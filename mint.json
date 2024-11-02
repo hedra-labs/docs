@@ -29,7 +29,7 @@
     {
       "name": "API Reference",
       "url": "api-reference",
-      "openapi": "/api-reference/openapi.yaml"
+      "openapi": "https://app.stainlessapi.com/api/spec/documented/hedra"
     }
   ],
   "anchors": [
@@ -43,33 +43,13 @@
     {
       "group": "Get Started",
       "pages": [
-        "introduction",
-        "quickstart",
-        "development"
-      ]
-    },
-    {
-      "group": "Essentials",
-      "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
-      ]
-    },
-    {
-      "group": "Endpoint Examples",
-      "pages": [
-        "api-reference/characters/initialize-character-generation",
-        "api-reference/audio/upload-audio"
+        "quickstart"
       ]
     }
   ],
   "footerSocials": {
-    "x": "https://x.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://linkedin.com/company/mintlify"
+    "x": "https://x.com/hedra_labs",
+    "github": "https://github.com/hedra-labs",
+    "linkedin": "https://linkedin.com/company/hedra-labs"
   }
 }
