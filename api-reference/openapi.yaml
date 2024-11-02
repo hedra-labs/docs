@@ -49,34 +49,33 @@ paths:
           content:
             application/json:
               schema: {}
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const response = await client.ping();
+            async function main() {
+              const response = await client.ping();
 
-                console.log(response);
-              }
+              console.log(response);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              response = client.ping()
-              print(response)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            response = client.ping()
+            print(response)
   /v1/voices:
     get:
       tags:
@@ -92,34 +91,33 @@ paths:
                 $ref: '#/components/schemas/VoicesResponseBody'
       security:
         - APIKeyHeader: []
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const voice = await client.voices.list();
+            async function main() {
+              const voice = await client.voices.list();
 
-                console.log(voice.supported_voices);
-              }
+              console.log(voice.supported_voices);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              voice = client.voices.list()
-              print(voice.supported_voices)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            voice = client.voices.list()
+            print(voice.supported_voices)
   /v1/audio:
     post:
       tags:
@@ -155,36 +153,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const audio = await client.audio.create({ file: fs.createReadStream('path/to/file') });
+            async function main() {
+              const audio = await client.audio.create({ file: fs.createReadStream('path/to/file') });
 
-                console.log(audio.url);
-              }
+              console.log(audio.url);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              audio = client.audio.create(
-                  file=b'raw file contents',
-              )
-              print(audio.url)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            audio = client.audio.create(
+                file=b'raw file contents',
+            )
+            print(audio.url)
   /v1/portrait:
     post:
       tags:
@@ -227,36 +224,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const portrait = await client.portraits.create({ file: fs.createReadStream('path/to/file') });
+            async function main() {
+              const portrait = await client.portraits.create({ file: fs.createReadStream('path/to/file') });
 
-                console.log(portrait.url);
-              }
+              console.log(portrait.url);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              portrait = client.portraits.create(
-                  file=b'raw file contents',
-              )
-              print(portrait.url)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            portrait = client.portraits.create(
+                file=b'raw file contents',
+            )
+            print(portrait.url)
   /v1/characters:
     post:
       tags:
@@ -292,34 +288,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const character = await client.characters.create();
+            async function main() {
+              const character = await client.characters.create();
 
-                console.log(character.jobId);
-              }
+              console.log(character.jobId);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              character = client.characters.create()
-              print(character.job_id)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            character = client.characters.create()
+            print(character.job_id)
   /v1/projects:
     get:
       tags:
@@ -335,34 +330,33 @@ paths:
                 $ref: '#/components/schemas/GetUserAvatarJobsResponse'
       security:
         - APIKeyHeader: []
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const project = await client.projects.list();
+            async function main() {
+              const project = await client.projects.list();
 
-                console.log(project.projects);
-              }
+              console.log(project.projects);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              project = client.projects.list()
-              print(project.projects)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            project = client.projects.list()
+            print(project.projects)
   /v1/projects/{project_id}:
     get:
       tags:
@@ -391,36 +385,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const avatarProjectItem = await client.projects.retrieve('project_id');
+            async function main() {
+              const avatarProjectItem = await client.projects.retrieve('project_id');
 
-                console.log(avatarProjectItem.id);
-              }
+              console.log(avatarProjectItem.id);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              avatar_project_item = client.projects.retrieve(
-                  "project_id",
-              )
-              print(avatar_project_item.id)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            avatar_project_item = client.projects.retrieve(
+                "project_id",
+            )
+            print(avatar_project_item.id)
     delete:
       tags:
         - Projects
@@ -447,36 +440,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const project = await client.projects.delete('project_id');
+            async function main() {
+              const project = await client.projects.delete('project_id');
 
-                console.log(project);
-              }
+              console.log(project);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              project = client.projects.delete(
-                  "project_id",
-              )
-              print(project)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            project = client.projects.delete(
+                "project_id",
+            )
+            print(project)
   /v1/projects/{project_id}/sharing:
     post:
       tags:
@@ -511,36 +503,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-      x-readme:
-        code-samples:
-          - language: node
-            code: |-
-              import Hedra from 'hedra-node';
+      x-codeSamples:
+        - lang: JavaScript
+          source: |-
+            import Hedra from 'hedra-node';
 
-              const client = new Hedra({
-                apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
-              });
+            const client = new Hedra({
+              apiKey: process.env['HEDRA_API_KEY'], // This is the default and can be omitted
+            });
 
-              async function main() {
-                const response = await client.projects.sharing('project_id');
+            async function main() {
+              const response = await client.projects.sharing('project_id');
 
-                console.log(response);
-              }
+              console.log(response);
+            }
 
-              main();
-          - language: python
-            code: |-
-              import os
-              from hedra import Hedra
+            main();
+        - lang: Python
+          source: |-
+            import os
+            from hedra import Hedra
 
-              client = Hedra(
-                  # This is the default and can be omitted
-                  api_key=os.environ.get("HEDRA_API_KEY"),
-              )
-              response = client.projects.sharing(
-                  project_id="project_id",
-              )
-              print(response)
+            client = Hedra(
+                # This is the default and can be omitted
+                api_key=os.environ.get("HEDRA_API_KEY"),
+            )
+            response = client.projects.sharing(
+                project_id="project_id",
+            )
+            print(response)
 components:
   schemas:
     ApiGenerateTalkingAvatarRequestBody:
