@@ -29,7 +29,7 @@
     {
       "name": "API Reference",
       "url": "api-reference",
-      "openapi": "https://app.stainlessapi.com/api/spec/documented/hedra"
+      "openapi": "/api-references/openapi.yaml"
     }
   ],
   "anchors": [
