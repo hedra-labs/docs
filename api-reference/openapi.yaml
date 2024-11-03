@@ -37,7 +37,7 @@ info:
 
   version: 0.1.0
 servers:
-  - url: /api
+  - url: https://mercury.dev.dream-ai.com/api
 paths:
   /ping:
     get:

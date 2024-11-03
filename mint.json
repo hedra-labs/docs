@@ -31,6 +31,10 @@
       "name": "API Reference",
       "url": "api-reference",
       "openapi": "/api-reference/openapi.yaml"
+    },
+    {
+      "name": "SDKs",
+      "url": "sdks"
     }
   ],
   "anchors": [
@@ -44,7 +48,12 @@
     {
       "group": "Get Started",
       "pages": [
-        "quickstart"
+        "about",
+        "quickstart",
+        {
+            "group": "Guides",
+            "pages": ["guides/introduction", "guides/python", "guides/node"]
+        }
       ]
     }
   ],
