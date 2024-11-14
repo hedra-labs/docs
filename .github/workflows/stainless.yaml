@@ -20,3 +20,13 @@ jobs:
           output_path: 'openapi/openapi.documented.json'
           project_name: 'hedra'
           commit_message: 'chore(api): update openapi specification'
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add openapi/openapi.json
+          git add openapi/openapi.documented.json
+          git commit -m 'chore: update documented OpenAPI spec'
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
