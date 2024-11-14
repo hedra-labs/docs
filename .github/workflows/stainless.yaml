@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: pip install -r requirements.txt
-      - run: python 
       - name: Push spec and config to Stainless and output documented spec
         uses: stainless-api/upload-openapi-spec-action@main
         with:
