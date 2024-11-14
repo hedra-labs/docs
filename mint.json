@@ -3,17 +3,17 @@
   "name": "Hedra API",
   "logo": {
     "href": "https://hedra.com",
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/assets/logo/dark.svg",
+    "light": "/assets/logo/light.svg"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/assets/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#ff4d8d",
+    "light": "#ff4d8d",
+    "dark": "#ff4d8d",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#ff4d8d",
+      "to": "#ff4d8d"
     }
   },
   "topbarLinks": [
@@ -28,13 +28,13 @@
   },
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference",
-      "openapi": "/api-reference/openapi.yaml"
+      "name": "SDKs",
+      "url": "pages/sdks"
     },
     {
-      "name": "SDKs",
-      "url": "sdks"
+      "name": "API Reference",
+      "url": "api-reference",
+      "openapi": "/openapi/openapi.yaml"
     }
   ],
   "anchors": [
@@ -48,11 +48,20 @@
     {
       "group": "Get Started",
       "pages": [
-        "about",
-        "quickstart",
+        "/pages/getting_started/about",
+        "/pages/getting_started/quickstart"
+      ]
+    },
+    {
+      "group": "Support",
+      "pages": ["/pages/support/feature_requests", "/pages/support/getting_help"]
+    },
+    { "group": "Available SDKs",
+      "pages": [
+        "pages/sdks/introduction",
         {
-            "group": "Guides",
-            "pages": ["guides/introduction", "guides/python", "guides/node"]
+          "group": "Guides",
+          "pages": ["/pages/sdks/guides/python", "/pages/sdks/guides/node"]
         }
       ]
     }
@@ -60,6 +69,7 @@
   "footerSocials": {
     "x": "https://x.com/hedra_labs",
     "github": "https://github.com/hedra-labs",
-    "linkedin": "https://linkedin.com/company/hedra-labs"
+    "linkedin": "https://linkedin.com/company/hedra-labs",
+    "discord": "https://discord.com/invite/KXeUUa6cXD"
   }
 }
