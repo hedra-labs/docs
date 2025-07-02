@@ -55,6 +55,7 @@
     {
       "group": "Realtime Avatar",
       "pages": [
+        "/pages/realtime-avatar/about",
         "/pages/realtime-avatar/get-started",
         "/pages/realtime-avatar/quickstart",
         "/pages/realtime-avatar/expert"
