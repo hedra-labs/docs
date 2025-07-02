@@ -1,0 +1,83 @@
+---
+title: "Quick Setup Guide"
+---
+Get up and running in minutes using create-hedra-avatar.
+> **⚠️ Before you begin:**
+> Please make sure you have completed the [Get Started](./get-started) section first to set up all required API keys and environment variables.
+
+
+---
+
+1. **Clone the [Create Hedra Avatar](https://github.com/surya-duggirala-hedra/create-hedra-avatar) repository.**
+
+2. **Navigate to the project directory:**
+
+```sh
+cd create-hedra-avatar
+```
+
+3. **Create your application (replace &lt;app-name&gt; with your desired name):**
+
+```sh
+npx create-hedra-avatar-test <app-name>
+```
+
+> **Note:** Make sure you have `pnpm` installed:
+
+```sh
+# Homebrew
+brew install pnpm
+# or
+npm install -g pnpm
+```
+
+> You might need to use a virtual environment when installing dependencies using pip. You must use Python version >3.10. (If you change your Python version after creating a virtual environment, delete the `venv` directory and recreate it with the correct Python version)
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+```
+
+> If you see an error about a missing dependency you can now install it with `pip`:
+
+```sh
+# Example
+pip install dotenv
+```
+
+4. **Navigate to your application directory:**
+
+```sh
+cd <app-name>
+```
+
+5. **Create `.env.local` in both frontend and backend directories and copy the contents of the `.env` file created earlier:**
+
+```sh
+cp ~/<path-to-your-env-file>/.env ./frontend/.env.local
+cp ~/<path-to-your-env-file>/.env ./backend/.env.local
+```
+
+6. **Start the agent:**
+
+```sh
+npm run start-agent
+```
+
+7. **Start the application (in a new terminal):**
+
+```sh
+npm run start-app
+```
+
+> **Note:** Make sure you have Node.js installed:
+
+```sh
+brew install node
+```
+
+> Install any missing packages:
+
+```sh
+npm install
+```

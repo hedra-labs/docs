@@ -53,6 +53,14 @@
       ]
     },
     {
+      "group": "Realtime Avatar",
+      "pages": [
+        "/pages/realtime-avatar/get-started",
+        "/pages/realtime-avatar/quickstart",
+        "/pages/realtime-avatar/expert"
+      ]
+    },
+    {
       "group": "Support",
       "pages": ["/pages/support/feature_requests", "/pages/support/getting_help"]
     },
