@@ -1,0 +1,153 @@
+---
+title: "Expert Guide"
+---
+
+Complete documentation with detailed explanations and advanced configurations.
+> **⚠️ Before you begin:**
+> Please make sure you have completed the [Get Started](./get-started) section first to set up all required API keys and environment variables.
+---
+
+## Hedra Avatar Setup
+
+### 1. Using Avatar ID
+
+#### Web UI
+
+1. Use [Hedra Studio image generator](https://www.hedra.com/app/image) to create an avatar image.
+2. Click to download your image.
+3. The UUID file name is the image asset id which can be used as `avatar_id`.
+
+#### Hedra API
+
+1. Use the [Hedra public api](https://api.hedra.com/web-app/redoc#tag/Public) to upload an image asset to the platform.
+2. The `id` in the JSON response is the image asset id which can be used as `avatar_id`.
+
+#### Add to .env
+
+```env
+HEDRA_AVATAR_ID="<avatar_id>"
+```
+
+### 2. Image upload
+
+Alternatively, you may pass an image from your local file system directly using the Livekit Hedra plugin:
+
+- You will still need a Hedra account and API key.
+- The image will be uploaded to Hedra's platform where you will be able to view it in your library and get the id using one of the methods detailed above.
+
+---
+
+## Installing Dependencies
+
+### 1. Install the Livekit Hedra plugin
+
+There are extra steps here since the plugin is not yet officially released:
+
+1. Clone the [Livekit Agents repository](https://github.com/livekit/agents) to your machine.
+2. Navigate to `agents/livekit-plugins/livekit-plugins-hedra`.
+3. Install the plugin:
+
+```sh
+pip install .
+```
+
+> **Note:** You might need to use a virtual environment when installing dependencies using pip:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 2. Install other dependencies
+
+As detailed in the [Livekit docs](https://docs.livekit.io/agents/integrations/).
+
+The included example uses OpenAI's realtime model which can be installed with:
+
+```sh
+pip install "livekit-agents[openai]~=1.0"
+```
+
+---
+
+## Avatar Example Setup
+
+1. Navigate to `agents/examples/avatar_agents/hedra`.
+2. Move your `.env` file with the necessary environment variables into this directory.
+
+.env example:
+
+```env
+# Livekit
+LIVEKIT_URL="wss://<project_name>.livekit.cloud"
+LIVEKIT_API_KEY="<livekit_api_key>"
+LIVEKIT_API_SECRET="<livekit_api_secret>"
+
+# Hedra
+HEDRA_AVATAR_ID="<avatar_image_id>" # omit if uploading image from local
+HEDRA_API_KEY="<hedra_api_key>"
+
+# Other providers
+OPENAI_API_KEY="<openai_api_key>"
+```
+
+3. If you choose to use a local file for your avatar image, you will need to edit the `agent_worker.py` example to pass the image properly:
+
+```python
+from PIL import Image
+avatar_image_path = "<path_to_local_image>"
+avatar_image = Image.open(avatar_image_path)
+hedra_avatar = hedra.AvatarSession(avatar_image=avatar_image)
+await hedra_avatar.start(session, room=ctx.room)
+```
+
+---
+
+## Avatar Example Run
+
+1. From within the `agents/examples/avatar_agents/hedra` directory, run the following to start your agent in production mode:
+
+```sh
+python agent_worker.py start
+```
+
+> **Note:** You may need to install missing dependencies with pip. Consider using a virtual environment:
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+
+# Example
+pip install dotenv
+```
+
+2. Navigate to the [Livekit Agents Playground](https://agents-playground.livekit.io/) in a browser.
+3. Connect to the project room that corresponds to the environment variables set in `.env`.
+
+> **Your session request will not be queued until after a user connects to the room.**
+> It may take several seconds for your avatar to load.
+
+---
+
+## Ending Your Avatar Session
+
+### 1. Inactivity timeout
+If the room does not get any user audio input for more than 2 minutes, the session will terminate due to user inactivity.
+
+> **NOTE: this is currently disabled**
+
+### 2. Room disconnect
+Click `disconnect` in the Livekit Playground and your session will stop.
+
+> **NOTE: if you disconnect this way, you will incur an additional 20-30 seconds of billing charges because the session is designed to prevent immediate termination in the event of disconnects that may occur due to network instability**
+
+### 3. End your example process
+End the `agent_worker.py` process using your favorite SIGINT, SIGKILL, etc. mechanism.
+
+### 4. Use the Livekit CLI
+If you've already set up the [Livekit CLI](https://docs.livekit.io/home/cli/cli-setup/) (not covered in this guide) then you can run the following to terminate the room and session:
+
+```sh
+lk room list
+lk room delete <room_name>
+```
