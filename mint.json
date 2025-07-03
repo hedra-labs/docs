@@ -27,10 +27,10 @@
     "url": "https://hedra.com/api-profile"
   },
   "tabs": [
-    {
-      "name": "SDKs",
-      "url": "pages/sdks"
-    },
+//    {
+//      "name": "SDKs",
+//      "url": "pages/sdks"
+//    },
     {
       "name": "API Reference",
       "url": "api-reference",
@@ -52,15 +52,15 @@
         "/pages/getting_started/quickstart"
       ]
     },
-    {
-      "group": "Realtime Avatar",
-      "pages": [
-        "/pages/realtime-avatar/about",
-        "/pages/realtime-avatar/get-started",
-        "/pages/realtime-avatar/quickstart",
-        "/pages/realtime-avatar/expert"
-      ]
-    },
+    // {
+    //  "group": "Realtime Avatar",
+    //  "pages": [
+    //    "/pages/realtime-avatar/about",
+    //    "/pages/realtime-avatar/get-started",
+    //    "/pages/realtime-avatar/quickstart",
+    //    "/pages/realtime-avatar/expert"
+    //  ]
+    //},
     {
       "group": "Support",
       "pages": ["/pages/support/feature_requests", "/pages/support/getting_help"]
