@@ -47,19 +47,6 @@
         "/pages/getting_started/about",
         "/pages/getting_started/quickstart"
       ]
-    },
-    {
-      "group": "Support",
-      "pages": ["/pages/support/feature_requests", "/pages/support/getting_help"]
-    },
-    { "group": "Available SDKs",
-      "pages": [
-        "pages/sdks/introduction",
-        {
-          "group": "Guides",
-          "pages": ["/pages/sdks/guides/python", "/pages/sdks/guides/node"]
-        }
-      ]
     }
   ],
   "footerSocials": {
