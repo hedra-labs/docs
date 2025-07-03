@@ -31,6 +31,11 @@
       "name": "API Reference",
       "url": "api-reference",
       "openapi": "/openapi.json"
+    },
+    {
+      "name": "Character-2 (legacy)",
+      "url": "legacy-api-reference",
+      "openapi": "/openapi_legacy.json"
     }
   ],
   "anchors": [
