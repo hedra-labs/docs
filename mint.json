@@ -34,7 +34,7 @@
     {
       "name": "API Reference",
       "url": "api-reference",
-      "openapi": "/openapi/openapi.yaml"
+      "openapi": "https://api.staging.hedra.com/web-app/openapi.json"
     }
   ],
   "anchors": [
