@@ -30,7 +30,7 @@
     {
       "name": "API Reference",
       "url": "api-reference",
-      "openapi": "https://api.staging.hedra.com/web-app/openapi.json"
+      "openapi": "/openapi.json"
     }
   ],
   "anchors": [
