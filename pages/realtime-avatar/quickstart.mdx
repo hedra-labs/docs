@@ -36,26 +36,26 @@ source venv/bin/activate
 pip install dotenv
 ```
 
-4. **Navigate to your application directory:**
+2. **Navigate to your application directory:**
 
 ```sh
 cd <app-name>
 ```
 
-5. **Create `.env.local` in both frontend and backend directories and copy the contents of the `.env` file created earlier:**
+3. **Create `.env.local` in both frontend and backend directories and copy the contents of the `.env` file created earlier:**
 
 ```sh
 cp ~/<path-to-your-env-file>/.env ./frontend/.env.local
 cp ~/<path-to-your-env-file>/.env ./backend/.env.local
 ```
 
-6. **Start the agent:**
+4. **Start the agent:**
 
 ```sh
 npm run start-agent
 ```
 
-7. **Start the application (in a new terminal with the same virtual environment activated):**
+5. **Start the application (in a new terminal with the same virtual environment activated):**
 
 ```sh
 npm run start-app
