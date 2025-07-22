@@ -2,7 +2,8 @@
 title: "Expert Guide"
 ---
 
-Complete documentation with detailed explanations and advanced configurations.
+Complete documentation with detailed explanations and advanced configurations using the [Livekit Agents Repository](https://github.com/livekit/agents/tree/main).
+This is helpful to see the various settings under the hood that are leveraged in the [hedra-avatar-starter](https://github.com/hedra-labs/hedra-avatar-starter).
 > **⚠️ Before you begin:**
 > Please make sure you have completed the [Get Started](./get-started) section first to set up all required API keys and environment variables.
 ---
@@ -40,15 +41,8 @@ Alternatively, you may pass an image from your local file system directly using 
 ## Installing Dependencies
 
 ### 1. Install the Livekit Hedra plugin
-
-There are extra steps here since the plugin is not yet officially released:
-
-1. Clone the [Livekit Agents repository](https://github.com/livekit/agents) to your machine.
-2. Navigate to `agents/livekit-plugins/livekit-plugins-hedra`.
-3. Install the plugin:
-
 ```sh
-pip install .
+pip install "livekit-agents[hedra]~=1.0"
 ```
 
 > **Note:** You might need to use a virtual environment when installing dependencies using pip:
