@@ -1,0 +1,85 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Hedra API",
+  "colors": {
+    "primary": "#ff4d8d",
+    "light": "#ff4d8d",
+    "dark": "#ff4d8d"
+  },
+  "favicon": "/assets/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "pages/getting_started/about",
+              "pages/getting_started/quickstart"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Character-3",
+        "openapi": {
+          "source": "/openapi.json",
+          "directory": "api-reference"
+        }
+      },
+      {
+        "tab": "Character-2 (legacy)",
+        "openapi": {
+          "source": "/openapi_legacy.json",
+          "directory": "legacy-api-reference"
+        }
+      },
+      {
+        "tab": "Live Avatar",
+        "pages": [
+          "/pages/realtime-avatar/about",
+          "/pages/realtime-avatar/get-started",
+          "/pages/realtime-avatar/quickstart",
+          "/pages/realtime-avatar/expert"
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Community",
+          "href": "https://discord.com/invite/KXeUUa6cXD",
+          "icon": "discord"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/assets/logo/light.svg",
+    "dark": "/assets/logo/dark.svg",
+    "href": "https://hedra.com"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://hedra.com/support"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://hedra.com/api-profile"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/hedra_labs",
+      "github": "https://github.com/hedra-labs",
+      "linkedin": "https://linkedin.com/company/hedra-labs",
+      "discord": "https://discord.com/invite/KXeUUa6cXD"
+    }
+  }
+}
