@@ -4,8 +4,10 @@ title: "Expert Guide"
 
 Complete documentation with detailed explanations and advanced configurations using the [Livekit Agents Repository](https://github.com/livekit/agents/tree/main).
 This is helpful to see the various settings under the hood that are leveraged in the [hedra-avatar-starter](https://github.com/hedra-labs/hedra-avatar-starter).
+
 > **⚠️ Before you begin:**
 > Please make sure you have completed the [Get Started](./get-started) section first to set up all required API keys and environment variables.
+
 ---
 
 ## Hedra Avatar Setup
@@ -15,8 +17,8 @@ This is helpful to see the various settings under the hood that are leveraged in
 #### Web UI
 
 1. Use [Hedra Studio image generator](https://www.hedra.com/app/image) to create an avatar image.
-2. Click to download your image.
-3. The UUID file name is the image asset id which can be used as `avatar_id`.
+2. Once it's generated, navigate to your Library and hover over the image you want to use and click the three dots icon
+3. Click "Copy Asset ID" which can then be used as `avatar_id`.
 
 #### Hedra API
 
@@ -41,6 +43,7 @@ Alternatively, you may pass an image from your local file system directly using 
 ## Installing Dependencies
 
 ### 1. Install the Livekit Hedra plugin
+
 ```sh
 pip install "livekit-agents[hedra]~=1.0"
 ```
@@ -126,19 +129,23 @@ pip install dotenv
 ## Ending Your Avatar Session
 
 ### 1. Inactivity timeout
+
 If the room does not get any user audio input for more than 2 minutes, the session will terminate due to user inactivity.
 
 > **NOTE: this is currently disabled**
 
 ### 2. Room disconnect
+
 Click `disconnect` in the Livekit Playground and your session will stop.
 
 > **NOTE: if you disconnect this way, you will incur an additional 20-30 seconds of billing charges because the session is designed to prevent immediate termination in the event of disconnects that may occur due to network instability**
 
 ### 3. End your example process
+
 End the `agent_worker.py` process using your favorite SIGINT, SIGKILL, etc. mechanism.
 
 ### 4. Use the Livekit CLI
+
 If you've already set up the [Livekit CLI](https://docs.livekit.io/home/cli/cli-setup/) (not covered in this guide) then you can run the following to terminate the room and session:
 
 ```sh
