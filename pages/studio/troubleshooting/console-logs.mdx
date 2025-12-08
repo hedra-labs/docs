@@ -1,0 +1,107 @@
+---
+title: "Gathering Console Logs and HAR Files"
+description: "How to collect diagnostic files for Hedra support"
+---
+
+When troubleshooting issues with Hedra support, you may be asked to provide diagnostic files. This guide explains how to collect them.
+
+## What These Files Are
+
+<AccordionGroup>
+  <Accordion title="Console Logs">
+    A record of what your browser is reporting behind the scenes (errors, warnings, etc.)
+  </Accordion>
+  <Accordion title="HAR File">
+    A timeline of all the network requests your browser made while the issue occurred
+  </Accordion>
+</AccordionGroup>
+
+## Before You Start
+
+1. Close unnecessary browser tabs
+2. Open developer tools **before** reproducing the problem
+3. This ensures complete information is captured
+
+## Collecting Console Logs
+
+<Tabs>
+  <Tab title="Chrome / Edge">
+    <Steps>
+      <Step title="Open Console">
+        Press `Cmd + Option + J` (Mac) or `Ctrl + Shift + J` (Windows/Linux)
+      </Step>
+      <Step title="Enable Preserve Log">
+        Click the gear icon and enable "Preserve log"
+      </Step>
+      <Step title="Reproduce the Issue">
+        Perform the actions that cause the problem
+      </Step>
+      <Step title="Save the Log">
+        Right-click in the console and select "Save as" to export as a text file
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Firefox">
+    <Steps>
+      <Step title="Open Console">
+        Press `Cmd + Option + K` (Mac) or `Ctrl + Shift + K` (Windows/Linux)
+      </Step>
+      <Step title="Enable Persist Logs">
+        Check "Persist Logs" in the console toolbar
+      </Step>
+      <Step title="Reproduce the Issue">
+        Perform the actions that cause the problem
+      </Step>
+      <Step title="Export Messages">
+        Use the hamburger menu to export messages
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Safari">
+    <Steps>
+      <Step title="Enable Developer Tools">
+        Go to Safari > Preferences > Advanced and enable "Show Develop menu"
+      </Step>
+      <Step title="Open Console">
+        Press `Cmd + Option + C`
+      </Step>
+      <Step title="Reproduce the Issue">
+        Perform the actions that cause the problem
+      </Step>
+      <Step title="Copy Content">
+        Select all content and paste into a text file
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Capturing HAR Files
+
+<Steps>
+  <Step title="Open Network Tab">
+    In developer tools, switch to the **Network** tab
+  </Step>
+  <Step title="Enable Log Preservation">
+    Enable "Preserve log" or similar option
+  </Step>
+  <Step title="Clear Existing Entries">
+    Clear any existing network entries
+  </Step>
+  <Step title="Reproduce the Issue">
+    Perform the actions that cause the problem
+  </Step>
+  <Step title="Export as HAR">
+    Right-click on the network list and select "Save all as HAR with content"
+  </Step>
+</Steps>
+
+## Submitting to Support
+
+<Warning>
+**HAR files may contain sensitive data** such as cookies, session tokens, or personal information. Review the file and redact any sensitive information before sending.
+</Warning>
+
+When submitting your files:
+1. Attach both the console log and HAR file to your support ticket
+2. Include a description of what you were trying to do
+3. Note the approximate time the issue occurred

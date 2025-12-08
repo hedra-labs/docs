@@ -1,51 +1,22 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Hedra API",
+  "name": "Hedra",
   "colors": {
-    "primary": "#ff4d8d",
-    "light": "#ff4d8d",
-    "dark": "#ff4d8d"
+    "primary": "#4f46e5",
+    "light": "#4f46e5",
+    "dark": "#818cf8"
   },
   "favicon": "/assets/favicon.svg",
+  "logo": {
+    "light": "/assets/logo/light.svg",
+    "dark": "/assets/logo/dark.svg",
+    "href": "https://hedra.com"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
   "navigation": {
-    "tabs": [
-      {
-        "tab": "Documentation",
-        "groups": [
-          {
-            "group": "Get Started",
-            "pages": [
-              "pages/getting_started/about",
-              "pages/getting_started/quickstart"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Character-3",
-        "openapi": {
-          "source": "/openapi.json",
-          "directory": "api-reference"
-        }
-      },
-      {
-        "tab": "Character-2 (legacy)",
-        "openapi": {
-          "source": "/openapi_legacy.json",
-          "directory": "legacy-api-reference"
-        }
-      },
-      {
-        "tab": "Live Avatar",
-        "pages": [
-          "/pages/realtime-avatar/about",
-          "/pages/realtime-avatar/get-started",
-          "/pages/realtime-avatar/quickstart",
-          "/pages/realtime-avatar/expert"
-        ]
-      }
-    ],
     "global": {
       "anchors": [
         {
@@ -54,15 +25,128 @@
           "icon": "discord"
         }
       ]
-    }
-  },
-  "logo": {
-    "light": "/assets/logo/light.svg",
-    "dark": "/assets/logo/dark.svg",
-    "href": "https://hedra.com"
+    },
+    "tabs": [
+      {
+        "tab": "Web Platform",
+        "icon": "browser",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "pages/studio/getting-started/overview",
+              "pages/studio/getting-started/hedra-studio",
+              "pages/studio/getting-started/character-3",
+              "pages/studio/getting-started/video-models"
+            ]
+          },
+          {
+            "group": "Content Creation",
+            "pages": [
+              "pages/studio/content-creation/create-audio",
+              "pages/studio/content-creation/create-image",
+              "pages/studio/content-creation/non-lip-sync-models",
+              "pages/studio/content-creation/voice-cloning",
+              "pages/studio/content-creation/speaker-selection",
+              "pages/studio/content-creation/download-content",
+              "pages/studio/content-creation/delete-content"
+            ]
+          },
+          {
+            "group": "Credits & Billing",
+            "pages": [
+              "pages/studio/billing/how-credits-work",
+              "pages/studio/billing/annual-subscriptions",
+              "pages/studio/billing/payment-methods",
+              "pages/studio/billing/change-plan",
+              "pages/studio/billing/promo-codes",
+              "pages/studio/billing/invoices",
+              "pages/studio/billing/cancel-subscription"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "pages/studio/account/forgot-password",
+              "pages/studio/account/delete-account",
+              "pages/studio/account/authentication-issues",
+              "pages/studio/account/mobile-app",
+              "pages/studio/account/creator-program"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "pages/studio/troubleshooting/file-specifications",
+              "pages/studio/troubleshooting/missing-video",
+              "pages/studio/troubleshooting/console-logs"
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              "pages/faq",
+              "pages/getting_started/pricing"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Platform",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "API",
+            "openapi": "/openapi.json",
+            "pages": [
+              "pages/getting_started/quickstart",
+              "GET /models",
+              "GET /assets",
+              "POST /assets",
+              "POST /assets/{id}/upload",
+              "GET /generations",
+              "POST /generations",
+              "GET /generations/{generation_id}/status",
+              "GET /billing/credits"
+            ]
+          },
+          {
+            "group": "Live Avatar",
+            "pages": [
+              "pages/realtime-avatar/about",
+              "pages/realtime-avatar/get-started",
+              "pages/realtime-avatar/quickstart",
+              "pages/realtime-avatar/expert"
+            ]
+          },
+          {
+            "group": "Legacy API (Character-2)",
+            "openapi": "/openapi_legacy.json",
+            "pages": [
+              "GET /v1/voices",
+              "POST /v1/audio",
+              "POST /v1/portrait",
+              "POST /v1/characters",
+              "GET /v1/projects",
+              "GET /v1/projects/{project_id}",
+              "DELETE /v1/projects/{project_id}",
+              "POST /v1/projects/{project_id}/sharing",
+              "POST /v1/user/register",
+              "POST /v1/images/text-to-image",
+              "GET /healthz",
+              "GET /ping"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "navbar": {
     "links": [
+      {
+        "label": "Pricing",
+        "href": "https://hedra.com/plans"
+      },
       {
         "label": "Support",
         "href": "https://hedra.com/support"
