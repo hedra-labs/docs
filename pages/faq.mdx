@@ -1,0 +1,122 @@
+---
+title: "FAQ"
+description: "Frequently asked questions about the Hedra API"
+---
+
+## General
+
+<AccordionGroup>
+  <Accordion title="What is Hedra?">
+    Hedra is a generative AI platform that creates realistic talking avatar videos. Our APIs let you generate videos by combining a portrait image with audio - the AI handles lip sync, facial expressions, and natural head movement.
+  </Accordion>
+
+  <Accordion title="What can I build with Hedra?">
+    Common use cases include:
+    - Personalized marketing videos at scale
+    - E-learning and training content
+    - Social media content (TikTok, Reels, Shorts)
+    - Virtual assistants and chatbots with video
+    - Customer support video libraries
+    - Multi-language video localization
+  </Accordion>
+
+  <Accordion title="What's the difference between Character API and Live Avatar?">
+    **Character API** generates pre-rendered videos - you upload assets and download a finished video file. Best for content creation workflows.
+
+    **Live Avatar** provides real-time streaming - the avatar responds immediately to audio input via WebRTC. Best for interactive applications like chatbots or live experiences.
+  </Accordion>
+</AccordionGroup>
+
+## API & Technical
+
+<AccordionGroup>
+  <Accordion title="What image formats are supported?">
+    We support PNG, JPG, and WebP images. For best results, use clear frontal portraits with good lighting and a neutral expression. Minimum recommended size is 512x512 pixels.
+  </Accordion>
+
+  <Accordion title="What audio formats are supported?">
+    MP3, WAV, and M4A are supported. Use clear speech audio without background music. Sample rates of 16kHz or higher are recommended.
+  </Accordion>
+
+  <Accordion title="How long can videos be?">
+    Maximum video duration depends on your subscription plan. Standard plans support up to 60 seconds per request. Enterprise plans can accommodate longer durations.
+  </Accordion>
+
+  <Accordion title="What resolutions are available?">
+    Character-3 supports 540p and 720p output in three aspect ratios: 16:9 (landscape), 9:16 (portrait), and 1:1 (square).
+  </Accordion>
+
+  <Accordion title="How long does generation take?">
+    Generation time varies based on video length and current demand. Typical videos complete in 1-5 minutes. You can poll the job status endpoint to check progress.
+  </Accordion>
+
+  <Accordion title="What are the rate limits?">
+    Rate limits depend on your subscription tier:
+    - Starter: 10 requests/minute
+    - Pro: 60 requests/minute
+    - Enterprise: Custom limits
+
+    [Contact sales](https://hedra.com/support) for higher limits.
+  </Accordion>
+</AccordionGroup>
+
+## Pricing & Billing
+
+<AccordionGroup>
+  <Accordion title="How does pricing work?">
+    Hedra uses a credit-based system. Credits are consumed based on video duration, resolution, and model version. See our [pricing page](/pages/getting_started/pricing) for details.
+  </Accordion>
+
+  <Accordion title="Do credits expire?">
+    Credit expiration depends on your plan type. Check your account dashboard or contact support for specific terms.
+  </Accordion>
+
+  <Accordion title="What payment methods are accepted?">
+    We accept major credit cards through our billing portal. Enterprise customers can arrange invoicing and other payment methods.
+  </Accordion>
+
+  <Accordion title="Is there a free trial?">
+    Visit [hedra.com/plans](https://hedra.com/plans) to see current trial offerings and pricing.
+  </Accordion>
+</AccordionGroup>
+
+## Character-2 Legacy
+
+<AccordionGroup>
+  <Accordion title="Should I use Character-2 or Character-3?">
+    We recommend Character-3 for all new projects. It offers better quality, more features, and will continue to receive updates. Character-2 is maintained for existing integrations but will be deprecated.
+  </Accordion>
+
+  <Accordion title="How do I migrate from Character-2 to Character-3?">
+    The APIs are similar but have some differences. Review the [Character-3 API reference](/api-reference) and update your integration. The main changes are in the request/response formats and available options.
+  </Accordion>
+
+  <Accordion title="When will Character-2 be deprecated?">
+    We'll announce deprecation timelines in advance. Subscribe to our changelog and join [Discord](https://discord.com/invite/KXeUUa6cXD) for updates.
+  </Accordion>
+</AccordionGroup>
+
+## Support
+
+<AccordionGroup>
+  <Accordion title="How do I get help?">
+    - **Discord**: Join our [community](https://discord.com/invite/KXeUUa6cXD) for developer discussions
+    - **Support**: Submit a ticket at [hedra.com/support](https://hedra.com/support)
+    - **Enterprise**: Dedicated support channels for enterprise customers
+  </Accordion>
+
+  <Accordion title="Where can I report bugs or request features?">
+    For API issues, contact [support](https://hedra.com/support). For general feedback and feature requests, join our [Discord community](https://discord.com/invite/KXeUUa6cXD).
+  </Accordion>
+</AccordionGroup>
+
+## Still Have Questions?
+
+<Columns cols={2}>
+  <Card title="Discord Community" icon="discord" href="https://discord.com/invite/KXeUUa6cXD">
+    Get help from the community and Hedra team
+  </Card>
+  <Card title="Contact Support" icon="life-ring" href="https://hedra.com/support">
+    Submit a support ticket for direct assistance
+  </Card>
+</Columns>
