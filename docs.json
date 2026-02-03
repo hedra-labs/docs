@@ -118,24 +118,6 @@
               "pages/realtime-avatar/quickstart",
               "pages/realtime-avatar/expert"
             ]
-          },
-          {
-            "group": "Legacy API (Character-2)",
-            "openapi": "/openapi_legacy.json",
-            "pages": [
-              "GET /v1/voices",
-              "POST /v1/audio",
-              "POST /v1/portrait",
-              "POST /v1/characters",
-              "GET /v1/projects",
-              "GET /v1/projects/{project_id}",
-              "DELETE /v1/projects/{project_id}",
-              "POST /v1/projects/{project_id}/sharing",
-              "POST /v1/user/register",
-              "POST /v1/images/text-to-image",
-              "GET /healthz",
-              "GET /ping"
-            ]
           }
         ]
       }
