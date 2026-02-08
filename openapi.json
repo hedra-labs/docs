@@ -4,6 +4,12 @@
     "title": "Hedra Web API",
     "version": "0.1.0"
   },
+  "servers": [
+    {
+      "url": "https://api.hedra.com/web-app/public",
+      "description": "Hedra Public API"
+    }
+  ],
   "paths": {
     "/models": {
       "get": {
