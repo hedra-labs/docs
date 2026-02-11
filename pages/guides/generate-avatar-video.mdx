@@ -1,0 +1,139 @@
+---
+title: "Generate an Avatar Video"
+description: "Create talking-head and motion avatar videos using the Hedra API."
+---
+
+All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
+
+```bash
+export HEDRA_API_KEY="your_api_key"
+```
+
+Avatar videos are driven by audio — the character in the image will lip-sync and move to the provided audio. Two models are available:
+
+| Model | ID | Best for |
+|-------|-----|----------|
+| **Hedra Avatar** | `26f0fc66-152b-40ab-abed-76c43df99bc8` | Talking-head videos, lip-sync, up to 200s |
+| **Hedra Omnia** | `ab372b84-432f-44f5-bacc-c2542465f712` | Motion avatar videos with full-body movement, up to 8s |
+
+Both models require an image and audio input.
+
+## Step 1: Upload your audio
+
+The audio determines the video length. For a 5-minute video, provide ~5 minutes of audio.
+
+```bash
+# Create the asset record
+curl -X POST https://api.hedra.com/web-app/public/assets \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "name": "five-minute-audio.mp3",
+    "type": "audio"
+  }'
+
+# Upload the file
+curl -X POST https://api.hedra.com/web-app/public/assets/{audio_asset_id}/upload \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -F "file=@/path/to/five-minute-audio.mp3"
+```
+
+## Step 2: Upload your portrait image
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/assets \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "name": "portrait.png",
+    "type": "image"
+  }'
+
+curl -X POST https://api.hedra.com/web-app/public/assets/{image_asset_id}/upload \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -F "file=@/path/to/portrait.png"
+```
+
+## Step 3: Generate the avatar video
+
+Use the Hedra Avatar model (`26f0fc66-152b-40ab-abed-76c43df99bc8`):
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "video",
+    "ai_model_id": "26f0fc66-152b-40ab-abed-76c43df99bc8",
+    "start_keyframe_id": "{image_asset_id}",
+    "audio_id": "{audio_asset_id}",
+    "generated_video_inputs": {
+      "text_prompt": "A person speaking to the camera",
+      "aspect_ratio": "9:16",
+      "resolution": "720p",
+      "duration_ms": 300000
+    }
+  }'
+```
+
+<Note>
+  Set `duration_ms` to `300000` for 5 minutes (300 seconds = 300,000 ms). The video duration will match your audio length.
+</Note>
+
+### Using Hedra Omnia
+
+For motion avatar videos with full-body movement, swap the model ID to Hedra Omnia:
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "video",
+    "ai_model_id": "ab372b84-432f-44f5-bacc-c2542465f712",
+    "start_keyframe_id": "{image_asset_id}",
+    "audio_id": "{audio_asset_id}",
+    "generated_video_inputs": {
+      "text_prompt": "A person gesturing expressively while speaking",
+      "aspect_ratio": "9:16",
+      "resolution": "720p",
+      "duration_ms": 8000
+    }
+  }'
+```
+
+### Inline audio generation
+
+Instead of uploading audio separately, you can generate speech inline by passing `audio_generation` instead of `audio_id`:
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "video",
+    "ai_model_id": "26f0fc66-152b-40ab-abed-76c43df99bc8",
+    "start_keyframe_id": "{image_asset_id}",
+    "audio_generation": {
+      "type": "text_to_speech",
+      "voice_id": "f412c62f-e94f-41c0-bfc6-97f63289941c",
+      "text": "Hello, this is a demo of inline audio generation for avatar videos."
+    },
+    "generated_video_inputs": {
+      "text_prompt": "A person speaking to the camera",
+      "aspect_ratio": "9:16",
+      "resolution": "540p"
+    }
+  }'
+```
+
+## Step 4: Poll for completion
+
+Long-form avatar videos take longer to generate. Check `progress` (0-1) and `eta_sec` for estimates:
+
+```bash
+curl https://api.hedra.com/web-app/public/generations/{generation_id}/status \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```
+
+When `status` is `"complete"`, the response includes an `asset_id` for the generated video.

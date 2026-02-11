@@ -1,0 +1,103 @@
+---
+title: "Generate a Video"
+description: "Generate videos from images and text prompts using the Hedra API."
+---
+
+All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
+
+```bash
+export HEDRA_API_KEY="your_api_key"
+```
+
+## Text-to-video
+
+Generate a video from a text prompt alone using Grok Video T2V (`827122cd-5fdd-4412-86f2-554f7bb8eef9`):
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "video",
+    "ai_model_id": "827122cd-5fdd-4412-86f2-554f7bb8eef9",
+    "generated_video_inputs": {
+      "text_prompt": "A woman walking through a busy market at golden hour",
+      "aspect_ratio": "16:9",
+      "resolution": "720p",
+      "duration_ms": 5000
+    }
+  }'
+```
+
+## Image-to-video
+
+Generate a video from a start image using Grok Video I2V (`0435547d-1b30-41ad-bf66-ca476ff0564e`).
+
+### Step 1: Upload a start image
+
+```bash
+# Create the asset record
+curl -X POST https://api.hedra.com/web-app/public/assets \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "name": "my-image.png",
+    "type": "image"
+  }'
+
+# Upload the file
+curl -X POST https://api.hedra.com/web-app/public/assets/{asset_id}/upload \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -F "file=@/path/to/image.png"
+```
+
+### Step 2: Generate the video
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "video",
+    "ai_model_id": "0435547d-1b30-41ad-bf66-ca476ff0564e",
+    "start_keyframe_id": "{image_asset_id}",
+    "generated_video_inputs": {
+      "text_prompt": "The scene comes to life with gentle movement",
+      "aspect_ratio": "16:9",
+      "resolution": "720p",
+      "duration_ms": 5000
+    }
+  }'
+```
+
+## Required fields
+
+| Field | Description |
+|-------|-------------|
+| `type` | Set to `"video"` |
+| `generated_video_inputs.text_prompt` | Text description of the video content |
+
+## Optional fields
+
+| Field | Description |
+|-------|-------------|
+| `ai_model_id` | The model to use (see `GET /models` for video models) |
+| `start_keyframe_id` | Asset ID of the start image (required for I2V models) |
+| `end_keyframe_id` | Asset ID of the end image |
+| `generated_video_inputs.aspect_ratio` | e.g. `"16:9"`, `"9:16"`, `"1:1"` |
+| `generated_video_inputs.resolution` | e.g. `"540p"`, `"720p"` |
+| `generated_video_inputs.duration_ms` | Duration in milliseconds |
+| `batch_size` | Generate 1-8 variations at once (default: 1) |
+
+## Poll for completion
+
+```bash
+curl https://api.hedra.com/web-app/public/generations/{generation_id}/status \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```
+
+When `status` is `"complete"`, the response includes an `asset_id` for the generated video.
+
+<Note>
+  For avatar and talking-head videos that require audio input, see the [Generate an Avatar Video](/pages/guides/generate-avatar-video) guide.
+</Note>

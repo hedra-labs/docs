@@ -32,10 +32,25 @@
         "icon": "code",
         "groups": [
           {
-            "group": "API",
+            "group": "Getting Started",
+            "pages": [
+              "pages/getting_started/quickstart"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "pages/guides/generate-image",
+              "pages/guides/generate-video",
+              "pages/guides/generate-avatar-video",
+              "pages/guides/generate-audio",
+              "pages/guides/automate-with-n8n"
+            ]
+          },
+          {
+            "group": "API Reference",
             "openapi": "/openapi.json",
             "pages": [
-              "pages/getting_started/quickstart",
               "GET /models",
               "GET /voices",
               "GET /assets",
@@ -76,6 +91,12 @@
       "label": "Dashboard",
       "href": "https://hedra.com/api-profile"
     }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view"
+    ]
   },
   "footer": {
     "socials": {

@@ -1,0 +1,62 @@
+---
+title: "Generate an Image"
+description: "Generate images from text prompts using the Hedra API."
+---
+
+All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
+
+```bash
+export HEDRA_API_KEY="your_api_key"
+```
+
+## Generate an image from a text prompt
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "image",
+    "text_prompt": "A golden retriever sitting in a field of sunflowers",
+    "ai_model_id": "a66300b4-f76e-4c4a-ac41-b31694ff585e",
+    "aspect_ratio": "16:9",
+    "resolution": "1080p"
+  }'
+```
+
+### Required fields
+
+| Field | Description |
+|-------|-------------|
+| `type` | Set to `"image"` |
+| `text_prompt` | The text description of the image to generate |
+| `ai_model_id` | The model to use (see `GET /models` for available image models) |
+
+### Optional fields
+
+| Field | Description |
+|-------|-------------|
+| `aspect_ratio` | e.g. `"16:9"`, `"9:16"`, `"1:1"` |
+| `resolution` | e.g. `"540p"`, `"720p"`, `"1080p"`, `"1440p (2K QHD)"`, `"2160p (4K UHD)"` |
+| `batch_size` | Generate 1-8 variations at once (default: 1) |
+| `enhance_prompt` | Set to `true` to automatically enhance the prompt |
+
+## Poll for completion
+
+The response includes a generation `id`. Poll until `status` is `"complete"`:
+
+```bash
+curl https://api.hedra.com/web-app/public/generations/{generation_id}/status \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```
+
+When complete, the response includes an `asset_id` for the generated image.
+
+## Available image models
+
+Use `GET /models` to list all models. Filter by `"type": "image"` to see image models with their supported resolutions and aspect ratios.
+
+```bash
+curl https://api.hedra.com/web-app/public/models \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```

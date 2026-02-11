@@ -1,0 +1,95 @@
+---
+title: "Generate Audio"
+description: "Convert text to speech using the Hedra API."
+---
+
+All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
+
+```bash
+export HEDRA_API_KEY="your_api_key"
+```
+
+## Step 1: Pick a voice
+
+List available voices:
+
+```bash
+curl https://api.hedra.com/web-app/public/voices \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```
+
+## Step 2: Generate speech
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "text_to_speech",
+    "voice_id": "f412c62f-e94f-41c0-bfc6-97f63289941c",
+    "text": "Hello, welcome to Hedra! This is an example of text-to-speech generation.",
+    "stability": 0.5,
+    "speed": 1.0,
+    "language": "English"
+  }'
+```
+
+### Required fields
+
+| Field | Description |
+|-------|-------------|
+| `type` | Set to `"text_to_speech"` |
+| `voice_id` | The voice to use (from `GET /voices`) |
+| `text` | The text to convert to speech |
+
+### Optional fields
+
+| Field | Description |
+|-------|-------------|
+| `stability` | `0.0` (most stable) to `1.0` (most variable). Default: `1.0` |
+| `speed` | `0.7` (slowest) to `1.2` (fastest). Default: `1.0` |
+| `language` | e.g. `"English"`, `"Spanish"`, `"French"`, `"Japanese"`. Default: `"auto"` |
+
+## Step 3: Poll for completion
+
+```bash
+curl https://api.hedra.com/web-app/public/generations/{generation_id}/status \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```
+
+When `status` is `"complete"`, the response includes an `asset_id` for the generated audio file.
+
+## Clone a voice
+
+You can create a custom voice by uploading an audio sample and cloning it.
+
+### 1. Upload an audio sample
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/assets \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "name": "voice-sample.mp3",
+    "type": "audio"
+  }'
+
+curl -X POST https://api.hedra.com/web-app/public/assets/{asset_id}/upload \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -F "file=@/path/to/voice-sample.mp3"
+```
+
+### 2. Clone the voice
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "voice_clone",
+    "audio_id": "{audio_asset_id}",
+    "name": "My Custom Voice"
+  }'
+```
+
+Once complete, the response includes an `asset_id` for the new voice. Use this as the `voice_id` in text-to-speech requests.

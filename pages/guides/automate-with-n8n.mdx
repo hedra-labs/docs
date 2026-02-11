@@ -1,0 +1,152 @@
+---
+title: "Automate Content with n8n"
+description: "Build automated content pipelines using the Hedra API and n8n."
+---
+
+[n8n](https://n8n.io) is a workflow automation tool that lets you connect APIs visually. This guide shows how to use n8n's **HTTP Request** node to automate content generation with the Hedra API.
+
+## Authentication setup
+
+Before building workflows, create a reusable credential for the Hedra API:
+
+1. Go to **Credentials** in n8n
+2. Click **Add Credential** → **Header Auth**
+3. Set **Name** to `X-API-Key` and **Value** to your Hedra API key
+4. Save as "Hedra API Key"
+
+Use this credential in every HTTP Request node by selecting **Authentication** → **Generic Credential Type** → **Header Auth** → **Hedra API Key**.
+
+## Example: Generate an image on a schedule
+
+This workflow generates a daily image from a prompt.
+
+### Node 1: Schedule Trigger
+
+- **Type:** Schedule Trigger
+- **Interval:** Every day at 9:00 AM
+
+### Node 2: Generate Image
+
+- **Type:** HTTP Request
+- **Method:** `POST`
+- **URL:** `https://api.hedra.com/web-app/public/generations`
+- **Authentication:** Header Auth → Hedra API Key
+- **Body (JSON):**
+
+```json
+{
+  "type": "image",
+  "text_prompt": "A vibrant abstract background for social media",
+  "ai_model_id": "a66300b4-f76e-4c4a-ac41-b31694ff585e",
+  "aspect_ratio": "1:1",
+  "resolution": "1080p"
+}
+```
+
+### Node 3: Wait
+
+- **Type:** Wait
+- **Duration:** 30 seconds
+
+### Node 4: Check Status
+
+- **Type:** HTTP Request
+- **Method:** `GET`
+- **URL:** `https://api.hedra.com/web-app/public/generations/{{ $('Generate Image').item.json.id }}/status`
+- **Authentication:** Header Auth → Hedra API Key
+
+### Node 5: Check if Complete
+
+- **Type:** If
+- **Condition:** `{{ $json.status }}` equals `complete`
+- **True:** Continue to next node
+- **False:** Loop back to **Wait** node
+
+---
+
+## Example: Avatar video from text input
+
+This workflow takes a text input, generates speech, and creates an avatar video.
+
+### Node 1: Manual Trigger / Webhook
+
+Start the workflow manually or via a webhook with a `text` field in the body.
+
+### Node 2: Upload Portrait Image
+
+If you have a fixed portrait, upload it once and reuse the asset ID. Otherwise, create and upload:
+
+- **Type:** HTTP Request
+- **Method:** `POST`
+- **URL:** `https://api.hedra.com/web-app/public/assets`
+- **Body (JSON):**
+
+```json
+{
+  "name": "portrait.png",
+  "type": "image"
+}
+```
+
+### Node 3: Upload File
+
+- **Type:** HTTP Request
+- **Method:** `POST`
+- **URL:** `https://api.hedra.com/web-app/public/assets/{{ $json.id }}/upload`
+- **Authentication:** Header Auth → Hedra API Key
+- **Body:** Form-Data, attach your portrait image file
+
+### Node 4: Generate Avatar Video with Inline TTS
+
+Use `audio_generation` to skip a separate TTS step:
+
+- **Type:** HTTP Request
+- **Method:** `POST`
+- **URL:** `https://api.hedra.com/web-app/public/generations`
+- **Body (JSON):**
+
+```json
+{
+  "type": "video",
+  "ai_model_id": "26f0fc66-152b-40ab-abed-76c43df99bc8",
+  "start_keyframe_id": "{{ $('Upload Portrait Image').item.json.id }}",
+  "audio_generation": {
+    "type": "text_to_speech",
+    "voice_id": "f412c62f-e94f-41c0-bfc6-97f63289941c",
+    "text": "{{ $('Manual Trigger').item.json.text }}"
+  },
+  "generated_video_inputs": {
+    "text_prompt": "A person speaking to the camera",
+    "aspect_ratio": "9:16",
+    "resolution": "540p"
+  }
+}
+```
+
+### Node 5: Poll Until Complete
+
+Use a **Wait** + **HTTP Request** + **If** loop (same pattern as the image example above) to poll `GET /generations/{id}/status` until `status` is `"complete"`.
+
+---
+
+## Polling pattern
+
+Most Hedra generations are asynchronous. Use this reusable polling pattern in your n8n workflows:
+
+```
+[Generate] → [Wait 15-30s] → [Check Status] → [If complete?]
+                  ↑                                  │
+                  └──────── No ──────────────────────┘
+                                                     │
+                                              Yes → [Next step]
+```
+
+<Tip>
+  For short generations (images, TTS), a 15-second wait is usually enough. For long-form avatar videos, use 60-second intervals and check the `progress` field (0-1) in the status response.
+</Tip>
+
+## Tips
+
+- **Reuse asset IDs.** If you use the same portrait or audio across runs, upload once and store the `asset_id` for reuse.
+- **Use n8n variables.** Store your Hedra model IDs and voice IDs as n8n workflow variables for easy updates.
+- **Error handling.** Add an **If** node to check for `status` equal to `"error"` and branch to a notification or retry path.
