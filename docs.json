@@ -101,6 +101,7 @@
             "pages": [
               "pages/getting_started/quickstart",
               "GET /models",
+              "GET /voices",
               "GET /assets",
               "POST /assets",
               "POST /assets/{id}/upload",
