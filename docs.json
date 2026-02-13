@@ -33,6 +33,11 @@
           "anchor": "Support",
           "href": "https://hedra.com/support",
           "icon": "headset"
+        },
+        {
+          "anchor": "Video Tutorials",
+          "href": "/pages/app/getting-started/video-tutorials",
+          "icon": "circle-play"
         }
       ]
     },
