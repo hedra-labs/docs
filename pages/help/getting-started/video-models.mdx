@@ -3,78 +3,417 @@ title: "Which Video Model Should I Use?"
 description: "A guide to choosing the right video model in Hedra for your project."
 ---
 
-## Hedra Avatar — 4–6 credits/sec
+# Hedra Video Model Guide
 
-**Best for:** Talking heads, hosts, explainers, lip sync, podcasts, tutorials, and any A-roll where lip-sync and performance matter.
+There isn’t one “best” model. There is a best model for your goal.
 
-**Shines at:**
-- Native audio support in Hedra (unique among these models)
-- Crisp lip-sync, expressive emotion, and full-body nuance
-- Perfect for tutorials, spokesperson content, and storytelling
+If you’re unsure where to begin:
 
-<Tip>
-  Character-3 also runs at **540p for 3 credits/sec** — a great way to try things out quickly and cost-effectively before moving to higher res.
-</Tip>
+• Dialogue or presenters → Start with Hedra-native models\
+• Cinematic visuals → Use text-to-video tiers\
+• Copying motion → Use Motion / Reference models\
+• Testing ideas → Use budget or fast tiers
 
-**Watch-outs:** Not intended for action set-pieces or large physics-driven scenes. Think "talent in front of the camera," not explosions.
+---
 
-## Veo 3 — 100 credits/sec
+# Hedra Native Models (Recommended Starting Point)
 
-**Best for:** Cinematic, photoreal B-roll or short creative shots.
+---
 
-**Shines at:** Extremely high realism, natural physics, strong prompt adherence, and beautiful cinematic motion.
+### **Hedra Avatar **_~7 credits per second_
 
-**Watch-outs:** Multi-shot character consistency can be tricky; generally works best as standalone clips. Limited to 8-second clips.
+**Category:** Audio-Driven Avatar\
+**Audio Support:** Yes\
+**Input Type:** Image + Audio
 
-## Veo 3 Fast — 55 credits/sec
+**Best For:**\
+Talking heads, presenters, tutorials, explainers.
 
-**Best for:** Rapid iteration and concepting with "Veo-like" quality at lower cost.
+**Strengths:**\
+• Reliable lip-sync\
+• Stable performance delivery\
+• Cost-efficient for longer dialogue
 
-**Shines at:** Speed and efficiency while keeping much of Veo's look.
+**Use When:**\
+You need a host speaking clearly on camera.
 
-**Watch-outs:** Slight trade-offs in fidelity and subtle detail compared to full Veo 3. Also limited to 8 seconds.
+**Avoid When:**\
+You’re building complex cinematic scenes.
 
-## MiniMax Hailou-02 Pro — 16 credits/sec
+---
 
-**Best for:** Physics-heavy motion (splashes, cloth, diving, dynamic stunts) in sharp 1080p.
+### **Hedra Omnia **_~15 credits per second_
 
-**Shines at:** Believable physical effects, clean motion, and cinematic feeling.
+**Category:** Cinematic Dialogue\
+**Audio Support:** Yes\
+**Input Type:** Text + Audio
 
-**Watch-outs:** Often dramatic by default — great for action, less so for subtle character work.
+**Best For:**\
+Short cinematic scenes with expressive dialogue and controlled camera movement.
 
-## MiniMax Hailou-02 (Standard) — 8 credits/sec
+**Strengths:**\
+• Lifelike motion and emotion\
+• Precision camera control\
+• Strong for short-form ads
 
-**Best for:** Budget-friendly social clips and quick motion tests.
+**Use When:**\
+You want dialogue plus dynamic framing.
 
-**Shines at:** Smooth, natural motion for cost.
+**Avoid When:**\
+You need long monologues or large-scale action sequences.
 
-**Watch-outs:** Lower resolution/detail than Pro.
+---
 
-## Kling 2.1 Master — 35 credits/sec
+### **Hedra Character 3**_~6 credits per second_
 
-**Best for:** Premium 1080p clips with complex motion and higher semantic fidelity.
+**Category:** Lightweight Facial Animation\
+**Audio Support:** Yes\
+**Input Type:** Image + Audio
 
-**Shines at:** Polished results, strong prompt following, good balance of realism and flexibility.
+**Best For:**\
+Simple portrait animation and quick dialogue tests.
 
-**Watch-outs:** More expensive tier, mainly worth it if you need maximum polish.
+**Strengths:**\
+• Efficient and low-cost\
+• Clean facial sync
 
-## Kling 2.1 Pro — 15 credits/sec
+**Use When:**\
+You want quick, cost-effective speaking animation.
 
-**Best for:** Cost-effective 720p/1080p videos where efficiency matters most.
+**Avoid When:**\
+You need cinematic environments.
 
-**Shines at:** Faster, affordable clips with good action and style.
+---
 
-**Watch-outs:** Less subtlety and stability than Master.
+# Premium Cinematic Models
 
-## Quick Picks
+---
 
-| Use Case | Recommended Model |
-|----------|-------------------|
-| On-camera dialogue, explainers, songs | Hedra Avatar |
-| Cinematic, photoreal B-roll | Veo 3 |
-| Fast prototyping / quick variants | Hedra Avatar, Veo 3 Fast, or Kling 2.1 Pro |
-| Action / splash / physics | Hailou-02 Pro |
-| Premium polished 1080p social clips | Kling 2.1 Master |
+### **Sora 2 Pro **_~70 credits per second_
+
+**Category:** Premium Narrative\
+**Audio Support:** Confirm\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Complex narrative scenes and high realism.
+
+**Strengths:**\
+• Strong scene coherence\
+• Advanced world interaction
+
+**Use When:**\
+Rendering final, high-impact cinematic shots.
+
+**Avoid When:**\
+Testing prompts or simple dialogue.
+
+---
+
+### **Veo 3 / Veo 3.1 **_~55 credits per second_
+
+**Category:** Premium Cinematic\
+**Audio Support:** No\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Photorealistic environments and physics-heavy scenes.
+
+**Strengths:**\
+• High realism\
+• Strong camera motion\
+• Environmental detail
+
+**Use When:**\
+You need polished visual realism.
+
+**Avoid When:**\
+You need native speech performance.
+
+---
+
+### **Kling V3 Pro **_~40 credits per second_
+
+**Category:** Premium Cinematic\
+**Audio Support:** Yes (Pro tier)\
+**Input Type:** Text-to-video
+
+**Best For:**\
+High-resolution cinematic sequences with audio.
+
+**Strengths:**\
+• Strong visual fidelity\
+• Extended generation capability
+
+**Use When:**\
+Producing final cinematic visuals with dialogue.
+
+**Avoid When:**\
+You are experimenting or testing cheaply.
+
+---
+
+### **Kling 2.1 Master **_~35 credits per second_
+
+**Category:** Premium Cinematic\
+**Audio Support:** Confirm\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Cinema-grade visuals with strong depth and texture.
+
+**Use When:**\
+You want detailed, visually rich final renders.
+
+**Avoid When:**\
+You’re testing ideas.
+
+---
+
+# Balanced Cinematic Models
+
+---
+
+### **Kling O3 Pro **_~24 credits per second_
+
+**Category:** Cinematic Text-to-Video\
+**Audio Support:** Yes\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Balanced cinematic scenes with audio support.
+
+**Use When:**\
+You want good quality without premium pricing.
+
+**Avoid When:**\
+You need maximum realism or budget testing.
+
+---
+
+### **Kling 2.6 Pro **_~20 credits per second_
+
+**Category:** Cinematic Text-to-Video\
+**Audio Support:** Yes\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Fluid motion and cinematic visuals at mid-tier cost.
+
+---
+
+### **Veo 3 Fast / Veo 3.1 Fast **_~20 credits per second_
+
+**Category:** Fast Cinematic\
+**Audio Support:** No\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Quick-turn cinematic visuals.
+
+**Avoid When:**\
+You need maximum fidelity.
+
+---
+
+### **Kling 2.5 Turbo **_~10 credits per second_
+
+**Category:** Budget Cinematic\
+**Audio Support:** Confirm\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Affordable cinematic generation.
+
+---
+
+# Budget & Fast Iteration
+
+---
+
+### **MiniMax Hailuo 2.3 Fast Standard **_~4 credits per second_
+
+**Category:** Budget\
+**Audio Support:** No\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Rapid testing and low-cost generation.
+
+---
+
+### **MiniMax Hailuo 2.3 Standard **_~6 credits per second_
+
+**Category:** Budget\
+**Audio Support:** No\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Everyday social clips with smooth motion.
+
+---
+
+### **Grok Video **_~7 credits per second_
+
+**Category:** Budget\
+**Audio Support:** No\
+**Input Type:** Text-to-video
+
+**Best For:**\
+Quick concept testing.
+
+---
+
+### **Kling V3 Standard **_~9 credits per second_
+
+**Category:** Balanced Cinematic\
+**Audio Support:** No\
+**Input Type:** Image-to-video (start frame only)
+
+**Best For:**\
+Animating a strong starting image into a short clip.
+
+**Use When:**\
+You already have a polished still frame.
+
+**Avoid When:**\
+You need dialogue or extended scene control.
+
+---
+
+# Motion Transfer & Reference Models
+
+---
+
+### **Kling 2.6 Motion Control Pro **_~16 credits per second_
+
+**Category:** Motion Transfer\
+**Audio Support:** No\
+**Input Type:** Reference Video + Image
+
+**Best For:**\
+Copying complex gestures or dance movements.
+
+---
+
+### **Kling 2.6 Motion Control Standard **_~8 credits per second_
+
+**Category:** Motion Transfer\
+**Audio Support:** No\
+**Input Type:** Reference Video + Image
+
+**Best For:**\
+Cost-effective motion copying.
+
+---
+
+### **Kling O3 Reference **_~24 credits per second_
+
+**Category:** Reference Preservation\
+**Audio Support:** Confirm\
+**Input Type:** Reference Video
+
+**Best For:**\
+Preserving camera style and motion from an existing clip.
+
+---
+
+### **Kling O3 Edit / O3 Standard Edit **_18~24 credits per second_
+
+**Category:** Video Editing\
+**Audio Support:** Confirm\
+**Input Type:** Existing Video
+
+**Best For:**\
+Editing videos using natural language instructions.
+
+---
+
+### **Kling O1 **_~20 credits per second_
+
+**Category:** Start-End Frame Animation\
+**Audio Support:** No\
+**Input Type:** Start Frame + End Frame
+
+**Best For:**\
+Animating between two images.
+
+---
+
+### **Seedance 1.5 Pro **_~8 credits per second_
+
+**Category:** Motion + Audio\
+**Audio Support:** Yes\
+**Input Type:** Start/End Frame + Audio
+
+**Best For:**\
+Audio-driven motion between defined frames.
+
+---
+
+# Avatar Alternatives
+
+---
+
+### **Kling AI Avatar v2 Pro **_~16 credits per second_
+
+**Category:** Avatar\
+**Audio Support:** Yes\
+**Input Type:** Image + Audio
+
+**Best For:**\
+Creating avatar videos from still images.
+
+---
+
+### **Kling AI Avatar v2 Standard **_~8 credits per second_
+
+**Category:** Avatar\
+**Audio Support:** Yes\
+**Input Type:** Image + Audio
+
+**Best For:**\
+Budget avatar generation.
+
+---
+
+### **VEED Fabric 1.0 **_~20 credits per second_
+
+**Category:** Avatar\
+**Audio Support:** Yes\
+**Input Type:** Image + Audio
+
+**Best For:**\
+Talking videos with expressive lip-sync.
+
+---
+
+### **Omnihuman 1.5 **_~23 credits per second_
+
+**Category:** Audio-Driven Character\
+**Audio Support:** Yes\
+**Input Type:** Audio
+
+**Best For:**\
+Emotion-driven character performance.
+
+---
+
+# Credit Strategy Guidance
+
+• Start with lower-cost models when testing ideas.\
+• Upgrade to higher-tier models when finalizing.\
+• Use Hedra-native models first for dialogue.\
+• Use Motion models only when copying movement.\
+• Use Premium tiers for maximum realism and narrative consistency.
+
+| Use Case                              | Recommended Model                          |
+| ------------------------------------- | ------------------------------------------ |
+| On-camera dialogue, explainers, songs | Hedra Avatar                               |
+| Cinematic, photoreal B-roll           | Veo 3                                      |
+| Fast prototyping / quick variants     | Hedra Avatar, Veo 3 Fast, or Kling 2.1 Pro |
+| Action / splash / physics             | Hailou-02 Pro                              |
+| Premium polished 1080p social clips   | Kling 2.1 Master                           |
 
 <Note>
   Video AI models evolve rapidly. Each one improves often, so use this guide as directional, not permanent truth — good starting points for choosing the right fit. Always feel free to reach out to the Hedra support team if you need help.
