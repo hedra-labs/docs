@@ -44,71 +44,71 @@
           {
             "group": "Welcome",
             "pages": [
-              "pages/help/getting-started/overview",
-              "pages/help/getting-started/hedra-studio",
-              "pages/help/getting-started/video-models",
-              "pages/help/getting-started/library"
+              "pages/app/getting-started/overview",
+              "pages/app/getting-started/hedra-studio",
+              "pages/app/getting-started/video-models",
+              "pages/app/getting-started/library"
             ]
           },
           {
             "group": "Image",
             "pages": [
-              "pages/help/content-creation/create-image",
-              "pages/help/content-creation/create-element"
+              "pages/app/content-creation/create-image",
+              "pages/app/content-creation/create-element"
             ]
           },
           {
             "group": "Video",
             "pages": [
-              "pages/help/content-creation/create-avatar-video",
-              "pages/help/content-creation/motion-control",
-              "pages/help/content-creation/upscale-video",
-              "pages/help/content-creation/speaker-selection"
+              "pages/app/content-creation/create-avatar-video",
+              "pages/app/content-creation/motion-control",
+              "pages/app/content-creation/upscale-video",
+              "pages/app/content-creation/speaker-selection"
             ]
           },
           {
             "group": "Audio",
             "pages": [
-              "pages/help/content-creation/create-audio",
-              "pages/help/content-creation/voice-cloning"
+              "pages/app/content-creation/create-audio",
+              "pages/app/content-creation/voice-cloning"
             ]
           },
           {
             "group": "Library",
             "pages": [
-              "pages/help/content-creation/download-content",
-              "pages/help/content-creation/delete-content"
+              "pages/app/content-creation/download-content",
+              "pages/app/content-creation/delete-content"
             ]
           },
           {
             "group": "Credits & Billing",
             "pages": [
-              "pages/help/billing/how-credits-work",
-              "pages/help/billing/annual-subscriptions",
-              "pages/help/billing/payment-methods",
-              "pages/help/billing/change-plan",
-              "pages/help/billing/promo-codes",
-              "pages/help/billing/invoices",
-              "pages/help/billing/cancel-subscription"
+              "pages/app/billing/how-credits-work",
+              "pages/app/billing/annual-subscriptions",
+              "pages/app/billing/payment-methods",
+              "pages/app/billing/change-plan",
+              "pages/app/billing/promo-codes",
+              "pages/app/billing/invoices",
+              "pages/app/billing/cancel-subscription"
             ]
           },
           {
             "group": "Account",
             "pages": [
-              "pages/help/account/create-account",
-              "pages/help/account/forgot-password",
-              "pages/help/account/delete-account",
-              "pages/help/account/creator-program"
+              "pages/app/account/create-account",
+              "pages/app/account/forgot-password",
+              "pages/app/account/delete-account",
+              "pages/app/account/creator-program"
             ]
           },
           {
             "group": "Troubleshooting",
             "pages": [
-              "pages/help/troubleshooting/faq",
-              "pages/help/troubleshooting/file-specifications",
-              "pages/help/troubleshooting/video-queue",
-              "pages/help/troubleshooting/missing-video",
-              "pages/help/troubleshooting/console-logs"
+              "pages/app/troubleshooting/faq",
+              "pages/app/troubleshooting/file-specifications",
+              "pages/app/troubleshooting/video-queue",
+              "pages/app/troubleshooting/missing-video",
+              "pages/app/troubleshooting/console-logs"
             ]
           }
         ]
@@ -120,17 +120,17 @@
           {
             "group": "Getting Started",
             "pages": [
-              "pages/getting_started/quickstart"
+              "pages/developer/getting_started/quickstart"
             ]
           },
           {
             "group": "Guides",
             "pages": [
-              "pages/guides/generate-image",
-              "pages/guides/generate-video",
-              "pages/guides/generate-avatar-video",
-              "pages/guides/generate-audio",
-              "pages/guides/automate-with-n8n"
+              "pages/developer/guides/generate-image",
+              "pages/developer/guides/generate-video",
+              "pages/developer/guides/generate-avatar-video",
+              "pages/developer/guides/generate-audio",
+              "pages/developer/guides/automate-with-n8n"
             ]
           },
           {
@@ -151,10 +151,10 @@
           {
             "group": "Live Avatar",
             "pages": [
-              "pages/realtime-avatar/about",
-              "pages/realtime-avatar/get-started",
-              "pages/realtime-avatar/quickstart",
-              "pages/realtime-avatar/expert"
+              "pages/developer/realtime-avatar/about",
+              "pages/developer/realtime-avatar/get-started",
+              "pages/developer/realtime-avatar/quickstart",
+              "pages/developer/realtime-avatar/expert"
             ]
           }
         ]
@@ -165,7 +165,10 @@
   "contextual": {
     "options": [
       "copy",
-      "view"
+      "view",
+      "claude",
+      "perplexity",
+      "chatgpt"
     ]
   },
   "footer": {
