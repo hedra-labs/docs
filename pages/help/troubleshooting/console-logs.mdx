@@ -1,0 +1,93 @@
+---
+title: "Gathering Console Logs and HAR Files"
+description: "How to collect browser console logs and HAR files to help troubleshoot issues."
+---
+
+Console logs and HAR files help the Hedra team see errors we can't reproduce and diagnose problems quickly.
+
+- **Console Logs** — A record of what your browser is reporting behind the scenes (errors, warnings, etc.)
+- **HAR File** — A timeline of all the network requests your browser made while the issue happened
+
+## Before You Start
+
+- Close other tabs that aren't needed to reduce noise
+- Reproduce the problem only after you've opened the tools below so we capture everything
+- These files only show what happened in the tab you're recording
+
+## Collecting Console Logs
+
+<AccordionGroup>
+  <Accordion title="Google Chrome & Microsoft Edge">
+    1. Open the page where the problem occurs
+    2. Press **Cmd + Option + J** (Mac) or **Ctrl + Shift + J** (Windows/Linux) to open Developer Tools directly to the Console tab
+    3. In the Console, click the gear icon and ensure **"Preserve log"** is checked
+    4. Reproduce the issue — watch for red error messages or warnings
+    5. Right-click inside the console output and choose **"Save as..."**
+    6. Save the file as `console-log.txt`
+    7. Attach and send that file in your support ticket
+
+    *If you can't see "Save as...", select all text (Cmd/Ctrl + A), then copy and paste it into a text file.*
+  </Accordion>
+  <Accordion title="Firefox">
+    1. Open the problem page
+    2. Press **Cmd + Option + K** (Mac) or **Ctrl + Shift + K** (Windows/Linux) to open the Web Console
+    3. Click the Settings icon, check **"Persist Logs"**
+    4. Reproduce the issue
+    5. Click the hamburger menu in the console (upper right) and select **Export visible messages to file...**
+    6. Save as `console-log.txt` and send it to us
+  </Accordion>
+  <Accordion title="Safari">
+    1. Go to **Safari > Settings (or Preferences) > Advanced**
+    2. Check **"Show Develop menu in menu bar"**
+    3. Open the problem page
+    4. Press **Cmd + Option + C** to open the Console
+    5. Reproduce the issue
+    6. Click inside the console, press **Cmd + A** to select all, then **Cmd + C** to copy
+    7. Paste into a text file and save as `console-log.txt`
+  </Accordion>
+</AccordionGroup>
+
+## Capturing a HAR File
+
+<AccordionGroup>
+  <Accordion title="Google Chrome & Microsoft Edge">
+    1. Open the page where the problem occurs
+    2. Press **Cmd + Option + I** (Mac) or **Ctrl + Shift + I** (Windows/Linux) to open Developer Tools
+    3. Click the **Network** tab
+    4. Make sure **"Preserve log"** is checked
+    5. Clear any existing entries (click the clear icon)
+    6. Reproduce the issue completely
+    7. Right-click anywhere in the list and select **"Save all as HAR with content"**
+    8. Save the file as `network-log.har`
+  </Accordion>
+  <Accordion title="Firefox">
+    1. Open the problem page
+    2. Press **Cmd + Option + E** (Mac) or **Ctrl + Shift + E** (Windows/Linux) to open the Network Monitor
+    3. Ensure **"Persist Logs"** is enabled in settings
+    4. Clear the log if needed
+    5. Reproduce the issue
+    6. Click the gear icon and select **Save All As HAR**
+    7. Save the file as `network-log.har`
+  </Accordion>
+  <Accordion title="Safari">
+    1. Make sure the Develop menu is enabled (see Safari steps above)
+    2. Press **Cmd + Option + I** to open Web Inspector
+    3. Go to the **Network** tab
+    4. Reload or reproduce the issue
+    5. Click the **Export HAR** icon (down arrow) in the Network tab toolbar
+    6. Save the file as `network-log.har`
+  </Accordion>
+</AccordionGroup>
+
+## Sending the Files
+
+Attach the required files (`console-log.txt` and/or `network-log.har`) to your support ticket with Hedra. Include a quick note describing what you were doing when the issue happened.
+
+<Warning>
+  HAR files can include request URLs and form data you entered on the captured page. If there's anything sensitive, let the support team know — they can guide you on redacting it or send a secure upload link.
+</Warning>
+
+## Quick Reference
+
+- **Console Logs:** Open dev tools > Console > Reproduce > Save/Copy > Send
+- **HAR File:** Open dev tools > Network > Preserve log > Reproduce > Save as HAR > Send

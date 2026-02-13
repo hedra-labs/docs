@@ -20,13 +20,99 @@
     "global": {
       "anchors": [
         {
+          "anchor": "Pricing",
+          "href": "https://hedra.com/app/subscription",
+          "icon": "credit-card"
+        },
+        {
           "anchor": "Community",
           "href": "https://discord.com/invite/KXeUUa6cXD",
           "icon": "discord"
+        },
+        {
+          "anchor": "Support",
+          "href": "https://hedra.com/support",
+          "icon": "headset"
         }
       ]
     },
     "tabs": [
+      {
+        "tab": "Hedra Web App",
+        "icon": "browser",
+        "groups": [
+          {
+            "group": "Welcome",
+            "pages": [
+              "pages/help/getting-started/overview",
+              "pages/help/getting-started/hedra-studio",
+              "pages/help/getting-started/video-models",
+              "pages/help/getting-started/library"
+            ]
+          },
+          {
+            "group": "Image",
+            "pages": [
+              "pages/help/content-creation/create-image",
+              "pages/help/content-creation/create-element"
+            ]
+          },
+          {
+            "group": "Video",
+            "pages": [
+              "pages/help/content-creation/create-avatar-video",
+              "pages/help/content-creation/motion-control",
+              "pages/help/content-creation/upscale-video",
+              "pages/help/content-creation/speaker-selection"
+            ]
+          },
+          {
+            "group": "Audio",
+            "pages": [
+              "pages/help/content-creation/create-audio",
+              "pages/help/content-creation/voice-cloning"
+            ]
+          },
+          {
+            "group": "Library",
+            "pages": [
+              "pages/help/content-creation/download-content",
+              "pages/help/content-creation/delete-content"
+            ]
+          },
+          {
+            "group": "Credits & Billing",
+            "pages": [
+              "pages/help/billing/how-credits-work",
+              "pages/help/billing/annual-subscriptions",
+              "pages/help/billing/payment-methods",
+              "pages/help/billing/change-plan",
+              "pages/help/billing/promo-codes",
+              "pages/help/billing/invoices",
+              "pages/help/billing/cancel-subscription"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "pages/help/account/create-account",
+              "pages/help/account/forgot-password",
+              "pages/help/account/delete-account",
+              "pages/help/account/creator-program"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "pages/help/troubleshooting/faq",
+              "pages/help/troubleshooting/file-specifications",
+              "pages/help/troubleshooting/video-queue",
+              "pages/help/troubleshooting/missing-video",
+              "pages/help/troubleshooting/console-logs"
+            ]
+          }
+        ]
+      },
       {
         "tab": "API Platform",
         "icon": "code",
@@ -75,23 +161,7 @@
       }
     ]
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Pricing",
-        "href": "https://hedra.com/plans"
-      },
-      {
-        "label": "Support",
-        "href": "https://hedra.com/support"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://hedra.com/api-profile"
-    }
-  },
+  "navbar": {},
   "contextual": {
     "options": [
       "copy",
