@@ -21,23 +21,23 @@
       "anchors": [
         {
           "anchor": "Pricing",
-          "href": "https://hedra.com/app/subscription",
-          "icon": "credit-card"
+          "icon": "credit-card",
+          "href": "https://hedra.com/app/subscription"
         },
         {
           "anchor": "Community",
-          "href": "https://discord.com/invite/KXeUUa6cXD",
-          "icon": "discord"
+          "icon": "discord",
+          "href": "https://discord.com/invite/KXeUUa6cXD"
         },
         {
           "anchor": "Support",
-          "href": "https://hedra.com/support",
-          "icon": "headset"
+          "icon": "headset",
+          "href": "https://hedra.com/support"
         },
         {
           "anchor": "Video Tutorials",
-          "href": "/pages/app/getting-started/video-tutorials",
-          "icon": "circle-play"
+          "icon": "circle-play",
+          "href": "/pages/app/getting-started/video-tutorials"
         }
       ]
     },
@@ -65,6 +65,7 @@
           {
             "group": "Video",
             "pages": [
+              "pages/app/content-creation/using-live-avatar",
               "pages/app/content-creation/create-avatar-video",
               "pages/app/content-creation/motion-control",
               "pages/app/content-creation/upscale-video",
