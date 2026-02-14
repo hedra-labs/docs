@@ -86,6 +86,12 @@
             ]
           },
           {
+            "group": "Workflow",
+            "pages": [
+              "creating-music-videos"
+            ]
+          },
+          {
             "group": "Credits & Billing",
             "pages": [
               "pages/app/billing/how-credits-work",
