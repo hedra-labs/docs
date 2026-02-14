@@ -65,7 +65,6 @@
           {
             "group": "Video",
             "pages": [
-              "pages/app/content-creation/using-live-avatar",
               "pages/app/content-creation/create-avatar-video",
               "pages/app/content-creation/motion-control",
               "pages/app/content-creation/upscale-video",

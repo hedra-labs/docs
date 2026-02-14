@@ -13,14 +13,14 @@ Avatar videos are driven by audio — the character in the image will lip-sync a
 
 | Model | ID | Best for |
 |-------|-----|----------|
-| **Hedra Avatar** | `26f0fc66-152b-40ab-abed-76c43df99bc8` | Talking-head videos, lip-sync, up to 200s |
+| **Hedra Avatar** | `26f0fc66-152b-40ab-abed-76c43df99bc8` | Talking-head videos, lip-sync, up to 10 minutes |
 | **Hedra Omnia** | `ab372b84-432f-44f5-bacc-c2542465f712` | Motion avatar videos with full-body movement, up to 8s |
 
 Both models require an image and audio input.
 
 ## Step 1: Upload your audio
 
-The audio determines the video length. For a 5-minute video, provide ~5 minutes of audio.
+The audio determines the video length. For a 10-minute video, provide ~10 minutes of audio.
 
 ```bash
 # Create the asset record
@@ -28,14 +28,14 @@ curl -X POST https://api.hedra.com/web-app/public/assets \
   -H "Content-Type: application/json" \
   -H "X-API-Key: $HEDRA_API_KEY" \
   -d '{
-    "name": "five-minute-audio.mp3",
+    "name": "ten-minute-audio.mp3",
     "type": "audio"
   }'
 
 # Upload the file
 curl -X POST https://api.hedra.com/web-app/public/assets/{audio_asset_id}/upload \
   -H "X-API-Key: $HEDRA_API_KEY" \
-  -F "file=@/path/to/five-minute-audio.mp3"
+  -F "file=@/path/to/ten-minute-audio.mp3"
 ```
 
 ## Step 2: Upload your portrait image
@@ -71,13 +71,13 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
       "text_prompt": "A person speaking to the camera",
       "aspect_ratio": "9:16",
       "resolution": "720p",
-      "duration_ms": 300000
+      "duration_ms": 600000
     }
   }'
 ```
 
 <Note>
-  Set `duration_ms` to `300000` for 5 minutes (300 seconds = 300,000 ms). The video duration will match your audio length.
+  Set `duration_ms` to `600000` for 10 minutes (600 seconds = 600,000 ms). The video duration will match your audio length.
 </Note>
 
 ### Using Hedra Omnia
