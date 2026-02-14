@@ -104,7 +104,16 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 
 ### Inline audio generation
 
-Instead of uploading audio separately, you can generate speech inline by passing `audio_generation` instead of `audio_id`:
+Instead of uploading audio separately, you can generate speech inline by passing `audio_generation` instead of `audio_id`.
+
+To find a `voice_id`, list the available voices:
+
+```bash
+curl https://api.hedra.com/web-app/public/voices \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```
+
+See the [Generate Audio](/developer/guides/generate-audio) guide for the full list of voice options, including voice cloning.
 
 ```bash
 curl -X POST https://api.hedra.com/web-app/public/generations \
