@@ -56,33 +56,39 @@
             ]
           },
           {
-            "group": "Workflow",
+            "group": "Create Content",
             "pages": [
               "how-to-create-ugc-ads",
               "creating-music-videos"
             ]
           },
           {
-            "group": "Image",
+            "group": "Tools",
+            "icon": "toolbox",
             "pages": [
-              "pages/app/content-creation/create-image",
-              "pages/app/content-creation/create-element"
-            ]
-          },
-          {
-            "group": "Video",
-            "pages": [
-              "pages/app/content-creation/create-avatar-video",
-              "pages/app/content-creation/motion-control",
-              "pages/app/content-creation/upscale-video",
-              "pages/app/content-creation/speaker-selection"
-            ]
-          },
-          {
-            "group": "Audio",
-            "pages": [
-              "pages/app/content-creation/create-audio",
-              "pages/app/content-creation/voice-cloning"
+              {
+                "group": "Image",
+                "pages": [
+                  "pages/app/content-creation/create-image",
+                  "pages/app/content-creation/create-element"
+                ]
+              },
+              {
+                "group": "Video",
+                "pages": [
+                  "pages/app/content-creation/create-avatar-video",
+                  "pages/app/content-creation/motion-control",
+                  "pages/app/content-creation/upscale-video",
+                  "pages/app/content-creation/speaker-selection"
+                ]
+              },
+              {
+                "group": "Audio",
+                "pages": [
+                  "pages/app/content-creation/create-audio",
+                  "pages/app/content-creation/voice-cloning"
+                ]
+              }
             ]
           },
           {
