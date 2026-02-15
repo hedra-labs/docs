@@ -52,8 +52,7 @@
             "pages": [
               "pages/app/getting-started/overview",
               "pages/app/getting-started/hedra-studio",
-              "pages/app/getting-started/video-models",
-              "pages/app/getting-started/library"
+              "pages/app/getting-started/video-models"
             ]
           },
           {
@@ -61,7 +60,8 @@
             "icon": "photo-film-music",
             "pages": [
               "how-to-create-ugc-ads",
-              "creating-music-videos"
+              "creating-music-videos",
+              "pages/app/content-creation/create-avatar-video"
             ]
           },
           {
@@ -80,9 +80,8 @@
                 "group": "Video",
                 "icon": "video",
                 "pages": [
-                  "pages/app/content-creation/create-avatar-video",
-                  "pages/app/content-creation/motion-control",
                   "pages/app/content-creation/upscale-video",
+                  "pages/app/content-creation/motion-control",
                   "pages/app/content-creation/speaker-selection"
                 ]
               },
@@ -100,6 +99,7 @@
             "group": "Library",
             "icon": "book",
             "pages": [
+              "pages/app/getting-started/library",
               "pages/app/content-creation/delete-content"
             ]
           },
