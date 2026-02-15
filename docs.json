@@ -55,7 +55,7 @@
           },
           {
             "group": "Workflows",
-            "icon": "photo-film-music",
+            "icon": "stairs",
             "pages": [
               "pages/app/content-creation/how-to-create-ugc-ads",
               "pages/app/content-creation/create-avatar-video",
