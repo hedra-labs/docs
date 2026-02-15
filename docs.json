@@ -95,7 +95,7 @@
           },
           {
             "group": "Library",
-            "icon": "book",
+            "icon": "folder",
             "pages": [
               "pages/app/content-creation/delete-content"
             ]
