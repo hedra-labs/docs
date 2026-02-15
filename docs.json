@@ -47,7 +47,7 @@
         "icon": "browser",
         "groups": [
           {
-            "group": "Welcome to Hedra",
+            "group": "Welcome",
             "icon": "house-chimney-blank",
             "pages": [
               "pages/app/getting-started/overview",
@@ -56,10 +56,9 @@
             ]
           },
           {
-            "group": "Create Content",
+            "group": "Workflows",
             "icon": "photo-film-music",
             "pages": [
-              "how-to-create-ugc-ads",
               "creating-music-videos",
               "pages/app/content-creation/create-avatar-video"
             ]
@@ -89,8 +88,7 @@
                 "group": "Audio",
                 "icon": "waveform-lines",
                 "pages": [
-                  "pages/app/content-creation/create-audio",
-                  "pages/app/content-creation/voice-cloning"
+                  "pages/app/content-creation/create-audio"
                 ]
               }
             ]
@@ -99,7 +97,6 @@
             "group": "Library",
             "icon": "book",
             "pages": [
-              "pages/app/getting-started/library",
               "pages/app/content-creation/delete-content"
             ]
           },
