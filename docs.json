@@ -50,9 +50,7 @@
             "group": "Welcome",
             "icon": "house-chimney-blank",
             "pages": [
-              "pages/app/getting-started/overview",
-              "pages/app/getting-started/hedra-studio",
-              "pages/app/getting-started/video-models"
+              "pages/app/getting-started/overview"
             ]
           },
           {
@@ -79,6 +77,7 @@
                 "group": "Video",
                 "icon": "video",
                 "pages": [
+                  "pages/app/getting-started/video-models",
                   "pages/app/content-creation/upscale-video",
                   "pages/app/content-creation/motion-control",
                   "pages/app/content-creation/speaker-selection"
