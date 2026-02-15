@@ -93,6 +93,7 @@
           },
           {
             "group": "Library",
+            "icon": "book",
             "pages": [
               "pages/app/content-creation/download-content",
               "pages/app/content-creation/delete-content"
