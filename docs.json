@@ -57,7 +57,8 @@
             "group": "Workflows",
             "icon": "photo-film-music",
             "pages": [
-              "pages/app/content-creation/create-avatar-video"
+              "pages/app/content-creation/create-avatar-video",
+              "pages/app/content-creation/creating-music-videos"
             ]
           },
           {
