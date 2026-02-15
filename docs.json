@@ -48,6 +48,7 @@
         "groups": [
           {
             "group": "Welcome",
+            "icon": "house-chimney-blank",
             "pages": [
               "pages/app/getting-started/overview",
               "pages/app/getting-started/hedra-studio",
@@ -57,6 +58,7 @@
           },
           {
             "group": "Create Content",
+            "icon": "photo-film-music",
             "pages": [
               "how-to-create-ugc-ads",
               "creating-music-videos"
@@ -68,6 +70,7 @@
             "pages": [
               {
                 "group": "Image",
+                "icon": "image",
                 "pages": [
                   "pages/app/content-creation/create-image",
                   "pages/app/content-creation/create-element"
@@ -75,6 +78,7 @@
               },
               {
                 "group": "Video",
+                "icon": "video",
                 "pages": [
                   "pages/app/content-creation/create-avatar-video",
                   "pages/app/content-creation/motion-control",
@@ -84,6 +88,7 @@
               },
               {
                 "group": "Audio",
+                "icon": "waveform-lines",
                 "pages": [
                   "pages/app/content-creation/create-audio",
                   "pages/app/content-creation/voice-cloning"
