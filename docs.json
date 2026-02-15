@@ -47,7 +47,7 @@
         "icon": "browser",
         "groups": [
           {
-            "group": "Welcome",
+            "group": "Welcome to Hedra",
             "icon": "house-chimney-blank",
             "pages": [
               "pages/app/getting-started/overview",
