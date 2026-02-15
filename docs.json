@@ -58,7 +58,8 @@
             "icon": "photo-film-music",
             "pages": [
               "pages/app/content-creation/create-avatar-video",
-              "pages/app/content-creation/creating-music-videos"
+              "pages/app/content-creation/creating-music-videos",
+              "pages/app/content-creation/motion-control"
             ]
           },
           {
@@ -79,7 +80,6 @@
                 "pages": [
                   "pages/app/getting-started/video-models",
                   "pages/app/content-creation/upscale-video",
-                  "pages/app/content-creation/motion-control",
                   "pages/app/content-creation/speaker-selection"
                 ]
               },
