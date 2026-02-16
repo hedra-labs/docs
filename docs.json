@@ -95,7 +95,7 @@
                 "group": "Editor",
                 "icon": "photo-film-music",
                 "pages": [
-                  "editing-your-videos"
+                  "pages/app/content-creation/editing-your-videos"
                 ]
               }
             ]
