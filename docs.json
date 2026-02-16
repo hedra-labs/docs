@@ -94,7 +94,9 @@
               {
                 "group": "Editor",
                 "icon": "photo-film-music",
-                "pages": []
+                "pages": [
+                  "editing-your-videos"
+                ]
               }
             ]
           },
