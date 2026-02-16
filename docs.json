@@ -68,11 +68,6 @@
             "icon": "toolbox",
             "pages": [
               {
-                "group": "Editor",
-                "icon": "photo-film-music",
-                "pages": []
-              },
-              {
                 "group": "Image",
                 "icon": "image",
                 "pages": [
@@ -95,6 +90,11 @@
                 "pages": [
                   "pages/app/content-creation/create-audio"
                 ]
+              },
+              {
+                "group": "Editor",
+                "icon": "photo-film-music",
+                "pages": []
               }
             ]
           },
