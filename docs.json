@@ -57,7 +57,7 @@
             "group": "Workflows",
             "icon": "stairs",
             "pages": [
-              "pages/app/content-creation/create-ugc-avatar-videos",
+              "pages/app/content-creation/create-avatar-video",
               "pages/app/content-creation/how-to-create-ugc-ads",
               "pages/app/content-creation/creating-music-videos",
               "pages/app/content-creation/motion-control"
