@@ -66,6 +66,11 @@
             ]
           },
           {
+            "group": "Learn",
+            "icon": "book",
+            "pages": []
+          },
+          {
             "group": "Tools",
             "icon": "toolbox",
             "pages": [
