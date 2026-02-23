@@ -104,14 +104,14 @@
                 "pages": [
                   "edit-videos-in-composer"
                 ]
+              },
+              {
+                "group": "Library",
+                "icon": "folder",
+                "pages": [
+                  "pages/app/content-creation/delete-content"
+                ]
               }
-            ]
-          },
-          {
-            "group": "Library",
-            "icon": "folder",
-            "pages": [
-              "pages/app/content-creation/delete-content"
             ]
           },
           {
