@@ -117,13 +117,11 @@
           {
             "group": "Credits & Billing",
             "pages": [
-              "pages/app/billing/how-credits-work",
               "pages/app/billing/annual-subscriptions",
               "pages/app/billing/payment-methods",
               "pages/app/billing/change-plan",
-              "pages/app/billing/promo-codes",
-              "pages/app/billing/invoices",
-              "pages/app/billing/cancel-subscription"
+              "pages/app/billing/cancel-subscription",
+              "pages/app/billing/how-credits-work"
             ]
           },
           {
