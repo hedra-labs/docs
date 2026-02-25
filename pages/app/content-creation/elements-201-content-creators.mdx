@@ -37,6 +37,8 @@ Elements provide the structure behind your results. The more intentionally they 
 
 We’ll examine how Elements are typically designed — and how refining their structure improves stability when layering multiple Elements together.
 
+### How Elements Are Commonly Designed
+
 <Tabs>
   <Tab title="CHARACTER">
     <Frame>
@@ -64,3 +66,38 @@ We’ll examine how Elements are typically designed — and how refining their s
     </Frame>
   </Tab>
 </Tabs>
+
+Most Elements are created as complete “looks.”
+
+A Character might include:
+
+- Face
+- Hair
+- Clothing
+- Pose
+- Lighting
+- Background
+
+An Outfit might include:
+
+- A full person wearing the clothes
+- Styling
+- Accessories
+- Environment
+
+A Style Element may include:
+
+- Subject
+- Lighting
+- Color grading
+- Composition
+
+On the surface, this makes sense. It looks polished and appealing.
+
+But when multiple Elements each contain several variables, they begin to overlap. The system must interpret which parts to prioritize.
+
+That’s where variation begins.
+
+This isn’t a flaw — it’s simply how generative systems interpret layered visual inputs.
+
+The more variables bundled into a single Element, the more interpretation is required when combining them.
