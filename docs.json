@@ -68,7 +68,9 @@
           {
             "group": "Learn",
             "icon": "book",
-            "pages": []
+            "pages": [
+              "elements-101-beginners-guide"
+            ]
           },
           {
             "group": "Tools",
