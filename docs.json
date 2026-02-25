@@ -69,7 +69,8 @@
             "group": "Learn",
             "icon": "book",
             "pages": [
-              "pages/app/content-creation/elements-101-beginners-guide"
+              "pages/app/content-creation/elements-101-beginners-guide",
+              "pages/app/content-creation/elements-201-content-creators"
             ]
           },
           {
