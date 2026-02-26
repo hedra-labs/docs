@@ -194,8 +194,26 @@ Drift isn’t random. It’s a signal that something wasn’t fully constrained.
 
 ### Reference Limits
 
-An Element can include up to 10 images to help anchor identity. However, when combining multiple Elements, the total number of reference images may approach the model’s limit.
+Each Element can include up to 10 images to help anchor identity. When combining multiple Elements, the total number of reference images counts toward the model’s overall limit.
 
-For example, Nano Banana Pro supports up to 14 reference images in a single generation. Exceeding that limit can reduce stability or prevent generation altogether.
+For example, Nano Banana Pro supports up to 14 reference images in a single generation. If your combined Elements exceed that limit, you may encounter instability or failed generations.
 
-As you design more structured Elements, keep reference limits in mind. Clear, focused anchors are more effective than large, overloaded sets.
+But this isn’t just a technical constraint — it’s a design consideration.
+
+Well-designed Elements don’t rely on large numbers of reference images. Clear, focused anchors often outperform overloaded sets. When each Element is intentional and modular, you need fewer references to achieve stable results.
+
+Design clarity reduces dependency on volume.
+
+### Strong Anchors, Simpler Prompts
+
+A strong Element reduces the amount of prompting required.
+
+When your anchor is clear and focused, the system has less ambiguity to resolve. Your prompts can stay short and direct.
+
+When your anchor is weak or overloaded, you often compensate by adding more instructions — reinforcing identity, correcting details, or clarifying intent.
+
+As a general rule:
+
+**The stronger the anchor, the simpler the prompt.**
+
+Good Element design reduces the need for complex prompt engineering.
