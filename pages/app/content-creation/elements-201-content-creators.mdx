@@ -194,21 +194,32 @@ Drift isn’t random. It’s a signal that something wasn’t fully constrained.
 
 ### Reference Limits
 
-Each Element can include up to 10 images to help anchor identity. When combining multiple Elements, the total number of reference images counts toward the model’s overall limit.
+Modern image models allow multiple reference images in a single generation. These references help anchor identity and objects, but they are not unlimited.
 
-For example, Nano Banana Pro supports up to 14 reference images in a single image generation. Exceeding that limit may reduce stability or prevent generation.
+For example, as of this writing:
 
-But this isn’t just a technical constraint — it’s a design consideration.
+- **Gemini 3.1 Flash (Nano Banana 2)** supports up to 14 total references:
+  - 4 character references
+  - 10 object references
+- **Gemini 3 Pro (Nano Banana Pro)** supports up to 11 total references:
+  - 5 character references
+  - 6 object references
 
-Well-designed Elements don’t rely on large numbers of references. Clear, focused anchors often outperform overloaded sets. When each Element is intentional and modular, fewer references are needed to achieve stable results.
+These categories matter. Character references are optimized for identity consistency, while object references support items like outfits, props, or kits.
 
-Design clarity reduces dependency on volume.
+However, the number of references is not the primary source of control.
+
+Adding more references does not automatically increase stability. When too many images compete within a generation, the system must reconcile overlapping signals.
+
+Well-designed Elements rely on clarity, not quantity. Focused anchors often outperform overloaded sets.
+
+Clear structure reduces dependency on volume.
 
 ### Strong Anchors, Simpler Prompts
 
-A strong Element reduces the amount of prompting required.
+A strong Element also reduces the amount of prompting required.
 
-When your anchor is clear and focused, the system has less ambiguity to resolve. Prompts can remain short and direct.
+When it's clear and focused, the system has less ambiguity to resolve. Prompts can remain short and direct.
 
 When an anchor is weak or overloaded, you compensate by adding more instructions — reinforcing identity, correcting details, or clarifying intent.
 
@@ -277,6 +288,21 @@ The back view defines hair volume, posture, and body mass distribution. This hel
 
 **4. Multiple Angles Reduce Guesswork**\
 When only one angle is provided, the system must infer missing geometry. By providing front, side, and back references, fewer assumptions are required — and identity remains more stable.
+
+### Why This Matters
+
+Strong anchors don’t restrict creativity. They protect identity.
+
+When identity is clearly defined, you can confidently:
+
+- Change outfits
+- Adjust makeup
+- Modify lighting
+- Shift camera angles
+- Introduce props
+- Build variations
+
+The character remains recognizable because the foundational structure is constrained.
 
 ### Makeup Design as Style Elements
 
