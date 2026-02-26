@@ -70,7 +70,9 @@
             "icon": "book",
             "pages": [
               "pages/app/content-creation/elements-101-beginners-guide",
-              "pages/app/content-creation/elements-201-content-creators"
+              "pages/app/content-creation/elements-201-content-creators",
+              "pages/app/content-creation/elements-301-production-workflows",
+              "pages/app/content-creation/elements-401-world-builders"
             ]
           },
           {
