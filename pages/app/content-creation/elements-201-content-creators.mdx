@@ -220,12 +220,10 @@ Good Element design reduces the need for complex prompt engineering.
 
 ### Designing a Strong Character Element
 
-A strong Character Element reduces variation across poses, angles, and scenes.
-
 When building one, focus on clarity and signal strength.
 
 **1. Choose a clear anchor image**\
-Use an image where the face and defining features are easy to see. Avoid distant shots when identity matters.
+Use an image where the face and defining features are easy to see. Avoid using makeup. Keep facial expressions neutral. Full body shots should be coupled with a closeup.
 
 **2. Avoid unnecessary variables**\
 Busy backgrounds, extreme lighting, or strong poses introduce extra signal that competes with identity.
@@ -238,6 +236,47 @@ Your Character Element should define identity — not outfit, environment, or mo
 
 The goal is not perfection.\
 The goal is reducing guesswork.
+
+<Columns cols={3}>
+  <Column>
+    <Frame>
+      ![Model Anchor 2](/images/model-anchor-2.png)
+    </Frame>
+  </Column>
+  <Column>
+    <Frame>
+      ![Model Anchor 1](/images/model-anchor-1.png)
+    </Frame>
+  </Column>
+  <Column>
+    <Frame>
+      ![Model Anchor 3](/images/model-anchor-3.png)
+    </Frame>
+  </Column>
+</Columns>
+
+## What Makes This a Strong Character Element?
+
+This Character includes:
+
+- A front view
+- A side profile
+- A back view
+- A close facial crop
+
+Together, these images define the character across multiple dimensions — not just appearance, but structure.
+
+**1. Facial Detail Is Clearly Defined**\
+The close-up image anchors eye shape, nose structure, lip form, skin tone, and hairline. This reduces identity variation when generating tighter shots or different camera angles.
+
+**2. Body Proportions Are Locked In**\
+Full-body front and side views define height, limb length, shoulder width, torso depth, and silhouette. This prevents subtle reshaping when outfits or poses change.
+
+**3. Silhouette and Mass Are Established**\
+The back view defines hair volume, posture, and body mass distribution. This helps maintain consistency across movement and styling changes.
+
+**4. Multiple Angles Reduce Guesswork**\
+When only one angle is provided, the system must infer missing geometry. By providing front, side, and back references, fewer assumptions are required — and identity remains more stable.
 
 ### Makeup Design as Style Elements
 
