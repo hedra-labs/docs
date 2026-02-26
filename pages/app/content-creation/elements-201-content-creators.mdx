@@ -168,7 +168,7 @@ But as creative workflows mature — and as compositional tools improve — the 
 
 That shift — from monolithic images to modular design — is where greater control and flexability begins.
 
-### Creating a Consistent Character
+## Creating a Consistent Character
 
 When a character doesn’t look the way you expect, start by reviewing the images that define your Element(s).
 
@@ -180,8 +180,14 @@ When a character doesn’t look the way you expect, start by reviewing the image
   ![Character Drift](/images/character-drift.png)
 </Frame>
 
-In the example above, a single full-body image was used to define the Character Element. When generating close-up views, the system had limited facial detail to reference.
+### Drift
 
-Because the face occupied only a small portion of the original image, the model had to interpret missing information when producing tighter angles. This can lead to variation in identity across outputs.
+Drift happens when an output deviates from your intended result.
 
-The stronger and clearer your anchor image, the more stable your character will remain across different views.
+In the example above, a single full-body image was used as the Character Element. When generating close-up views, the face occupied only a small portion of the original anchor.
+
+With limited detail to reference, the system had to interpret missing information. That interpretation can produce variation — or drift.
+
+The clearer and more defined your Element, the less room there is for deviation.
+
+Drift isn’t random. It’s a signal that something wasn’t fully constrained.
