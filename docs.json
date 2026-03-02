@@ -131,6 +131,7 @@
           {
             "group": "Credits & Billing",
             "pages": [
+              "pages/app/billing/generation-history",
               "pages/app/billing/annual-subscriptions",
               "pages/app/billing/payment-methods",
               "pages/app/billing/change-plan",
@@ -141,7 +142,6 @@
           {
             "group": "Account",
             "pages": [
-              "pages/app/account/create-account",
               "pages/app/account/forgot-password",
               "pages/app/account/delete-account",
               "pages/app/account/creator-program"
@@ -224,5 +224,20 @@
       "linkedin": "https://linkedin.com/company/hedra-labs",
       "discord": "https://discord.com/invite/KXeUUa6cXD"
     }
+  },
+  "background": {
+    "color": {
+      "light": "#F0F0F0",
+      "dark": "#0f0f0f"
+    }
+  },
+  "appearance": {
+    "default": "system"
+  },
+  "seo": {
+    "indexing": "all"
+  },
+  "icons": {
+    "library": "tabler"
   }
 }
