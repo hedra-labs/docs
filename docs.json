@@ -11,7 +11,7 @@
   "logo": {
     "light": "/assets/logo/light.svg",
     "dark": "/assets/logo/dark.svg",
-    "href": "https://hedra.com"
+    "href": "https://www.hedra.com"
   },
   "styling": {
     "eyebrows": "breadcrumbs"
@@ -22,7 +22,7 @@
         {
           "anchor": "Pricing",
           "icon": "credit-card",
-          "href": "https://hedra.com/app/subscription"
+          "href": "https://www.hedra.com/pricing"
         },
         {
           "anchor": "Community",
@@ -32,7 +32,7 @@
         {
           "anchor": "Support",
           "icon": "headset",
-          "href": "https://hedra.com/support"
+          "href": "https://www.hedra.com/support"
         },
         {
           "anchor": "Video Tutorials",
@@ -116,7 +116,7 @@
                 "group": "Editor",
                 "icon": "photo-film-music",
                 "pages": [
-                  "edit-videos-in-composer"
+                  "pages/app/content-creation/edit-videos-in-composer"
                 ]
               },
               {
@@ -235,7 +235,10 @@
     "default": "system"
   },
   "seo": {
-    "indexing": "all"
+    "indexing": "all",
+    "metatags": {
+      "canonical": "https://www.hedra.com/docs"
+    }
   },
   "icons": {
     "library": "tabler"
