@@ -17,6 +17,13 @@
           "Public"
         ],
         "summary": "List Models",
+        "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models.",
+        "x-mint": {
+          "metadata": {
+            "title": "List Available AI Models",
+            "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models."
+          }
+        },
         "operationId": "list_models_public_models_get",
         "security": [
           {
@@ -78,6 +85,13 @@
           "Public"
         ],
         "summary": "List Voices",
+        "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos.",
+        "x-mint": {
+          "metadata": {
+            "title": "List Available Voices",
+            "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos."
+          }
+        },
         "operationId": "list_voices_public_voices_get",
         "responses": {
           "200": {
@@ -108,6 +122,13 @@
           "Public"
         ],
         "summary": "List Assets",
+        "description": "Retrieve your uploaded and generated assets, with optional filtering by asset type or IDs.",
+        "x-mint": {
+          "metadata": {
+            "title": "List Uploaded & Generated Assets",
+            "description": "Retrieve your uploaded and generated assets, with optional filtering by asset type or IDs."
+          }
+        },
         "operationId": "list_assets_public_assets_get",
         "security": [
           {
@@ -172,6 +193,7 @@
           "Public"
         ],
         "summary": "Create Asset",
+        "description": "Create a new asset record for an image, audio, or voice file to use in generations.",
         "operationId": "create_asset_public_assets_post",
         "security": [
           {
@@ -218,6 +240,7 @@
           "Public"
         ],
         "summary": "Upload Asset",
+        "description": "Upload the file contents for a previously created asset.",
         "operationId": "upload_asset_public_assets__id__upload_post",
         "security": [
           {
@@ -276,6 +299,13 @@
           "Public"
         ],
         "summary": "List ",
+        "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt.",
+        "x-mint": {
+          "metadata": {
+            "title": "List Your Generations",
+            "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt."
+          }
+        },
         "operationId": "list__public_generations_get",
         "security": [
           {
@@ -426,6 +456,7 @@
           "Public"
         ],
         "summary": "Generate Asset",
+        "description": "Start a new image, video, or audio generation using your chosen model and inputs.",
         "operationId": "generate_asset_public_generations_post",
         "security": [
           {
@@ -592,6 +623,13 @@
           "Public"
         ],
         "summary": "Get Status",
+        "description": "Check the status of a generation and retrieve the resulting asset when it completes.",
+        "x-mint": {
+          "metadata": {
+            "title": "Get Generation Status",
+            "description": "Check the status of a generation and retrieve the resulting asset when it completes."
+          }
+        },
         "operationId": "get_status_public_generations__generation_id__status_get",
         "security": [
           {
@@ -640,6 +678,13 @@
           "Public"
         ],
         "summary": "Get Credits",
+        "description": "Retrieve the current API credit balance for your account.",
+        "x-mint": {
+          "metadata": {
+            "title": "Get Your Credit Balance",
+            "description": "Retrieve the current API credit balance for your account."
+          }
+        },
         "operationId": "get_credits_public_billing_credits_get",
         "responses": {
           "200": {
