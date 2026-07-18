@@ -194,20 +194,21 @@
               "GET /generations/{generation_id}/status",
               "GET /billing/credits"
             ]
-          },
-          {
-            "group": "Live Avatar",
-            "pages": [
-              "pages/developer/realtime-avatar/about",
-              "pages/developer/realtime-avatar/get-started",
-              "pages/developer/realtime-avatar/quickstart",
-              "pages/developer/realtime-avatar/expert"
-            ]
           }
         ]
       }
     ]
   },
+  "redirects": [
+    {
+      "source": "/pages/developer/realtime-avatar",
+      "destination": "/pages/developer/getting_started/quickstart"
+    },
+    {
+      "source": "/pages/developer/realtime-avatar/:slug*",
+      "destination": "/pages/developer/getting_started/quickstart"
+    }
+  ],
   "navbar": {},
   "contextual": {
     "options": [
