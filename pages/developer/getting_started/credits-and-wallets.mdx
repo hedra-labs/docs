@@ -1,0 +1,44 @@
+---
+title: "Credits and wallets"
+sidebarTitle: "Credits & wallets"
+description: "Understand which credit pool the Hedra API charges based on the endpoint you call."
+---
+
+Hedra maintains two separate credit pools on your account. Which one an API call debits depends on **which version of the API you're using**, not on which model or media type you're generating.
+
+| Wallet | Where you top it up | What it pays for |
+|--------|--------------------|-------------------|
+| **Studio credits** | Included with a paid Hedra web subscription (or bought as add-on packs from your account page) | Anything you create in the Hedra web app, plus every call to the **legacy v2 public API** |
+| **API wallet** | Purchased as API credit packs from the [API keys](https://www.hedra.com/develop/api-keys) page | Every call to the **v3 API** — including generations and file uploads |
+
+The two balances are tracked independently. Draining one does not affect the other, and topping one up does not fund the other.
+
+## Which wallet a call debits
+
+- **Legacy v2** — every request to `https://api.hedra.com/web-app/public/generations` (video, image, and text-to-speech) is billed against your **Studio credit** balance. This is the API version used by every guide in this section today. Access to v2 still requires the paid-plan entitlement that has always guarded it, so an existing paid v2 integration with a Studio balance keeps working exactly as before, even if your API wallet is empty.
+- **v3** — every `/v3/…` endpoint is billed against your **API wallet**. This covers both generations and `POST /v3/files` uploads. Uploads are the one v3 write that costs real work without pricing a generation, so we run the same zero-balance check on them that we run on generations — if your API wallet is empty, the upload is rejected before any bytes are read.
+
+## What happens when a wallet is empty
+
+If you call a **v3** endpoint (generation or upload) without a positive API wallet balance, the response is:
+
+```http
+HTTP/1.1 402 Payment Required
+Content-Type: application/json
+
+{
+  "error": {
+    "code": "MISSING_CREDITS",
+    "message": "Your API wallet has no available credits."
+  }
+}
+```
+
+Fund the wallet from the [API keys](https://www.hedra.com/develop/api-keys) page and retry.
+
+If you call a **legacy v2** endpoint without a Studio balance (or without the paid-plan entitlement), the request is rejected with the same subscription-required error v2 has always returned. Purchasing an API credit pack does not unblock v2 — top up Studio credits instead.
+
+## Which one should I use?
+
+- If you're building a new integration, use the **v3 API** and fund the **API wallet**. It's the actively developed surface.
+- If you have an existing paid v2 integration, keep using it — your Studio credits still cover v2 traffic and you do not need to move to the API wallet to keep the integration alive.

@@ -167,7 +167,8 @@
             "group": "Getting Started",
             "pages": [
               "pages/developer/getting_started/about",
-              "pages/developer/getting_started/quickstart"
+              "pages/developer/getting_started/quickstart",
+              "pages/developer/getting_started/credits-and-wallets"
             ]
           },
           {
