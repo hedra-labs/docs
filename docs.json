@@ -129,6 +129,15 @@
             ]
           },
           {
+            "group": "Personalize",
+            "icon": "sliders",
+            "pages": [
+              "pages/app/personalize/overview",
+              "pages/app/personalize/skills",
+              "pages/app/personalize/connectors"
+            ]
+          },
+          {
             "group": "Credits & Billing",
             "pages": [
               "pages/app/billing/generation-history",

@@ -1,0 +1,55 @@
+---
+title: "Connectors"
+description: "Connect third-party MCP services so your Hedra agent can read from and act on them."
+---
+
+**Connectors** let your Hedra agent talk to external services — such as GitHub, Google Drive, Notion, or any other MCP-compatible provider — using the [Model Context Protocol](https://modelcontextprotocol.io). Once a service is connected, the agent can use it in a chat to fetch context, take actions on your behalf, or reference your data.
+
+Open the **Connectors** tab from [Personalize](/pages/app/personalize/overview) in the sidebar.
+
+## Discover vs Connected
+
+The tab has two sub-tabs:
+
+- **All** — the full catalog of connectors available to add. Each card shows whether you're already connected, still need to authorize, or have an expired connection.
+- **Connected** — only the connectors that are currently connected or need reconnecting. Use this view to audit which services your agent already has access to.
+
+Switch between them using the toggle at the top of the tab.
+
+## Connector cards
+
+Each connector is shown as a card with the service logo, name, and a short description. The card's right side indicates the current state:
+
+| State                     | Indicator                                                                 |
+| ------------------------- | ------------------------------------------------------------------------- |
+| Not connected             | **+ Add** button                                                          |
+| Connected                 | Green **checkmark** badge, plus a three-dot menu with a **Remove** action |
+| Connection expired        | Red warning icon overlay on the logo, plus a **Reconnect** button         |
+
+## Connect a service
+
+<Steps>
+  <Step title="Find the connector">
+    In the **All** view, scroll through the catalog or use search to find the service you want.
+  </Step>
+  <Step title="Click Add">
+    Click **+ Add** on the card. You'll be redirected to the provider's OAuth screen.
+  </Step>
+  <Step title="Authorize">
+    Approve the requested permissions. When the OAuth flow completes, you'll return to Hedra and the card will show a green checkmark.
+  </Step>
+</Steps>
+
+The connector is now available in any new chat with your agent.
+
+## Reconnect an expired connection
+
+OAuth grants can lapse (for example, when a provider rotates tokens or revokes access). Expired connectors are surfaced with a red warning icon on the logo and a **Reconnect** button — click **Reconnect** to run through the OAuth flow again. Expired connectors also stay visible in the **Connected** view so the reconnect cue doesn't disappear.
+
+## Remove a connection
+
+On any connected card, open the **three-dot menu** and choose **Remove**. This revokes the connection on Hedra's side; you may also want to revoke Hedra's access from the provider's own account settings if you want to fully rescind the grant.
+
+## Search
+
+Use the search input at the top of the tab to filter the connector list by name. Search works across both **All** and **Connected** views.
