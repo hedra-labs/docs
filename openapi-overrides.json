@@ -8,42 +8,96 @@
   "paths": {
     "/assets": {
       "get": {
+        "x-mint": {
+          "metadata": {
+            "title": "List Uploaded & Generated Assets",
+            "sidebarTitle": "List Uploaded & Generated Assets"
+          }
+        },
         "description": "Retrieve your uploaded and generated assets by asset type, with optional filtering by IDs."
       },
       "post": {
+        "x-mint": {
+          "metadata": {
+            "title": "Create Asset",
+            "sidebarTitle": "Create Asset"
+          }
+        },
         "description": "Create a new asset record before uploading a supported file to use in generations."
       }
     },
     "/assets/{id}/upload": {
       "post": {
+        "x-mint": {
+          "metadata": {
+            "title": "Upload Asset",
+            "sidebarTitle": "Upload Asset"
+          }
+        },
         "description": "Upload the file contents for a previously created asset."
       }
     },
     "/billing/credits": {
       "get": {
+        "x-mint": {
+          "metadata": {
+            "title": "Get Your Credit Balance",
+            "sidebarTitle": "Get Your Credit Balance"
+          }
+        },
         "description": "Retrieve the current API credit balance for your account."
       }
     },
     "/generations": {
       "get": {
+        "x-mint": {
+          "metadata": {
+            "title": "List Your Generations",
+            "sidebarTitle": "List Your Generations"
+          }
+        },
         "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt."
       },
       "post": {
+        "x-mint": {
+          "metadata": {
+            "title": "Generate Asset",
+            "sidebarTitle": "Generate Asset"
+          }
+        },
         "description": "Start a new image, video, or audio generation using your chosen model and inputs."
       }
     },
     "/generations/{generation_id}/status": {
       "get": {
+        "x-mint": {
+          "metadata": {
+            "title": "Get Generation Status",
+            "sidebarTitle": "Get Generation Status"
+          }
+        },
         "description": "Check the status of a generation and retrieve the resulting asset when it completes."
       }
     },
     "/models": {
       "get": {
+        "x-mint": {
+          "metadata": {
+            "title": "List Available AI Models",
+            "sidebarTitle": "List Available AI Models"
+          }
+        },
         "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models."
       }
     },
     "/voices": {
       "get": {
+        "x-mint": {
+          "metadata": {
+            "title": "List Available Voices",
+            "sidebarTitle": "List Available Voices"
+          }
+        },
         "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos."
       }
     }
