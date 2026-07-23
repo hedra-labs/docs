@@ -37,9 +37,9 @@ This workflow generates a daily image from a prompt.
 {
   "type": "image",
   "text_prompt": "A vibrant abstract background for social media",
-  "ai_model_id": "a66300b4-f76e-4c4a-ac41-b31694ff585e",
+  "model_slug": "google/nano-banana-pro",
   "aspect_ratio": "1:1",
-  "resolution": "1080p"
+  "resolution": "2K"
 }
 ```
 
@@ -108,7 +108,7 @@ Use `audio_generation` to skip a separate TTS step:
 ```json
 {
   "type": "video",
-  "ai_model_id": "26f0fc66-152b-40ab-abed-76c43df99bc8",
+  "model_slug": "together/hedra-avatar",
   "start_keyframe_id": "{{ $('Upload Portrait Image').item.json.id }}",
   "audio_generation": {
     "type": "text_to_speech",

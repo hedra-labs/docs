@@ -59,37 +59,7 @@ curl https://api.hedra.com/web-app/public/generations/{generation_id}/status \
 
 When `status` is `"complete"`, the response includes an `asset_id` for the generated audio file.
 
-## Clone a voice
-
-You can create a custom voice by uploading an audio sample and cloning it.
-
-### 1. Upload an audio sample
-
-```bash
-curl -X POST https://api.hedra.com/web-app/public/assets \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: $HEDRA_API_KEY" \
-  -d '{
-    "name": "voice-sample.mp3",
-    "type": "audio"
-  }'
-
-curl -X POST https://api.hedra.com/web-app/public/assets/{asset_id}/upload \
-  -H "X-API-Key: $HEDRA_API_KEY" \
-  -F "file=@/path/to/voice-sample.mp3"
-```
-
-### 2. Clone the voice
-
-```bash
-curl -X POST https://api.hedra.com/web-app/public/generations \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: $HEDRA_API_KEY" \
-  -d '{
-    "type": "voice_clone",
-    "audio_id": "{audio_asset_id}",
-    "name": "My Custom Voice"
-  }'
-```
-
-Once complete, the response includes an `asset_id` for the new voice. Use this as the `voice_id` in text-to-speech requests.
+<Note>
+  The public generation endpoint currently supports image, video, and
+  text-to-speech requests. Voice cloning is not available through this endpoint.
+</Note>

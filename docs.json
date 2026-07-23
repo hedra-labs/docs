@@ -51,6 +51,7 @@
               "pages/app/getting-started/overview",
               "pages/app/getting-started/start-with-an-idea",
               "pages/app/getting-started/spaces",
+              "pages/app/getting-started/multiplayer",
               "pages/app/getting-started/library"
             ]
           },
