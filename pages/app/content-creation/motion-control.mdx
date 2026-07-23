@@ -1,39 +1,42 @@
 ---
-title: "Create Viral Dance Videos"
-description: "How to use motion control to animate videos with reference video motion."
-og:image: "https://www.hedra.com/docs/images/articles/using-motion-control.jpg"
+title: "Drive video with motion references"
+description: "Use a reference video to transfer useful motion while preserving the intended character or scene."
 ---
 
-<video controls={true} className="w-full aspect-video rounded-xl" src="https://stream.mux.com/CLoTk1M3G01v7Ak4y202znoYTCxrJ93FG7wtg9005rCMRM.m3u8" />
+Some video models accept a motion or video reference. Use that workflow when the
+movement matters more than a text description alone can communicate.
+
+## Inputs
+
+- a clear visual reference for the character or scene;
+- a motion reference with the action and camera behavior you want;
+- a prompt explaining what should transfer and what should remain unchanged.
+
+## Manual workflow
 
 <Steps>
-  <Step title="Open Motion Control">
-    Go to [Motion Control](https://www.hedra.com/app/video).
+  <Step title="Open Video">
+    Go to **Manual tools → Video** and choose a model that accepts a video or motion
+    reference.
   </Step>
-  <Step title="Add a start frame">
-    Click **Add Start Frame** and select from: **Generate**, **Upload**, **Take Photo**, or **Library**.
+  <Step title="Add references">
+    Add the character image or start frame and the reference video required by the
+    selected model.
   </Step>
-  <Step title="Add a reference video">
-    Click **Add Video** and select from: **Upload**, **Record**, or **Assets**.
+  <Step title="Describe the transfer">
+    Name the subject, motion, framing, environment, and the details that must remain
+    faithful to the visual reference.
   </Step>
-  <Step title="Select match orientation">
-    Choose your **Match Orientation**:
-
-    - **Video** — Orientation matches reference video; best for complex motion
-    - **Character** — Orientation matches reference image; best for camera moves
+  <Step title="Choose supported settings">
+    Set the available aspect ratio, resolution, duration, and batch size.
   </Step>
-  <Step title="Write your prompt">
-    In the prompt box, describe your video. Press Tab to expand. Use Ctrl+K for custom prompt enhancement instructions.
-  </Step>
-  <Step title="Select model and settings">
-    Select **Kling 2.6 Motion Control Pro** in the model dropdown menu. Check your **Video Settings** — you can change the batch size (1–8) and pick your aspect ratio (16:9, 1:1, 9:16).
-  </Step>
-  <Step title="Generate">
-    - Click the **Magic Wand** to enhance your prompt
-    - Click the **Up Arrow** to generate your video
-  </Step>
-  <Step title="Review">
-    - Select the ellipsis on your video to: **View Details**, **Share**, **Download**, or **Delete**
-    - Click the **Turntable** icon on your video to remix it
+  <Step title="Generate and compare">
+    Review body geometry, identity, contact points, and camera motion. Try a simpler
+    reference if the movement is unclear or partially occluded.
   </Step>
 </Steps>
+
+<Note>
+  Motion-reference support and controls are model-specific. Use the live selector
+  rather than relying on a fixed model name.
+</Note>

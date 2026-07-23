@@ -1,11 +1,14 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
+  "theme": "maple",
   "name": "Hedra",
   "colors": {
-    "primary": "#4f46e5",
-    "light": "#4f46e5",
-    "dark": "#818cf8"
+    "primary": "#181818",
+    "light": "#F8F8F8",
+    "dark": "#D0D0D0"
+  },
+  "fonts": {
+    "family": "Geist"
   },
   "favicon": "/assets/favicon.svg",
   "logo": {
@@ -20,9 +23,9 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Pricing",
-          "icon": "credit-card",
-          "href": "https://www.hedra.com/pricing"
+          "anchor": "Support",
+          "icon": "headset",
+          "href": "https://www.hedra.com/support"
         },
         {
           "anchor": "Community",
@@ -30,102 +33,53 @@
           "href": "https://discord.com/invite/KXeUUa6cXD"
         },
         {
-          "anchor": "Support",
-          "icon": "headset",
-          "href": "https://www.hedra.com/support"
-        },
-        {
-          "anchor": "Video Tutorials",
-          "icon": "circle-play",
-          "href": "/pages/app/getting-started/video-tutorials"
+          "anchor": "API Dashboard",
+          "icon": "layout-dashboard",
+          "href": "https://www.hedra.com/api-profile"
         }
       ]
     },
-    "tabs": [
+    "products": [
       {
-        "tab": "Hedra Web App",
-        "icon": "browser",
+        "product": "Hedra Agent",
+        "description": "Create with the agent and manual tools",
+        "icon": "message-circle",
         "groups": [
           {
-            "group": "Welcome",
-            "icon": "house-chimney-blank",
+            "group": "Start here",
             "pages": [
-              "pages/app/getting-started/overview"
+              "pages/app/getting-started/overview",
+              "pages/app/getting-started/start-with-an-idea",
+              "pages/app/getting-started/spaces",
+              "pages/app/getting-started/library"
+            ]
+          },
+          {
+            "group": "Build with the agent",
+            "pages": [
+              "pages/app/getting-started/references-and-elements",
+              "pages/app/getting-started/skills-and-connectors"
             ]
           },
           {
             "group": "Workflows",
-            "icon": "stairs",
             "pages": [
-              "pages/app/content-creation/create-avatar-video",
+              "pages/app/content-creation/create-image",
+              "pages/app/content-creation/animate-your-photos",
               "pages/app/content-creation/how-to-create-ugc-ads",
+              "pages/app/content-creation/create-avatar-video",
               "pages/app/content-creation/creating-music-videos",
-              "pages/app/content-creation/motion-control",
-              "pages/app/content-creation/how-to-swap-your-face",
-              "pages/app/content-creation/animate-your-photos"
+              "pages/app/content-creation/how-to-swap-your-face"
             ]
           },
           {
-            "group": "Learn",
-            "icon": "book",
+            "group": "Manual tools",
             "pages": [
-              {
-                "group": "Elements Guide",
-                "pages": [
-                  "pages/app/content-creation/elements-101-beginners-guide",
-                  "pages/app/content-creation/elements-201-content-creators",
-                  "pages/app/content-creation/elements-301-production-workflows",
-                  "pages/app/content-creation/elements-401-world-builders"
-                ]
-              },
-              {
-                "group": "Prompts Guide",
-                "pages": []
-              }
-            ]
-          },
-          {
-            "group": "Tools",
-            "icon": "toolbox",
-            "pages": [
-              {
-                "group": "Image",
-                "icon": "image",
-                "pages": [
-                  "pages/app/content-creation/create-image",
-                  "pages/app/content-creation/create-element"
-                ]
-              },
-              {
-                "group": "Video",
-                "icon": "video",
-                "pages": [
-                  "pages/app/getting-started/video-models",
-                  "pages/app/content-creation/upscale-video",
-                  "pages/app/content-creation/speaker-selection"
-                ]
-              },
-              {
-                "group": "Audio",
-                "icon": "waveform-lines",
-                "pages": [
-                  "pages/app/content-creation/create-audio"
-                ]
-              },
-              {
-                "group": "Editor",
-                "icon": "photo-film-music",
-                "pages": [
-                  "pages/app/content-creation/edit-videos-in-composer"
-                ]
-              },
-              {
-                "group": "Library",
-                "icon": "folder",
-                "pages": [
-                  "pages/app/content-creation/delete-content"
-                ]
-              }
+              "pages/app/getting-started/manual-tools",
+              "pages/app/getting-started/manual-image",
+              "pages/app/getting-started/video-models",
+              "pages/app/content-creation/create-audio",
+              "pages/app/content-creation/edit-videos-in-composer"
             ]
           },
           {
@@ -146,27 +100,17 @@
               "pages/app/account/delete-account",
               "pages/app/account/creator-program"
             ]
-          },
-          {
-            "group": "Troubleshooting",
-            "pages": [
-              "pages/app/troubleshooting/faq",
-              "pages/app/troubleshooting/file-specifications",
-              "pages/app/troubleshooting/video-queue",
-              "pages/app/troubleshooting/missing-video",
-              "pages/app/troubleshooting/console-logs"
-            ]
           }
         ]
       },
       {
-        "tab": "API Platform",
+        "product": "Hedra API",
+        "description": "Build with Hedra models and APIs",
         "icon": "code",
         "groups": [
           {
             "group": "Getting Started",
             "pages": [
-              "pages/developer/getting_started/about",
               "pages/developer/getting_started/quickstart"
             ]
           },
@@ -194,15 +138,6 @@
               "GET /generations/{generation_id}/status",
               "GET /billing/credits"
             ]
-          },
-          {
-            "group": "Live Avatar",
-            "pages": [
-              "pages/developer/realtime-avatar/about",
-              "pages/developer/realtime-avatar/get-started",
-              "pages/developer/realtime-avatar/quickstart",
-              "pages/developer/realtime-avatar/expert"
-            ]
           }
         ]
       }
@@ -228,8 +163,8 @@
   },
   "background": {
     "color": {
-      "light": "#F0F0F0",
-      "dark": "#0f0f0f"
+      "light": "#E3E3E3",
+      "dark": "#181818"
     }
   },
   "appearance": {

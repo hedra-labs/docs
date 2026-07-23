@@ -1,68 +1,29 @@
 ---
-title: "Avatar Speaker Selection"
-description: "How to define which character should be speaking in a multi-character image."
-"og:image": "https://www.hedra.com/docs/images/articles/selecting-speakers.png"
+title: "Choose the speaker in an avatar scene"
+description: "Make the intended speaker explicit when a reference image contains multiple people."
 ---
 
-<video controls className="w-full aspect-video rounded-xl" src="https://stream.mux.com/3Gs01X5t8UMi197oKBHP00pJne00GXRLve5xV89YQSuEbY.m3u8" />
+For a multi-person avatar image, the selected model may expose a speaker control
+on the image reference.
 
-## 1. Add a Start Frame
+## Workflow
 
-Upload or create a starting image that contains multiple characters.
+1. Open **Manual tools → Video** and choose **Avatar**.
+2. Select a model that supports the image and audio inputs you need.
+3. Add the multi-person image as the visual reference.
+4. If **Select Speaker** is available, place the speaker indicator over the intended
+   face and size it closely enough to avoid overlap.
+5. Add the audio and state in the prompt which person should perform it.
+6. Generate a short test and confirm the correct face is speaking.
 
-You can choose from:
+## Better multi-person references
 
-- **Generate**
-- **Upload**
-- **Take Photo**
-- **Library**
+- Keep faces separated and large enough to identify.
+- Avoid crossing faces, heavy occlusion, and extreme profiles.
+- Use a short sample before committing to a long generation.
+- If the wrong person speaks, crop or simplify the reference and select again.
 
----
-
-## 2. Select the Speaker
-
-Next to the uploaded image:
-
-1. Click **Select Speaker** <Icon icon="user" />\
-   (the person icon on the image toolbar, next to the trash icon)
-
----
-
-## 3. Position the Speaker Indicator
-
-On the image:
-
-1. Drag the green <Icon icon="face-smile" /> onto the character you want to speak
-2. Resize the indicator box if needed
-3. Continue creating your video
-
-The selected character will be the one who speaks, sings, or performs based on your audio input.
-
----
-
-## Available Speaker Models
-
-Hedra supports a range of voice providers:
-
-- **OpenAI Voices** – built-in options for natural speech
-- **ElevenLabs Voices** – high-fidelity, expressive voices
-- **Gemini Voices** – rich and nuanced speech output
-
-Choose the voice that best matches your project’s style and tone.
-
----
-
-## Notes
-
-- Speaker options may vary depending on your subscription and model access.
-- Some voices may require external API keys or provider configuration in your account settings.
-- Voice change does not alter lip-sync timing — only the voice output.
-
----
-
-## Tips for Best Results
-
-- Choose a voice that matches the character persona you defined.
-- Preview each voice before finalizing.
-- Use expressive voices for narrative and emotive content.
-- Use neutral voices for informational or tutorial videos.
+<Note>
+  Speaker controls are model-specific. If the selected model does not expose one,
+  use a clearer single-person reference or choose another avatar model.
+</Note>

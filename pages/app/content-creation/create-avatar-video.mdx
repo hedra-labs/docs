@@ -1,93 +1,52 @@
 ---
-title: "Create UGC Avatar Videos"
-description: "Learn how to turn a static image into a speaking avatar video."
-og:image: "https://www.hedra.com/docs/images/articles/how-to-create-ugc-avatars.png"
+title: "Create an avatar or presenter video"
+description: "Turn a character image and speech into a directed performance."
 ---
 
-<video controls={true} className="w-full aspect-video rounded-xl" src="https://stream.mux.com/AXm8K7K7o1Oh1z3fXEPwGHkE8029K4X202Ddtqn00fSQpc.m3u8" />
+An avatar workflow combines a visual identity with audio and performance direction.
+You can brief the agent in a Space or run the model directly from the Video tool.
 
-This guide walks you through the full process: **image** <Icon icon="arrow-right-long" /> **audio** <Icon icon="arrow-right-long" /> **video**
+## Create with the agent
 
----
+<Steps>
+  <Step title="Prepare the inputs">
+    Use a clear character image and clean speech or music. A front-facing image with
+    an unobstructed face is the most reliable starting point.
+  </Step>
+  <Step title="Start from a presenter or UGC Skill">
+    On the home screen, select **presenter** or **ugc**, or describe the intended
+    performance in a new Space.
+  </Step>
+  <Step title="Add the references">
+    Attach the character image and audio. Explain who should speak, the framing, the
+    tone, and any movement or background constraints.
+  </Step>
+  <Step title="Review and refine">
+    Check lip sync, identity, framing, and gesture. Ask for a bounded change while
+    preserving the references that already work.
+  </Step>
+</Steps>
 
-### **Before You Start**
+## Use the manual Avatar mode
 
-You will need the following:
+Open **Manual tools → Video**, then choose **Avatar**.
 
-- **Image** (uploaded or generated in Hedra)
-- **Audio** (uploaded, recorded, or AI-generated)
-- Access to video generation inside Hedra Studio
+1. Select a model from the filtered catalog.
+2. Add the image and audio references required by that model.
+3. Describe the desired performance.
+4. Choose the available aspect ratio, resolution, duration, and batch size.
+5. Select **Generate**.
 
----
+## Better inputs produce better performances
 
-See: [**Create Images**](https://www.hedra.com/docs/pages/app/content-creation/create-image)
+- Use a sharp, well-lit face at a useful scale.
+- Avoid heavy occlusion over the mouth and eyes.
+- Use clean audio without clipping or excessive background noise.
+- Start with a short test before generating a long performance.
+- For multiple people, make the intended speaker unambiguous in the prompt and
+  use speaker controls when the selected model exposes them.
 
-> Tip: Front-facing portraits produce the most natural speaking results.
-
----
-
-See: [**Create Voice**](https://www.hedra.com/docs/pages/app/content-creation/create-audio)
-
-> Tip: Clear audio improves lip-sync accuracy.
-
----
-
-**Select an Avatar Video Model**
-
-1. Go to the [**Avatar**](https://www.hedra.com/app/video) section
-2. Choose an **avatar video model** (_Hedra Omnia, Avatar, Kling_) from the pop-up menu below the prompt box
-3. Select **aspect ratio, resolution and batch size**
-4. Confirm image and audio are both attached loaded
-
----
-
-**Generate the Video**
-
-1. In the prompt box, **describe your video**
-2. Click  to **Generate**
-3. Wait for processing to complete
-4. Preview the result
-5. On the video, select  to:\
-   **View Details**, **Share**, **Download** or **Delete** if needed
-
----
-
-### **Best Practices**
-
-- Use high-resolution images
-- Avoid extreme angles or heavy shadows
-- Keep audio clean and evenly paced
-- Start with short clips when testing
-
----
-
-### **Troubleshooting**
-
-### [**​**](https://www.hedra.com/docs/pages/app/content-creation/create-avatar-video#the-lips-don%E2%80%99t-match-the-audio)
-
-**The lips don’t match the audio**
-
-- Check for background noise
-- Ensure the audio file is clear and not distorted
-
-### [**​**](https://www.hedra.com/docs/pages/app/content-creation/create-avatar-video#the-face-looks-unnatural)
-
-**The face looks unnatural**
-
-- Use a well-lit, front-facing image
-- Avoid heavy filters or stylization
-
-### [**​**](https://www.hedra.com/docs/pages/app/content-creation/create-avatar-video#the-video-failed-to-generate)
-
-**The video failed to generate**
-
-- Confirm both image and audio are attached
-- Try regenerating
-
----
-
-### **Next Steps**
-
-- Enhance motion with motion control tools
-- Experiment with different voice styles
-- Create multi-scene videos using Composer
+<Note>
+  Avatar models accept different input combinations and durations. The live model
+  selector shows the requirements for the model you choose.
+</Note>
