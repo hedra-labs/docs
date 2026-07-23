@@ -22,6 +22,21 @@ Run the following command at the root of your documentation (where mint.json is)
 mintlify dev
 ```
 
+### OpenAPI
+
+`openapi.json` is generated from the production v2 FastAPI schema. Refresh it
+locally with:
+
+```bash
+python3 scripts/sync_openapi.py
+```
+
+Keep documentation-only descriptions in `openapi-overrides.json` instead of
+editing the generated schema. The `Sync v2 OpenAPI` workflow checks the
+production schema daily and opens or updates a pull request when it changes. It
+requires an `OPENAPI_SYNC_TOKEN` repository secret with contents and pull
+request write access.
+
 ### Publishing Changes
 
 Install our Github App to auto propagate changes from your repo to your deployment. Changes will be deployed to production automatically after pushing to the default branch. Find the link to install on your dashboard. 
