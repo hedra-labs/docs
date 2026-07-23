@@ -171,6 +171,14 @@
             ]
           },
           {
+            "group": "API v3",
+            "pages": [
+              "pages/developer/v3/overview",
+              "pages/developer/v3/requests",
+              "pages/developer/v3/errors"
+            ]
+          },
+          {
             "group": "Guides",
             "pages": [
               "pages/developer/guides/generate-image",

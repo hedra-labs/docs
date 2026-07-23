@@ -1,0 +1,64 @@
+---
+title: "API v3 overview"
+sidebarTitle: "Overview"
+description: "The Hedra v3 API — model-callable submits, durable request resources, and scoped API keys."
+---
+
+<Note>
+  API v3 is Hedra's next-generation developer API. It is currently in pre-launch and lives alongside the existing `/web-app/public` (v2) API. Endpoints, schemas, and scopes on this page describe the v3 launch contract.
+</Note>
+
+The v3 API is organized around two resources:
+
+- **Models** — the callable generators (image, video, audio, avatar). You submit a job by POSTing directly to a model.
+- **Requests** — the durable record of a submission. Every submit returns a `request_id` (`req_<uuid>`) that you use to poll status, stream logs, and fetch the final result.
+
+## Base URL
+
+```text
+https://api.hedra.com/v3
+```
+
+## Authentication
+
+v3 uses scoped API keys. Create a key in the [API keys](https://www.hedra.com/develop/api-keys) dashboard — a key is a `<key_id>:<secret>` pair.
+
+Send it on every request as an `Authorization` header:
+
+```bash
+export HEDRA_API_KEY="<key_id>:<secret>"
+
+curl "https://api.hedra.com/v3/models/seedream-45" \
+  -H "Authorization: Key $HEDRA_API_KEY"
+```
+
+Both `Authorization: Key <key_id>:<secret>` and `Authorization: Bearer <key_id>:<secret>` are accepted.
+
+## Scopes
+
+v3 keys carry least-privilege scopes in the `<resource>:<action>` shape. When creating a key, select only the scopes the integration needs.
+
+| Scope | Grants |
+|-------|--------|
+| `requests:write` | Submit new generations (`POST /v3/models/{model}`). |
+| `requests:read` | Read request status, logs, and results. |
+| `models:read` | List models and read model metadata. |
+| `files:write` | Upload input files via `POST /v3/files`. |
+| `webhooks:manage` | Create and manage webhook endpoints. |
+| `log_drains:manage` | Create and manage log drains. |
+| `usage:read` | Read workspace usage and credit balances. |
+| `keys:manage` | Create and revoke API keys. |
+
+<Info>
+  A submit call requires `requests:write`; polling for status or fetching a result requires `requests:read`. Pair them on the same key when the integration both submits and reads its own requests.
+</Info>
+
+## Requests lifecycle
+
+Every generation follows the same shape on v3:
+
+1. **Submit** — `POST /v3/models/{model}` with a JSON body `{ "input": { ... } }`. The response is a 202 with the `request_id` and polling URLs.
+2. **Poll** — `GET /v3/requests/{request_id}/status` until the request reaches a terminal state.
+3. **Fetch result** — `GET /v3/requests/{request_id}` to read the completed outputs.
+
+See [Requests](/pages/developer/v3/requests) for the full submit/poll flow and [Errors](/pages/developer/v3/errors) for the error envelope and correlation headers.

@@ -1,0 +1,62 @@
+---
+title: "Errors"
+sidebarTitle: "Errors"
+description: "The v3 error envelope, correlation headers, and how to identify the right id when contacting support."
+---
+
+Every v3 error response uses a single envelope so callers can parse errors uniformly regardless of the endpoint that failed.
+
+## Error envelope
+
+```json
+{
+  "error": {
+    "code": "insufficient_scope",
+    "message": "Key is missing required scope(s): requests:write.",
+    "retryable": false,
+    "retry_after": null,
+    "param": null,
+    "details": null
+  },
+  "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736"
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `error.code` | Machine-readable error code — branch on this in client code. |
+| `error.message` | Human-readable explanation. |
+| `error.retryable` | `true` when retrying the same request may succeed (transient failures, rate limits). |
+| `error.retry_after` | Seconds to wait before retrying, when applicable. Mirrored on the `Retry-After` response header. |
+| `error.param` | The offending request parameter, when the error is a validation failure. |
+| `error.details` | Optional array of per-field validation errors. |
+| `trace_id` | OpenTelemetry trace id (32-character hex) for this call. Also emitted on the `X-Trace-Id` response header. |
+
+## Correlation ids
+
+v3 exposes two distinct ids. Keep them straight when reading logs or filing support tickets:
+
+| Id | Where it appears | What it identifies |
+|----|------------------|--------------------|
+| `request_id` (`req_<uuid>`) | Submit / status / result response **bodies**; the URL segment `/v3/requests/{request_id}`. | The **durable request resource** — the generation itself. Use it to poll and to fetch the result. |
+| `X-Request-Id` header | Every v3 response, including errors. | A **per-HTTP-call correlation token**. Different on every call, including calls that target the same durable request. |
+| `X-Trace-Id` header and `trace_id` body field | Every v3 response and every v3 error body (when tracing is active). | The **OpenTelemetry trace** for the call, for cross-service log correlation. |
+
+<Warning>
+  `request_id` in v3 always means the durable request resource. It is **not** returned in the error body — the only id inside an error envelope is `trace_id`. When you need to reference a specific failed HTTP call to Hedra support, quote the `X-Request-Id` response header, not `request_id`.
+</Warning>
+
+## When to retry
+
+Retry an error when `error.retryable` is `true`. If `error.retry_after` (or the `Retry-After` header) is set, wait at least that many seconds before retrying. Non-retryable errors — bad input, missing scope, not found — will fail again with the same input and should be surfaced to the caller instead.
+
+## Common status codes
+
+| Status | Meaning |
+|--------|---------|
+| `400` | Invalid or failed-validation request. |
+| `401` | Authentication failed — missing, malformed, or invalid credentials. |
+| `403` | Insufficient scope or plan. |
+| `404` | Resource not found. |
+| `429` | Rate limit exceeded. Includes `Retry-After` and `X-RateLimit-*` headers. |
+| `500` | Internal error. Retry with backoff; contact support with the `X-Request-Id` if it persists. |

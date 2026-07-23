@@ -1,0 +1,109 @@
+---
+title: "Requests"
+sidebarTitle: "Requests"
+description: "Submit a generation to a v3 model and poll the durable request resource for status and results."
+---
+
+The v3 request lifecycle lives under a single `Requests` surface: you submit to a model, then read status, logs, and the final result from the durable request resource the server mints for you.
+
+## Prerequisites
+
+- A v3 API key with the `requests:write` scope (to submit) and `requests:read` (to poll). See [Overview](/pages/developer/v3/overview#scopes).
+- The `model` id you want to call — for example `seedream-45`. Use `GET /v3/models` to list available models.
+
+```bash
+export HEDRA_API_KEY="<key_id>:<secret>"
+```
+
+## Submit a request
+
+Submit by POSTing directly to the model. The request body carries a single `input` object whose shape is defined by the model's schema (fetch it from `GET /v3/models/{model}/openapi.json`), plus optional top-level fields.
+
+```bash
+curl -X POST "https://api.hedra.com/v3/models/seedream-45" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {
+      "prompt": "A golden retriever in a field of sunflowers",
+      "aspect_ratio": "16:9"
+    }
+  }'
+```
+
+### Request body
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `input` | object | Model-specific inputs. See the per-model schema at `GET /v3/models/{model}/openapi.json`. |
+| `webhook` | string | Optional. HTTPS URL that receives a POST when the request reaches a terminal state. |
+| `idempotency_key` | string | Optional. Replays return the original 202 response instead of enqueuing a new generation. |
+| `priority` | string | Optional. Reserved for tier-based priority (currently every submit runs at `normal`). |
+
+### 202 response
+
+A successful submit returns HTTP `202 Accepted`:
+
+```json
+{
+  "request_id": "req_01HXYZ...",
+  "model": "seedream-45",
+  "status": "IN_QUEUE",
+  "status_url": "https://api.hedra.com/v3/requests/req_01HXYZ.../status",
+  "response_url": "https://api.hedra.com/v3/requests/req_01HXYZ...",
+  "estimated_completion_at": "2026-07-23T12:34:56Z"
+}
+```
+
+The response also carries these headers:
+
+| Header | Description |
+|--------|-------------|
+| `Location` | Same URL as `response_url` — the durable request resource to poll. |
+| `X-Hedra-Queue-Priority` | The processing-queue priority applied to this submit. |
+| `X-Request-Id` | Per-call correlation id — include this when contacting support. |
+| `X-Trace-Id` | OpenTelemetry trace id for the call. |
+
+<Info>
+  `request_id` is the **durable** request resource id (`req_<uuid>`). It is the id you use in every downstream URL. It is distinct from the per-HTTP-call correlation id, which rides the `X-Request-Id` response header only.
+</Info>
+
+## Poll for status
+
+Use the `status_url` from the ack (or build it yourself) to poll:
+
+```bash
+curl "https://api.hedra.com/v3/requests/req_01HXYZ.../status" \
+  -H "Authorization: Key $HEDRA_API_KEY"
+```
+
+The status endpoint returns the current `status`, an optional `progress` value between 0 and 1, and the most recent log entries. Poll every few seconds until `status` is a terminal value (`COMPLETED`, `FAILED`, or `CANCELED`).
+
+For long-running requests, stream logs instead of polling:
+
+```bash
+curl -N "https://api.hedra.com/v3/requests/req_01HXYZ.../stream" \
+  -H "Authorization: Key $HEDRA_API_KEY"
+```
+
+## Fetch the result
+
+Once the request completes, `GET /v3/requests/{request_id}` returns the full result envelope, including `outputs`, `metrics`, and — for completed successful requests — `credits_spent` and `usd_spent`:
+
+```bash
+curl "https://api.hedra.com/v3/requests/req_01HXYZ..." \
+  -H "Authorization: Key $HEDRA_API_KEY"
+```
+
+## Idempotency
+
+To make submits safe to retry, pass an `idempotency_key` in the body. Replays of the same key from the same workspace return the original 202 response and set `X-Idempotent-Replayed: true` on the response headers — no new generation is enqueued.
+
+## List model requests
+
+To list previous requests for a given model, use:
+
+```bash
+curl "https://api.hedra.com/v3/models/seedream-45/requests" \
+  -H "Authorization: Key $HEDRA_API_KEY"
+```
