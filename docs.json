@@ -51,6 +51,7 @@
               "pages/app/getting-started/overview",
               "pages/app/getting-started/start-with-an-idea",
               "pages/app/getting-started/spaces",
+              "pages/app/getting-started/multiplayer",
               "pages/app/getting-started/library"
             ]
           },
@@ -58,7 +59,6 @@
             "group": "Build with the agent",
             "pages": [
               "pages/app/getting-started/references-and-elements",
-              "pages/app/getting-started/multiplayer",
               "pages/app/getting-started/skills-and-connectors"
             ]
           },
