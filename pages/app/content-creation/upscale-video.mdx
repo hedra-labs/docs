@@ -1,119 +1,39 @@
 ---
-title: "Upscaling Videos"
-description: "How to upscale your videos to higher resolutions in Hedra: what upscaling does, when to use it, step-by-step instructions, and tips."
-"og:image": "https://www.hedra.com/docs/images/articles/how-to-upscale-videos.png"
-keywords: ["upscaling","topaz","video"]
+title: "Upscale a video"
+description: "Create a higher-resolution derivative while preserving the original video."
 ---
 
-How to upscale your videos to higher resolutions in Hedra.
+Upscaling creates a new, enhanced version of an existing video. It does not replace
+or modify the source.
 
-<video controls className="w-full aspect-video rounded-xl" src="https://stream.mux.com/D1u01EVMfHN7aUErn4EzfVvoI9Yw3mt9fmcTVpxn7EVY.m3u8" />
+## Upscale in the Video tool
 
-Use **Video Upscaling** to increase the resolution and detail of your video outputs.\
-Upscaling makes videos sharper, improves clarity, and enhances visual quality — especially when exporting for larger displays.
+<Steps>
+  <Step title="Open Upscale mode">
+    Go to **Manual tools → Video**, then choose **Upscale**.
+  </Step>
+  <Step title="Add the source video">
+    Upload a video or select one from the Library.
+  </Step>
+  <Step title="Choose the output">
+    Select a model and target resolution supported by the source and your plan.
+  </Step>
+  <Step title="Generate">
+    Start the upscale, then compare the result with the original before downloading
+    or using it in Composer.
+  </Step>
+</Steps>
 
----
+## What upscaling can improve
 
-## What Upscaling Does
+- output resolution;
+- edge and texture clarity;
+- perceived sharpness on larger displays.
 
-Video upscaling:
+It cannot reliably restore detail that was never present. Heavy compression,
+motion blur, or very low source resolution can limit the result.
 
-- Increases resolution (e.g., 720p → 1080p)
-- Improves visual detail
-- Reduces blur in motion
-- Enhances fine features
-
-Upscaling applies an AI-based enhancement step after your video is generated.
-
----
-
-## When to Use Upscale
-
-Use Upscale when:
-
-✔ You want higher resolution output\
-✔ You are preparing content for large screens\
-✔ Your original video is low resolution\
-✔ You want smoother, clearer visuals
-
-Upscaling is optional — use it only when you need a higher fidelity result.
-
----
-
-## How to Upscale a Video
-
-Follow these steps:
-
-### 1. Open the Video You Want to Upscale
-
-Go to your **Studio** or **Video Library**, and open the video you want to improve.
-
----
-
-### 2. Click **Upscale**
-
-Within the video controls, select the **Upscale** option.
-
-This opens the upscaling interface.
-
----
-
-### 3. Choose Upscale Settings
-
-- Select the **Target Resolution**\
-  (e.g., 1080p, 2K, 4K)
-- Select the **Upscale Model** (if available)
-
-Higher resolutions offer better quality but may take longer to process.
-
----
-
-### 4. Start the Upscale
-
-Click **Generate** or **Start Upscale**.
-
-The system will process the original video to create a new, upscaled version.
-
-Processing time varies based on:
-
-- Original resolution
-- Target resolution
-- Video length
-
----
-
-### 5. Review and Download
-
-Once complete:
-
-- Preview the upscaled video
-- Download or export the result
-- Compare with the original if needed
-
----
-
-## Tips for Best Results
-
-- Use source videos with clear frames
-- Avoid upscaling extremely low-res clips too far up (e.g., 240p → 4K)
-- Upscaling works best when the original quality is moderately high
-
----
-
-## Common Issues
-
-**Upscaled video looks blurry**\
-➡ Upscaling cannot add detail that doesn’t exist in the source. Start with the highest quality original possible.
-
-**Upscale takes a long time**\
-➡ Higher target resolutions require more processing.
-
-**Video artifacts appear**\
-➡ Try a lower upscale target or regenerate.
-
----
-
-## What Happens After Upscaling
-
-An upscaled video becomes a **separate output file** from the original.\
-Your original stays unchanged in the library.
+<Tip>
+  Start from the cleanest available source rather than repeatedly upscaling an
+  already processed derivative.
+</Tip>

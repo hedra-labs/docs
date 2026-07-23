@@ -1,113 +1,52 @@
 ---
-title: "How to Create an Element"
-description: "Elements are reusable building blocks you can use to jumpstart content creation in Hedra."
+title: "Create an Element"
+description: "Save reusable visual context for characters, environments, styles, outfits, and brand identities."
 ---
 
-<video controls={true} className="w-full aspect-video rounded-xl" src="https://stream.mux.com/IB2VDCIOpDC4lvqefeln2y7SsWlIf1f4lklExz5eBaw.m3u8" />
+Elements give frequently reused visual context a stable name that you can mention
+in agent and manual-tool prompts.
 
-## What Are Elements?
+## Create an Element
 
-Elements are pre-configured visual pieces you can use to define creative building blocks like:
+<Steps>
+  <Step title="Open the Elements library">
+    Select **Library**, then choose **Elements**.
+  </Step>
+  <Step title="Open Create Element">
+    Select the **Create element** card.
+  </Step>
+  <Step title="Add references">
+    Add up to 10 PNG, JPG, or WebP images, each up to 10 MB. Use images that agree
+    about the subject or visual identity you want to preserve.
+  </Step>
+  <Step title="Name and classify it">
+    Enter a unique `@name`, then choose **Character**, **Environment**, **Style**,
+    **Outfit**, or **Brand Identity**.
+  </Step>
+  <Step title="Describe the invariant">
+    Optionally explain what the agent should preserve and which variation is
+    acceptable, then select **Save**.
+  </Step>
+</Steps>
 
-- Character styles and poses
-- Visual environments
-- Clothing or outfit options
-- Visual themes
-- Custom branded assets
+## Use an Element
 
-They help you avoid “blank slate paralysis” by giving you a tangible visual starting point instead of starting from generic text. You can mix and match Elements with your own uploads or generated content to speed up creation, eliminate guesswork, and reduce prompt fatigue.
+Type `@` in a Space or manual image/video prompt and select the Element.
 
----
+```text
+Place @field-jacket on @maya in a foggy coastal environment.
+Preserve the jacket construction and Maya's facial identity.
+```
 
-## When Should You Use Elements?
+## Reference quality
 
-Use Elements when you:
+- Use sharp images without heavy compression.
+- Include useful angles when shape matters.
+- Avoid mixing conflicting identities or styles in one Element.
+- Crop tightly enough that the intended subject is obvious.
+- Use the description to distinguish what is fixed from what may change.
 
-- Want a consistent character or style base
-- Don’t want to write detailed prompts from scratch
-- Are iterating content quickly
-- Need visual inspiration
-- Want reusable components for a series of videos
-
----
-
-## How to Create an Element
-
-Create reusable elements like **characters, environments, styles, and outfits** that you can use across projects.
-
----
-
-## 1. Open the Elements Page
-
-From the **Image** page:
-
-1. Click **Elements** at the top navigation.
-
----
-
-## 2. Open My Elements
-
-Inside the Elements page:
-
-1. Click **My Elements**.
-
----
-
-## 3. Create a New Element
-
-1. Click **Create Element** below My Elements.
-
----
-
-## 4. Upload Reference Images
-
-You can upload up to **10 reference images**.
-
-- Drag and drop your images\
-  **or**
-- Click the upload area to select files
-
-Reference images help define the visual consistency of your element.
-
----
-
-## 5. Configure the Element
-
-Before saving:
-
-- Enter a **Name**
-- Select the **Type**:
-
-  <Icon icon="face-smile" /> **Characters** – Base personas you can animate\
-  <Icon icon="palette" /> **Styles** – Visual art styles or render looks\
-  <Icon icon="apartment" /> **Environments** – Background scenes\
-  <Icon icon="shirt" /> **Outfits** – Clothing sets your characters can wear
-- (Optional) Add a description
-
----
-
-## 6. Save
-
-Click **Save** to store the element in your library.
-
-Your new element will now appear under **My Elements** and can be reused in future creations.
-
----
-
-## Tips for Best Results
-
-- **Use branded Elements** for recurring characters or styles.
-- **Mix multiple Elements** to create unique combinations.
-- **Name and tag Elements** so they’re easy to find later.
-- **Start with Elements first**, then refine your prompts around them.
-
----
-
-## Why Elements Matter
-
-Elements solve common content-creation problems:
-
-✔ They eliminate blank slate intimidation. \
-✔ They let you combine visuals without complex prompting. \
-✔ They speed up repeatable workflows. \
-✔ They help maintain brand consistency.
+<Tip>
+  Use an Element for recurring visual identity, a Skill for recurring instructions,
+  and an ordinary reference for one-off source media.
+</Tip>

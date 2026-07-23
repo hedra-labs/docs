@@ -1,0 +1,84 @@
+---
+title: "Work in Spaces"
+description: "Use a Space to keep an agent conversation, visual canvas, references, and outputs together."
+---
+
+A Space is the working context for a project. It combines an agent conversation
+with a visual canvas, so planning, inference, source material, and finished assets
+stay connected.
+
+<Frame caption="A Space keeps the agent and its visual work side by side.">
+  ![A Hedra Space with an agent conversation and generated imagery on a canvas](/images/product/agent-space.webp)
+</Frame>
+
+## What a Space contains
+
+- **Conversation** — the brief, follow-up instructions, decisions, and agent results.
+- **Canvas** — generated, uploaded, and collected media arranged in a visual workspace.
+- **References** — the assets and Elements used to keep identity, style, or product
+  details consistent.
+- **Project context** — the work already completed and available for the next request.
+
+## A practical workflow
+
+<Steps>
+  <Step title="Set the direction">
+    Describe the outcome and add the references the agent should use.
+  </Step>
+  <Step title="Review on the canvas">
+    Compare outputs spatially, select the useful work, and keep multiple directions
+    visible while you decide.
+  </Step>
+  <Step title="Refine in context">
+    Ask for targeted changes by referring to a selected asset or an earlier result.
+  </Step>
+  <Step title="Reuse or organize">
+    Download finished work, keep it in the Space, or organize assets through the
+    Library and Projects.
+  </Step>
+</Steps>
+
+## Spaces and manual tools
+
+<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+  <div>
+    <h3>Choose the interface that matches the work</h3>
+    <p>Use a <strong>Space</strong> when the task benefits from planning, research, multiple steps, references, or conversational iteration. The Agent can move between capabilities while the conversation and canvas preserve the project context.</p>
+    <p>Use a <strong>manual tool</strong> when you already know the single operation, model, inputs, and settings you want. Image, Video, Audio, and Composer provide direct controls without changing the Space workflow.</p>
+    <p>Outputs from either path remain available in the Library and can be brought back into a Space as references.</p>
+    <p><a href="/pages/app/getting-started/manual-tools">Compare the manual tools →</a></p>
+  </div>
+  <div className="space-y-4">
+    <img src="/images/product/manual-image.webp" alt="Manual Image tool with model, references, prompt, and output settings" className="rounded-xl border border-gray-200 dark:border-white/10" />
+    <p className="text-sm text-gray-500">Manual Image</p>
+    <img src="/images/product/manual-video.webp" alt="Manual Video tool with operation, model, reference, and output controls" className="rounded-xl border border-gray-200 dark:border-white/10" />
+    <p className="text-sm text-gray-500">Manual Video</p>
+    <img src="/images/product/manual-speech.webp" alt="Manual Audio tool with voice, synthesis, and script controls" className="rounded-xl border border-gray-200 dark:border-white/10" />
+    <p className="text-sm text-gray-500">Manual Audio</p>
+  </div>
+</div>
+
+## Realtime multiplayer
+
+A Space can be shared without exporting or duplicating the canvas. Select
+**Share** to invite people by email or change general access for the link.
+
+- **Can view** gives someone live, read-only access to the canvas.
+- **Can edit** lets them arrange and edit canvas content with you.
+- **Private** limits access to the owner and specifically invited people.
+- **Anyone with the link** can be configured for viewing or editing.
+
+Connected collaborators join the same realtime canvas room. Canvas changes
+synchronize as people work, and generation status updates are relayed to connected
+viewers and editors so the shared Space does not fall out of sync.
+
+<Note>
+  Share access deliberately. Anyone-edit links allow every person with the link to
+  modify the Space. Use individual invitations when you need named access and
+  per-person roles.
+</Note>
+
+<Tip>
+  Keep one creative objective per Space. The agent can use earlier decisions more
+  reliably when the conversation and canvas remain focused.
+</Tip>

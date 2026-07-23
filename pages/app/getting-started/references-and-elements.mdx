@@ -1,0 +1,58 @@
+---
+title: "Give the agent visual context"
+description: "Use references and Elements to preserve identity, products, environments, and visual direction."
+---
+
+Text describes an intention. References and Elements show the agent what must
+remain recognizable.
+
+## References
+
+Add an image, video, or audio reference when a task depends on existing media.
+Depending on the workflow, a reference can define:
+
+- a subject or product that must remain recognizable;
+- the opening frame or motion of a video;
+- a visual style, composition, or color direction;
+- speech or music used by an avatar or edit;
+- source material the agent should inspect or transform.
+
+In a Space, select **Add reference asset**. In a manual tool, use the reference
+panel above the prompt. You can upload new media or choose existing work from the
+Library.
+
+## Elements
+
+An Element is reusable visual context with a stable `@name`. Elements are useful
+for recurring characters, environments, styles, outfits, and brand identities.
+
+<Steps>
+  <Step title="Open Library → Elements">
+    Select **Library**, then choose **Elements**.
+  </Step>
+  <Step title="Create the Element">
+    Select **Create element** and add up to 10 PNG, JPG, or WebP reference images,
+    each up to 10 MB.
+  </Step>
+  <Step title="Describe it">
+    Add a name, choose **Character**, **Environment**, **Style**, **Outfit**, or
+    **Brand Identity**, and optionally add a description.
+  </Step>
+  <Step title="Mention it">
+    Type `@` in an agent or manual-tool prompt and select the Element.
+  </Step>
+</Steps>
+
+## Choose the right kind of context
+
+| Need | Use |
+| --- | --- |
+| One-off source media | A reference |
+| A recurring character or product identity | An Element |
+| A repeatable sequence of instructions | A Skill |
+| Current information from another service | A connector |
+
+<Tip>
+  Use a small set of clear, mutually consistent references. More images are not
+  automatically better if they disagree about identity or style.
+</Tip>

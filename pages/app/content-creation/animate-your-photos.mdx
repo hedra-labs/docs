@@ -1,19 +1,42 @@
 ---
-title: "Animate Your Photos"
-description: "Learn how to bring your images to life with generative AI video."
-og:image: "https://www.hedra.com/docs/images/articles/animate-photos.jpg"
+title: "Animate a still image"
+description: "Bring a still image to life with agent direction or direct video inference."
 ---
 
-<video controls={true} className="w-full aspect-video rounded-xl" src="https://stream.mux.com/98mOy02Jetm7BrwE1i4VBlTwEnBE6hVv01VM3U7bnNwn00.m3u8" />
+Animation works best when the prompt describes motion and camera behavior without
+contradicting the source image.
 
-## Using Generative AI Video
+## Animate with the agent
 
-Bringing your photos to life has never been easier. The simpliest way to do this:
+<Steps>
+  <Step title="Start with the animate Skill">
+    Select **animate** on the home screen or start a new Space in **Video** mode.
+  </Step>
+  <Step title="Add the still image">
+    Attach the image as a reference and explain which parts must remain unchanged.
+  </Step>
+  <Step title="Direct motion">
+    Describe subject motion, environmental motion, camera movement, pace, and the
+    intended duration.
+  </Step>
+  <Step title="Review in context">
+    Check identity, geometry, and temporal consistency. Ask for one bounded change
+    at a time.
+  </Step>
+</Steps>
 
-1. From the home page, click the **\+ References** button in the Agent prompt box
-2. **Select** **Upload**
-3. Find and **select the image** you want to animate
-4. **Describe what you want** to happen in the video using the prompt box
-5. Click the **Arrow** <Icon icon="arrow-up" />
-6. The Agent will present a suggestion. You can **Deny** or **Approve** it
-7. Once finished, click the <Icon icon="ellipsis" /> on your video to **Download** or **Share**
+```text
+Animate this portrait with subtle breathing and one natural blink.
+The camera makes a slow 5% push-in. Keep the face, wardrobe, background,
+and lighting unchanged. No speaking.
+```
+
+## Animate with the manual Video tool
+
+Open **Manual tools → Video**, choose a model that accepts an image reference,
+attach the still, and set the supported duration, resolution, and aspect ratio.
+
+<Tip>
+  Small, physically plausible motion is easier to preserve than several competing
+  actions in one short clip.
+</Tip>

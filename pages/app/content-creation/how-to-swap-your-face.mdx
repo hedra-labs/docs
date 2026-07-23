@@ -1,25 +1,46 @@
 ---
-title: "How to Swap Your Face"
-description: "Learn how to swap your face onto another person."
-"og:image": "https://www.hedra.com/docs/images/articles/how-to-swap-faces.png"
+title: "Swap a face"
+description: "Use the swap-a-face Skill with clear source and target references."
 ---
 
-<video controls className="w-full aspect-video rounded-xl" src="https://stream.mux.com/VA5RrogaJoLX1028jhar2OYUaXTLvLIzLIOx2dWfIJPw.m3u8" />
+Use the **swap-a-face** Skill when you want to transfer a face from one image into
+another while preserving the target composition.
 
-## Swapping Faces
+<Warning>
+  Only use faces you have permission to use. Do not create deceptive,
+  non-consensual, or impersonating content.
+</Warning>
 
-To swap faces on Hedra, you can access the tool directly here: [Templates | Hedra](https://www.hedra.com/app/templates?template=face-swap)
+## Inputs
 
-<Info>
-  You need two images. The person being replaced and a picture of yourself, or the person being added.
-</Info>
+You need:
 
-**Upload the face you want to insert:**\
-This is the person/face that is getting replaced.
+- a clear **source face** whose identity should be transferred;
+- a **target image** containing the face to replace.
 
-**Photo with face to replace:**\
-This is a picture of you or the person you want to appear in the new image.
+## Workflow
 
-After inserting the images, select your aspect ratio (**9:16, 16:9**)
+<Steps>
+  <Step title="Start the Skill">
+    Open **Personalize → Skills** and choose **swap-a-face**, or select it from the
+    available Skill shortcuts.
+  </Step>
+  <Step title="Add both references">
+    Label the source and target clearly in your instruction so their roles cannot
+    be confused.
+  </Step>
+  <Step title="Describe what to preserve">
+    Specify whether expression, hair, pose, lighting, clothing, and background
+    should stay from the target image.
+  </Step>
+  <Step title="Review the result">
+    Check identity, edges, skin tone, lighting, and occlusion before using or sharing
+    the image.
+  </Step>
+</Steps>
 
-Click **Generate**
+```text
+Use reference 1 as the source identity and reference 2 as the target.
+Replace only the face. Preserve the target's hair, expression, lighting,
+clothing, pose, and background.
+```
