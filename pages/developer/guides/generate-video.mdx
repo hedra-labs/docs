@@ -11,7 +11,8 @@ export HEDRA_API_KEY="your_api_key"
 
 ## Text-to-video
 
-Generate a video from a text prompt alone using Grok Video T2V (`827122cd-5fdd-4412-86f2-554f7bb8eef9`):
+Generate a video from a text prompt alone using Grok Video T2V
+(`fal/grok-video-t2v`):
 
 ```bash
 curl -X POST https://api.hedra.com/web-app/public/generations \
@@ -19,7 +20,7 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
   -H "X-API-Key: $HEDRA_API_KEY" \
   -d '{
     "type": "video",
-    "ai_model_id": "827122cd-5fdd-4412-86f2-554f7bb8eef9",
+    "model_slug": "fal/grok-video-t2v",
     "generated_video_inputs": {
       "text_prompt": "A woman walking through a busy market at golden hour",
       "aspect_ratio": "16:9",
@@ -31,7 +32,8 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 
 ## Image-to-video
 
-Generate a video from a start image using Grok Video I2V (`0435547d-1b30-41ad-bf66-ca476ff0564e`).
+Generate a video from a start image using Grok Video I2V
+(`fal/grok-video-i2v`).
 
 ### Step 1: Upload a start image
 
@@ -59,7 +61,7 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
   -H "X-API-Key: $HEDRA_API_KEY" \
   -d '{
     "type": "video",
-    "ai_model_id": "0435547d-1b30-41ad-bf66-ca476ff0564e",
+    "model_slug": "fal/grok-video-i2v",
     "start_keyframe_id": "{image_asset_id}",
     "generated_video_inputs": {
       "text_prompt": "The scene comes to life with gentle movement",
@@ -81,13 +83,18 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 
 | Field | Description |
 |-------|-------------|
-| `ai_model_id` | The model to use (see `GET /models` for video models) |
+| `model_slug` | The model slug to use (see `GET /models?types=video`) |
 | `start_keyframe_id` | Asset ID of the start image (required for I2V models) |
 | `end_keyframe_id` | Asset ID of the end image |
 | `generated_video_inputs.aspect_ratio` | e.g. `"16:9"`, `"9:16"`, `"1:1"` |
 | `generated_video_inputs.resolution` | e.g. `"540p"`, `"720p"` |
 | `generated_video_inputs.duration_ms` | Duration in milliseconds |
 | `batch_size` | Generate 1-8 variations at once (default: 1) |
+
+<Note>
+  When `batch_size` is greater than 1, include a `generation_ids` array containing
+  one client-generated UUID for each variation.
+</Note>
 
 ## Poll for completion
 

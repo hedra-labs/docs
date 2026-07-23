@@ -58,6 +58,7 @@
             "group": "Build with the agent",
             "pages": [
               "pages/app/getting-started/references-and-elements",
+              "pages/app/getting-started/multiplayer",
               "pages/app/getting-started/skills-and-connectors"
             ]
           },

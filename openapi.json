@@ -476,37 +476,7 @@
                     "$ref": "#/components/schemas/GenerateTextToSpeechRequest"
                   },
                   {
-                    "$ref": "#/components/schemas/GenerateTextToSoundRequest"
-                  },
-                  {
                     "$ref": "#/components/schemas/GenerateImageRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateImageUpscaleRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateVideoUpscaleRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateIsolatedAudioRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateSpeechToSpeechRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateVoiceCloneRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateAudioFromVideoRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateVideoWithAudioRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateVideoToVideoRequest"
-                  },
-                  {
-                    "$ref": "#/components/schemas/GenerateMotionControlRequest-Input"
                   }
                 ],
                 "discriminator": {
@@ -514,18 +484,8 @@
                   "mapping": {
                     "video": "#/components/schemas/GenerateVideoRequest-Input",
                     "text_to_speech": "#/components/schemas/GenerateTextToSpeechRequest",
-                    "text_to_sound": "#/components/schemas/GenerateTextToSoundRequest",
                     "image": "#/components/schemas/GenerateImageRequest",
-                    "image_to_image": "#/components/schemas/GenerateImageRequest",
-                    "image_upscale": "#/components/schemas/GenerateImageUpscaleRequest",
-                    "video_upscale": "#/components/schemas/GenerateVideoUpscaleRequest",
-                    "audio_isolation": "#/components/schemas/GenerateIsolatedAudioRequest",
-                    "speech_to_speech": "#/components/schemas/GenerateSpeechToSpeechRequest",
-                    "voice_clone": "#/components/schemas/GenerateVoiceCloneRequest",
-                    "audio_from_video": "#/components/schemas/GenerateAudioFromVideoRequest",
-                    "video_with_audio": "#/components/schemas/GenerateVideoWithAudioRequest",
-                    "video_to_video": "#/components/schemas/GenerateVideoToVideoRequest",
-                    "motion_control": "#/components/schemas/GenerateMotionControlRequest-Input"
+                    "image_to_image": "#/components/schemas/GenerateImageRequest"
                   }
                 },
                 "title": "Generate Request"
@@ -547,37 +507,7 @@
                       "$ref": "#/components/schemas/GenerateTextToSpeechResponse"
                     },
                     {
-                      "$ref": "#/components/schemas/GenerateTextToSoundResponse"
-                    },
-                    {
                       "$ref": "#/components/schemas/GenerateImageResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateImageUpscaleResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateVideoUpscaleResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateIsolatedAudioResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateSpeechToSpeechResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateVoiceCloneResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateAudioFromVideoResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateVideoWithAudioResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateVideoToVideoResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GenerateMotionControlResponse"
                     }
                   ],
                   "discriminator": {
@@ -585,18 +515,8 @@
                     "mapping": {
                       "video": "#/components/schemas/GenerateVideoResponse",
                       "text_to_speech": "#/components/schemas/GenerateTextToSpeechResponse",
-                      "text_to_sound": "#/components/schemas/GenerateTextToSoundResponse",
                       "image": "#/components/schemas/GenerateImageResponse",
-                      "image_to_image": "#/components/schemas/GenerateImageResponse",
-                      "image_upscale": "#/components/schemas/GenerateImageUpscaleResponse",
-                      "video_upscale": "#/components/schemas/GenerateVideoUpscaleResponse",
-                      "audio_isolation": "#/components/schemas/GenerateIsolatedAudioResponse",
-                      "speech_to_speech": "#/components/schemas/GenerateSpeechToSpeechResponse",
-                      "voice_clone": "#/components/schemas/GenerateVoiceCloneResponse",
-                      "audio_from_video": "#/components/schemas/GenerateAudioFromVideoResponse",
-                      "video_with_audio": "#/components/schemas/GenerateVideoWithAudioResponse",
-                      "video_to_video": "#/components/schemas/GenerateVideoToVideoResponse",
-                      "motion_control": "#/components/schemas/GenerateMotionControlResponse"
+                      "image_to_image": "#/components/schemas/GenerateImageResponse"
                     }
                   },
                   "title": "Response Generate Asset Public Generations Post"
@@ -1698,10 +1618,18 @@
             "description": "The id of the Image asset to use as the start keyframe. This will be ignored if reference_image_ids is provided."
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The model to use."
+            "description": "Deprecated. Use model_slug to select the model.",
+            "deprecated": true
           },
           "reference_image_ids": {
             "anyOf": [
@@ -1732,12 +1660,23 @@
             "title": "Enhance Prompt",
             "description": "If true, automatically enhance the prompt before generation.",
             "default": false
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to ai_model_id."
           }
         },
         "type": "object",
         "required": [
-          "text_prompt",
-          "ai_model_id"
+          "text_prompt"
         ],
         "title": "GenerateImageRequest"
       },
@@ -1848,10 +1787,18 @@
             "description": "The id of the Image asset to use as the start keyframe. This will be ignored if reference_image_ids is provided."
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The model to use."
+            "description": "Deprecated. Use model_slug to select the model.",
+            "deprecated": true
           },
           "reference_image_ids": {
             "anyOf": [
@@ -1940,12 +1887,23 @@
             "type": "array",
             "title": "Batch Results",
             "description": "All generation results in the batch. Always populated (even for batch_size=1). The main response fields (id, asset_id, etc.) reflect the first successful generation."
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to ai_model_id."
           }
         },
         "type": "object",
         "required": [
           "text_prompt",
-          "ai_model_id",
           "asset_id",
           "id",
           "created_at",
@@ -3319,7 +3277,8 @@
               }
             ],
             "title": "Model Id",
-            "description": "The id of the model to use."
+            "description": "Deprecated. Use model_slug to select the model.",
+            "deprecated": true
           },
           "text": {
             "type": "string",
@@ -3346,6 +3305,18 @@
             "$ref": "#/components/schemas/SupportedLanguage",
             "description": "Language for TTS. See SupportedLanguage enum for valid values. Defaults to 'auto'.",
             "default": "auto"
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to model_id."
           }
         },
         "type": "object",
@@ -3433,7 +3404,8 @@
               }
             ],
             "title": "Model Id",
-            "description": "The id of the model to use."
+            "description": "Deprecated. Use model_slug to select the model.",
+            "deprecated": true
           },
           "text": {
             "type": "string",
@@ -3498,6 +3470,18 @@
             ],
             "title": "Eta Sec",
             "description": "Estimated time until completion in seconds. May be None if no historical data available."
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to model_id."
           }
         },
         "type": "object",
@@ -3574,11 +3558,18 @@
             "default": "video"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "ID of the model to use for the generation.",
-            "default": "d1dd37a3-e39a-4854-a298-6510289f9cf2"
+            "description": "Deprecated. Use model_slug to select the model.",
+            "deprecated": true
           },
           "start_keyframe_id": {
             "anyOf": [
@@ -3712,6 +3703,18 @@
             "title": "Batch Size",
             "description": "Number of video variations to generate (1-8). When > 1, batch_results will contain all generation results.",
             "default": 1
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "Slug of the model to use for the generation. Alternative to ai_model_id."
           }
         },
         "type": "object",
@@ -3782,11 +3785,18 @@
             "default": "video"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "ID of the model to use for the generation.",
-            "default": "d1dd37a3-e39a-4854-a298-6510289f9cf2"
+            "description": "Deprecated. Use model_slug to select the model.",
+            "deprecated": true
           },
           "start_keyframe_id": {
             "anyOf": [
@@ -3920,6 +3930,18 @@
             "title": "Batch Size",
             "description": "Number of video variations to generate (1-8). When > 1, batch_results will contain all generation results.",
             "default": 1
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "Slug of the model to use for the generation. Alternative to ai_model_id."
           }
         },
         "type": "object",
@@ -3990,11 +4012,18 @@
             "default": "video"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "ID of the model to use for the generation.",
-            "default": "d1dd37a3-e39a-4854-a298-6510289f9cf2"
+            "description": "Deprecated. Use model_slug to select the model.",
+            "deprecated": true
           },
           "start_keyframe_id": {
             "anyOf": [
@@ -4186,6 +4215,18 @@
             "type": "array",
             "title": "Batch Results",
             "description": "All generation results in the batch. Always populated (even for batch_size=1). The main response fields (id, asset_id, etc.) reflect the first successful generation."
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "Slug of the model to use for the generation. Alternative to ai_model_id."
           }
         },
         "type": "object",
