@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Hedra Web API",
+    "title": "Hedra Public API",
     "version": "0.1.0"
   },
   "servers": [
@@ -17,14 +17,7 @@
           "Public"
         ],
         "summary": "List Models",
-        "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models.",
-        "x-mint": {
-          "metadata": {
-            "title": "List Available AI Models",
-            "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models."
-          }
-        },
-        "operationId": "list_models_public_models_get",
+        "operationId": "list_models_models_get",
         "security": [
           {
             "APIKeyHeader": []
@@ -40,7 +33,7 @@
                 {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "$ref": "#/components/schemas/GenerationType"
                   }
                 },
                 {
@@ -61,7 +54,7 @@
                   "items": {
                     "$ref": "#/components/schemas/AIModel"
                   },
-                  "title": "Response List Models Public Models Get"
+                  "title": "Response List Models Models Get"
                 }
               }
             }
@@ -76,7 +69,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models."
       }
     },
     "/voices": {
@@ -85,14 +79,7 @@
           "Public"
         ],
         "summary": "List Voices",
-        "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos.",
-        "x-mint": {
-          "metadata": {
-            "title": "List Available Voices",
-            "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos."
-          }
-        },
-        "operationId": "list_voices_public_voices_get",
+        "operationId": "list_voices_voices_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -103,7 +90,7 @@
                     "$ref": "#/components/schemas/Asset"
                   },
                   "type": "array",
-                  "title": "Response List Voices Public Voices Get"
+                  "title": "Response List Voices Voices Get"
                 }
               }
             }
@@ -113,7 +100,8 @@
           {
             "APIKeyHeader": []
           }
-        ]
+        ],
+        "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos."
       }
     },
     "/assets": {
@@ -122,14 +110,7 @@
           "Public"
         ],
         "summary": "List Assets",
-        "description": "Retrieve your uploaded and generated assets, with optional filtering by asset type or IDs.",
-        "x-mint": {
-          "metadata": {
-            "title": "List Uploaded & Generated Assets",
-            "description": "Retrieve your uploaded and generated assets, with optional filtering by asset type or IDs."
-          }
-        },
-        "operationId": "list_assets_public_assets_get",
+        "operationId": "list_assets_assets_get",
         "security": [
           {
             "APIKeyHeader": []
@@ -171,7 +152,7 @@
                   "items": {
                     "$ref": "#/components/schemas/Asset"
                   },
-                  "title": "Response List Assets Public Assets Get"
+                  "title": "Response List Assets Assets Get"
                 }
               }
             }
@@ -186,15 +167,15 @@
               }
             }
           }
-        }
+        },
+        "description": "Retrieve your uploaded and generated assets by asset type, with optional filtering by IDs."
       },
       "post": {
         "tags": [
           "Public"
         ],
         "summary": "Create Asset",
-        "description": "Create a new asset record for an image, audio, or voice file to use in generations.",
-        "operationId": "create_asset_public_assets_post",
+        "operationId": "create_asset_assets_post",
         "security": [
           {
             "APIKeyHeader": []
@@ -231,7 +212,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Create a new asset record before uploading a supported file to use in generations."
       }
     },
     "/assets/{id}/upload": {
@@ -240,8 +222,7 @@
           "Public"
         ],
         "summary": "Upload Asset",
-        "description": "Upload the file contents for a previously created asset.",
-        "operationId": "upload_asset_public_assets__id__upload_post",
+        "operationId": "upload_asset_assets__id__upload_post",
         "security": [
           {
             "APIKeyHeader": []
@@ -264,7 +245,7 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/Body_upload_asset_public_assets__id__upload_post"
+                "$ref": "#/components/schemas/Body_upload_asset_assets__id__upload_post"
               }
             }
           }
@@ -290,7 +271,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Upload the file contents for a previously created asset."
       }
     },
     "/generations": {
@@ -299,14 +281,7 @@
           "Public"
         ],
         "summary": "List ",
-        "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt.",
-        "x-mint": {
-          "metadata": {
-            "title": "List Your Generations",
-            "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt."
-          }
-        },
-        "operationId": "list__public_generations_get",
+        "operationId": "list__generations_get",
         "security": [
           {
             "APIKeyHeader": []
@@ -449,15 +424,15 @@
               }
             }
           }
-        }
+        },
+        "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt."
       },
       "post": {
         "tags": [
           "Public"
         ],
         "summary": "Generate Asset",
-        "description": "Start a new image, video, or audio generation using your chosen model and inputs.",
-        "operationId": "generate_asset_public_generations_post",
+        "operationId": "generate_asset_generations_post",
         "security": [
           {
             "APIKeyHeader": []
@@ -470,22 +445,54 @@
               "schema": {
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/GenerateVideoRequest-Input"
+                    "$ref": "#/components/schemas/GenerateVideoRequest"
                   },
                   {
                     "$ref": "#/components/schemas/GenerateTextToSpeechRequest"
                   },
                   {
+                    "$ref": "#/components/schemas/GenerateTextToSoundRequest"
+                  },
+                  {
                     "$ref": "#/components/schemas/GenerateImageRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GenerateImageUpscaleRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GenerateVideoUpscaleRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GenerateIsolatedAudioRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GenerateSpeechToSpeechRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GenerateVoiceCloneRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GenerateVideoToVideoRequest"
+                  },
+                  {
+                    "$ref": "#/components/schemas/GenerateMotionControlRequest"
                   }
                 ],
                 "discriminator": {
                   "propertyName": "type",
                   "mapping": {
-                    "video": "#/components/schemas/GenerateVideoRequest-Input",
+                    "video": "#/components/schemas/GenerateVideoRequest",
                     "text_to_speech": "#/components/schemas/GenerateTextToSpeechRequest",
+                    "text_to_sound": "#/components/schemas/GenerateTextToSoundRequest",
                     "image": "#/components/schemas/GenerateImageRequest",
-                    "image_to_image": "#/components/schemas/GenerateImageRequest"
+                    "image_to_image": "#/components/schemas/GenerateImageRequest",
+                    "image_upscale": "#/components/schemas/GenerateImageUpscaleRequest",
+                    "video_upscale": "#/components/schemas/GenerateVideoUpscaleRequest",
+                    "audio_isolation": "#/components/schemas/GenerateIsolatedAudioRequest",
+                    "speech_to_speech": "#/components/schemas/GenerateSpeechToSpeechRequest",
+                    "voice_clone": "#/components/schemas/GenerateVoiceCloneRequest",
+                    "video_to_video": "#/components/schemas/GenerateVideoToVideoRequest",
+                    "motion_control": "#/components/schemas/GenerateMotionControlRequest"
                   }
                 },
                 "title": "Generate Request"
@@ -507,7 +514,31 @@
                       "$ref": "#/components/schemas/GenerateTextToSpeechResponse"
                     },
                     {
+                      "$ref": "#/components/schemas/GenerateTextToSoundResponse"
+                    },
+                    {
                       "$ref": "#/components/schemas/GenerateImageResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenerateImageUpscaleResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenerateVideoUpscaleResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenerateIsolatedAudioResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenerateSpeechToSpeechResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenerateVoiceCloneResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenerateVideoToVideoResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/GenerateMotionControlResponse"
                     }
                   ],
                   "discriminator": {
@@ -515,11 +546,19 @@
                     "mapping": {
                       "video": "#/components/schemas/GenerateVideoResponse",
                       "text_to_speech": "#/components/schemas/GenerateTextToSpeechResponse",
+                      "text_to_sound": "#/components/schemas/GenerateTextToSoundResponse",
                       "image": "#/components/schemas/GenerateImageResponse",
-                      "image_to_image": "#/components/schemas/GenerateImageResponse"
+                      "image_to_image": "#/components/schemas/GenerateImageResponse",
+                      "image_upscale": "#/components/schemas/GenerateImageUpscaleResponse",
+                      "video_upscale": "#/components/schemas/GenerateVideoUpscaleResponse",
+                      "audio_isolation": "#/components/schemas/GenerateIsolatedAudioResponse",
+                      "speech_to_speech": "#/components/schemas/GenerateSpeechToSpeechResponse",
+                      "voice_clone": "#/components/schemas/GenerateVoiceCloneResponse",
+                      "video_to_video": "#/components/schemas/GenerateVideoToVideoResponse",
+                      "motion_control": "#/components/schemas/GenerateMotionControlResponse"
                     }
                   },
-                  "title": "Response Generate Asset Public Generations Post"
+                  "title": "Response Generate Asset Generations Post"
                 }
               }
             }
@@ -534,7 +573,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Start a new image, video, or audio generation using your chosen model and inputs."
       }
     },
     "/generations/{generation_id}/status": {
@@ -543,14 +583,7 @@
           "Public"
         ],
         "summary": "Get Status",
-        "description": "Check the status of a generation and retrieve the resulting asset when it completes.",
-        "x-mint": {
-          "metadata": {
-            "title": "Get Generation Status",
-            "description": "Check the status of a generation and retrieve the resulting asset when it completes."
-          }
-        },
-        "operationId": "get_status_public_generations__generation_id__status_get",
+        "operationId": "get_status_generations__generation_id__status_get",
         "security": [
           {
             "APIKeyHeader": []
@@ -589,7 +622,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Check the status of a generation and retrieve the resulting asset when it completes."
       }
     },
     "/billing/credits": {
@@ -598,14 +632,7 @@
           "Public"
         ],
         "summary": "Get Credits",
-        "description": "Retrieve the current API credit balance for your account.",
-        "x-mint": {
-          "metadata": {
-            "title": "Get Your Credit Balance",
-            "description": "Retrieve the current API credit balance for your account."
-          }
-        },
-        "operationId": "get_credits_public_billing_credits_get",
+        "operationId": "get_credits_billing_credits_get",
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -622,7 +649,8 @@
           {
             "APIKeyHeader": []
           }
-        ]
+        ],
+        "description": "Retrieve the current API credit balance for your account."
       }
     }
   },
@@ -631,9 +659,21 @@
       "AIModel": {
         "properties": {
           "id": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Id",
-            "description": "ID of the model"
+            "description": "Environment-specific UUID of the model, or null for a code-backed model with no `ai_models` row (identified by `slug`). Being removed in favor of `slug` (model-registry plan step 7); prefer `slug`."
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug",
+            "description": "Stable cross-environment identifier for the model, e.g. ``google/nano-banana``. Unique and identical across local/staging/production. Prefer ``slug`` over ``id`` when referencing models \u2014 ``id`` is environment-specific and will be removed in a later migration (model-registry plan step 7)."
           },
           "name": {
             "type": "string",
@@ -672,6 +712,28 @@
             "title": "Aspect Ratios",
             "description": "Aspect ratios the model supports."
           },
+          "aspect_ratio_range": {
+            "anyOf": [
+              {
+                "prefixItems": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "type": "array",
+                "maxItems": 2,
+                "minItems": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Aspect Ratio Range",
+            "description": "If set to (min, max), the model accepts any keyframe whose width/height ratio is in [min, max], not just the values in ``aspect_ratios``. The model snaps the output to its internal grid. ``aspect_ratios`` then serves as UI/preset labels rather than as an enum gate."
+          },
           "resolutions": {
             "anyOf": [
               {
@@ -686,6 +748,18 @@
             ],
             "title": "Resolutions",
             "description": "Resolutions the model supports."
+          },
+          "default_resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default Resolution",
+            "description": "Backend-declared default output resolution for this model."
           },
           "durations": {
             "anyOf": [
@@ -762,6 +836,33 @@
             "title": "Requires Character Orientation",
             "description": "Whether the model requires character orientation (motion control)."
           },
+          "eta_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eta Ms",
+            "description": "Average generation duration in milliseconds."
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags",
+            "description": "Tags for model categorization."
+          },
           "max_duration_ms": {
             "anyOf": [
               {
@@ -772,7 +873,7 @@
               }
             ],
             "title": "Max Duration Ms",
-            "description": "Maximum video duration in milliseconds. Only applies to audio-driven models."
+            "description": "Maximum output duration in milliseconds for video/audio models."
           },
           "custom_resolution": {
             "anyOf": [
@@ -819,6 +920,45 @@
             "title": "Dimensions",
             "description": "Width and height for each aspect_ratio and resolution tuple."
           },
+          "min_prompt_length": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Prompt Length",
+            "description": "Minimum character count for text prompts. Null means no minimum."
+          },
+          "max_prompt_length": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Prompt Length",
+            "description": "Maximum character count for text prompts. Null means no maximum."
+          },
+          "inputs": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/InputMode"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inputs",
+            "description": "List of input modes the model supports. Each mode groups mutually exclusive input slots. The frontend picks one mode. text_to_video (no inputs) is always implicitly available for VIDEO type models. Null means the model has no declarative input specifications (use requires_* booleans)."
+          },
           "logo_url": {
             "anyOf": [
               {
@@ -852,7 +992,7 @@
         },
         "type": "object",
         "required": [
-          "id",
+          "slug",
           "name",
           "description",
           "type",
@@ -904,7 +1044,14 @@
             "description": "Name of the asset. Default to user-provided file name."
           },
           "thumbnail_url": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Thumbnail Url",
             "description": "URL of the thumbnail image."
           },
@@ -961,6 +1108,9 @@
                 "$ref": "#/components/schemas/UploadedVideo"
               },
               {
+                "$ref": "#/components/schemas/Uploaded3D"
+              },
+              {
                 "$ref": "#/components/schemas/GeneratedAudio"
               },
               {
@@ -983,6 +1133,7 @@
                 "generated_video": "#/components/schemas/GeneratedVideo",
                 "uploaded_audio": "#/components/schemas/UploadedAudio",
                 "uploaded_image": "#/components/schemas/UploadedImage",
+                "uploaded_three_d": "#/components/schemas/Uploaded3D",
                 "uploaded_video": "#/components/schemas/UploadedVideo",
                 "voice": "#/components/schemas/Voice"
               }
@@ -994,7 +1145,6 @@
           "id",
           "type",
           "name",
-          "thumbnail_url",
           "created_at",
           "asset"
         ],
@@ -1007,7 +1157,9 @@
           "image",
           "audio",
           "video",
-          "voice"
+          "voice",
+          "three_d",
+          "rich_text"
         ],
         "title": "AssetType"
       },
@@ -1037,7 +1189,7 @@
               }
             ],
             "title": "Asset Id",
-            "description": "The id of the image asset resulting from the generation. None if failed."
+            "description": "The id of the image asset. Set even on failure when the client reserved an asset id; None only when no id was reserved."
           },
           "created_at": {
             "type": "string",
@@ -1101,7 +1253,7 @@
               }
             ],
             "title": "Asset Id",
-            "description": "The id of the video asset resulting from the generation. None if failed."
+            "description": "The id of the video asset. Set even on failure when the client reserved an asset id; None only when no id was reserved."
           },
           "created_at": {
             "type": "string",
@@ -1128,6 +1280,18 @@
             ],
             "title": "Error",
             "description": "Error message if this item failed."
+          },
+          "eta_sec": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eta Sec",
+            "description": "Estimated time until completion in seconds. None if unavailable."
           }
         },
         "type": "object",
@@ -1139,11 +1303,11 @@
         "title": "BatchVideoResultItem",
         "description": "Individual result item in a batch video generation."
       },
-      "Body_upload_asset_public_assets__id__upload_post": {
+      "Body_upload_asset_assets__id__upload_post": {
         "properties": {
           "file": {
             "type": "string",
-            "format": "binary",
+            "contentMediaType": "application/octet-stream",
             "title": "File"
           }
         },
@@ -1151,7 +1315,7 @@
         "required": [
           "file"
         ],
-        "title": "Body_upload_asset_public_assets__id__upload_post"
+        "title": "Body_upload_asset_assets__id__upload_post"
       },
       "CreateAssetRequest": {
         "properties": {
@@ -1163,6 +1327,30 @@
           "type": {
             "$ref": "#/components/schemas/AssetType",
             "description": "The type of the asset."
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID, used as the produced media+asset resource_id so the client knows the upload's identity before it completes."
           }
         },
         "type": "object",
@@ -1182,6 +1370,30 @@
           "type": {
             "$ref": "#/components/schemas/AssetType",
             "description": "The type of the asset."
+          },
+          "workspace_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Id"
+          },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID, used as the produced media+asset resource_id so the client knows the upload's identity before it completes."
           },
           "id": {
             "type": "string",
@@ -1243,7 +1455,22 @@
               }
             ],
             "title": "Workspace Credits",
-            "description": "Credits for each workspace mapped by workspace_id. Only included if user is in a workspace."
+            "description": "DEPRECATED: use workspace_credit_pool[id].available instead. Available credits for each workspace mapped by workspace_id. Only included if user is in a workspace."
+          },
+          "workspace_credit_pool": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/WorkspaceCreditUsage"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workspace Credit Pool",
+            "description": "Per-workspace credit pool usage (used/allocated/available) keyed by workspace_id. Only included if user is in a workspace."
           }
         },
         "type": "object",
@@ -1275,241 +1502,26 @@
         ],
         "title": "Dimension"
       },
-      "GenerateAudioFromVideoRequest": {
-        "properties": {
-          "workspace_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workspace Id"
-          },
-          "agent_thread_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Agent Thread Id",
-            "description": "Optional agent thread ID to associate this generation with."
-          },
-          "generation_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Id",
-            "description": "Optional pre-reserved generation ID. If provided, this ID will be used instead of generating a new one. For batch operations (batch_size > 1), use generation_ids instead."
-          },
-          "generation_ids": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Ids",
-            "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
-          },
-          "type": {
-            "type": "string",
-            "const": "audio_from_video",
-            "title": "Type",
-            "default": "audio_from_video"
-          },
-          "audio_generation_model_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Audio Generation Model Id",
-            "description": "ID of the model to use for video-to-audio generation (Mirelo Studio)."
-          },
-          "video_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Video Id",
-            "description": "The id of the video asset to generate audio from."
-          },
-          "prompt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prompt",
-            "description": "Optional prompt to guide the audio generation."
-          }
-        },
-        "type": "object",
-        "required": [
-          "audio_generation_model_id",
-          "video_id"
+      "ErrorCode": {
+        "type": "string",
+        "enum": [
+          "UNKNOWN",
+          "INVALID_ARGUMENT",
+          "NOT_FOUND",
+          "ALREADY_EXISTS",
+          "ALREADY_IN_PROGRESS",
+          "UNAUTHORIZED",
+          "PERMISSION_DENIED",
+          "MISSING_CREDITS",
+          "MODERATION_FAILED",
+          "FAILED_PRECONDITION",
+          "DEADLINE_EXCEEDED",
+          "RESOURCE_EXHAUSTED",
+          "UNAVAILABLE",
+          "INTERNAL"
         ],
-        "title": "GenerateAudioFromVideoRequest",
-        "description": "Audio generation request that extracts sound effects from video using Mirelo Studio."
-      },
-      "GenerateAudioFromVideoResponse": {
-        "properties": {
-          "workspace_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workspace Id"
-          },
-          "agent_thread_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Agent Thread Id",
-            "description": "Optional agent thread ID to associate this generation with."
-          },
-          "generation_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Id",
-            "description": "Optional pre-reserved generation ID. If provided, this ID will be used instead of generating a new one. For batch operations (batch_size > 1), use generation_ids instead."
-          },
-          "generation_ids": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Ids",
-            "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
-          },
-          "type": {
-            "type": "string",
-            "const": "audio_from_video",
-            "title": "Type",
-            "default": "audio_from_video"
-          },
-          "audio_generation_model_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Audio Generation Model Id",
-            "description": "ID of the model to use for video-to-audio generation (Mirelo Studio)."
-          },
-          "video_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Video Id",
-            "description": "The id of the video asset to generate audio from."
-          },
-          "prompt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prompt",
-            "description": "Optional prompt to guide the audio generation."
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id",
-            "description": "The id of the generation created."
-          },
-          "asset_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Asset Id",
-            "description": "The id of the audio asset resulting from the generation. Only present when generation is complete."
-          },
-          "created_at": {
-            "type": "string",
-            "title": "Created At",
-            "description": "Date the generation was submitted."
-          },
-          "status": {
-            "$ref": "#/components/schemas/GenerationStatus",
-            "description": "Status of the generation"
-          },
-          "progress": {
-            "type": "number",
-            "title": "Progress",
-            "description": "Current progress to completion. Between 0-1"
-          },
-          "eta_sec": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Eta Sec",
-            "description": "Estimated time until completion in seconds. May be None if no historical data available."
-          }
-        },
-        "type": "object",
-        "required": [
-          "audio_generation_model_id",
-          "video_id",
-          "id",
-          "created_at",
-          "status",
-          "progress"
-        ],
-        "title": "GenerateAudioFromVideoResponse"
+        "title": "ErrorCode",
+        "description": "Universal error code space. Modeled after gRPC status codes.\n\nEvery exception in the system carries an ErrorCode. SDK clients map\n3rd-party errors to these codes at the lowest level. Retry logic,\nHTTP status mapping, and OTEL metrics all key off this enum.\n\nNOTE: The semantic meaning of these error codes is roughly mapped from the\n    semantic of the gRPC status codes: see\n    https://grpc.io/docs/guides/status-codes/ for details."
       },
       "GenerateImageRequest": {
         "properties": {
@@ -1566,6 +1578,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "enum": [
@@ -1574,6 +1615,19 @@
             ],
             "title": "Type",
             "default": "image"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Optional human-friendly name for the generated asset."
           },
           "text_prompt": {
             "type": "string",
@@ -1615,7 +1669,7 @@
               }
             ],
             "title": "Start Keyframe Id",
-            "description": "The id of the Image asset to use as the start keyframe. This will be ignored if reference_image_ids is provided."
+            "description": "The id of the Image asset to use as the start keyframe."
           },
           "ai_model_id": {
             "anyOf": [
@@ -1628,8 +1682,20 @@
               }
             ],
             "title": "Ai Model Id",
-            "description": "Deprecated. Use model_slug to select the model.",
+            "description": "Deprecated. Use `model_slug` to select the model.",
             "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to `ai_model_id`."
           },
           "reference_image_ids": {
             "anyOf": [
@@ -1660,18 +1726,6 @@
             "title": "Enhance Prompt",
             "description": "If true, automatically enhance the prompt before generation.",
             "default": false
-          },
-          "model_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Model Slug",
-            "description": "The slug of the model to use. Alternative to ai_model_id."
           }
         },
         "type": "object",
@@ -1735,6 +1789,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "enum": [
@@ -1743,6 +1826,19 @@
             ],
             "title": "Type",
             "default": "image"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Optional human-friendly name for the generated asset."
           },
           "text_prompt": {
             "type": "string",
@@ -1784,7 +1880,7 @@
               }
             ],
             "title": "Start Keyframe Id",
-            "description": "The id of the Image asset to use as the start keyframe. This will be ignored if reference_image_ids is provided."
+            "description": "The id of the Image asset to use as the start keyframe."
           },
           "ai_model_id": {
             "anyOf": [
@@ -1797,8 +1893,20 @@
               }
             ],
             "title": "Ai Model Id",
-            "description": "Deprecated. Use model_slug to select the model.",
+            "description": "Deprecated. Use `model_slug` to select the model.",
             "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to `ai_model_id`."
           },
           "reference_image_ids": {
             "anyOf": [
@@ -1887,18 +1995,6 @@
             "type": "array",
             "title": "Batch Results",
             "description": "All generation results in the batch. Always populated (even for batch_size=1). The main response fields (id, asset_id, etc.) reflect the first successful generation."
-          },
-          "model_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Model Slug",
-            "description": "The slug of the model to use. Alternative to ai_model_id."
           }
         },
         "type": "object",
@@ -1967,6 +2063,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "image_upscale",
@@ -1974,16 +2099,48 @@
             "default": "image_upscale"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The model to use for upscaling."
+            "description": "Deprecated. Use `model_slug` to select the image upscale model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for upscaling. Alternative to `ai_model_id`."
           },
           "image_id": {
             "type": "string",
             "format": "uuid",
             "title": "Image Id",
             "description": "The id of the Image asset to use as the basis for upscaling."
+          },
+          "target_resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Resolution",
+            "description": "Target output resolution (e.g. '1080p', '2K', '4K'). Preferred over upscale_factor."
           },
           "upscale_factor": {
             "anyOf": [
@@ -1995,12 +2152,11 @@
               }
             ],
             "title": "Upscale Factor",
-            "description": "Optional upscale factor to pass to the model (e.g. 2.0 for 2x)."
+            "description": "Optional upscale factor (e.g. 2.0 for 2x). Deprecated: prefer target_resolution."
           }
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "image_id"
         ],
         "title": "GenerateImageUpscaleRequest"
@@ -2060,6 +2216,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "image_upscale",
@@ -2067,16 +2252,48 @@
             "default": "image_upscale"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The model to use for upscaling."
+            "description": "Deprecated. Use `model_slug` to select the image upscale model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for upscaling. Alternative to `ai_model_id`."
           },
           "image_id": {
             "type": "string",
             "format": "uuid",
             "title": "Image Id",
             "description": "The id of the Image asset to use as the basis for upscaling."
+          },
+          "target_resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Resolution",
+            "description": "Target output resolution (e.g. '1080p', '2K', '4K'). Preferred over upscale_factor."
           },
           "upscale_factor": {
             "anyOf": [
@@ -2088,7 +2305,7 @@
               }
             ],
             "title": "Upscale Factor",
-            "description": "Optional upscale factor to pass to the model (e.g. 2.0 for 2x)."
+            "description": "Optional upscale factor (e.g. 2.0 for 2x). Deprecated: prefer target_resolution."
           },
           "asset_id": {
             "type": "string",
@@ -2131,7 +2348,6 @@
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "image_id",
           "asset_id",
           "id",
@@ -2196,6 +2412,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "audio_isolation",
@@ -2209,16 +2454,35 @@
             "description": "The id of the audio asset requiring sound isolation."
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for audio isolation."
+            "description": "Deprecated. Use `model_slug` to select the audio isolation model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for audio isolation. Alternative to `ai_model_id`."
           }
         },
         "type": "object",
         "required": [
-          "audio_id",
-          "ai_model_id"
+          "audio_id"
         ],
         "title": "GenerateIsolatedAudioRequest"
       },
@@ -2277,6 +2541,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "audio_isolation",
@@ -2290,10 +2583,30 @@
             "description": "The id of the audio asset requiring sound isolation."
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for audio isolation."
+            "description": "Deprecated. Use `model_slug` to select the audio isolation model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for audio isolation. Alternative to `ai_model_id`."
           },
           "id": {
             "type": "string",
@@ -2337,7 +2650,6 @@
         "type": "object",
         "required": [
           "audio_id",
-          "ai_model_id",
           "id",
           "asset_id",
           "created_at",
@@ -2346,7 +2658,7 @@
         ],
         "title": "GenerateIsolatedAudioResponse"
       },
-      "GenerateMotionControlRequest-Input": {
+      "GenerateMotionControlRequest": {
         "properties": {
           "workspace_id": {
             "anyOf": [
@@ -2401,59 +2713,7 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
-          "type": {
-            "type": "string",
-            "const": "motion_control",
-            "title": "Type",
-            "default": "motion_control"
-          },
-          "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Ai Model Id",
-            "description": "The id of the Motion Control model to use."
-          },
-          "video_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Video Id",
-            "description": "The id of the video asset to use as motion reference."
-          },
-          "start_keyframe_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Start Keyframe Id",
-            "description": "The id of the character image asset to animate with the motion from the video."
-          },
-          "generated_video_inputs": {
-            "$ref": "#/components/schemas/GeneratedVideoInputs",
-            "description": "Video generation parameters including text_prompt and character_orientation."
-          }
-        },
-        "type": "object",
-        "required": [
-          "ai_model_id",
-          "video_id",
-          "start_keyframe_id",
-          "generated_video_inputs"
-        ],
-        "title": "GenerateMotionControlRequest",
-        "description": "Motion Control request for transferring motion from a reference video to a character image.\nProcessed through V2V infrastructure internally."
-      },
-      "GenerateMotionControlRequest-Output": {
-        "properties": {
-          "workspace_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workspace Id"
-          },
-          "agent_thread_id": {
+          "reserved_asset_id": {
             "anyOf": [
               {
                 "type": "string",
@@ -2463,23 +2723,10 @@
                 "type": "null"
               }
             ],
-            "title": "Agent Thread Id",
-            "description": "Optional agent thread ID to associate this generation with."
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
           },
-          "generation_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Id",
-            "description": "Optional pre-reserved generation ID. If provided, this ID will be used instead of generating a new one. For batch operations (batch_size > 1), use generation_ids instead."
-          },
-          "generation_ids": {
+          "reserved_asset_ids": {
             "anyOf": [
               {
                 "items": {
@@ -2492,8 +2739,8 @@
                 "type": "null"
               }
             ],
-            "title": "Generation Ids",
-            "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
           },
           "type": {
             "type": "string",
@@ -2502,10 +2749,30 @@
             "default": "motion_control"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the Motion Control model to use."
+            "description": "Deprecated. Use `model_slug` to select the motion control model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the Motion Control model. Alternative to `ai_model_id`."
           },
           "video_id": {
             "type": "string",
@@ -2526,7 +2793,6 @@
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "video_id",
           "start_keyframe_id",
           "generated_video_inputs"
@@ -2589,6 +2855,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "motion_control",
@@ -2596,10 +2891,30 @@
             "default": "motion_control"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the Motion Control model to use."
+            "description": "Deprecated. Use `model_slug` to select the motion control model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the Motion Control model. Alternative to `ai_model_id`."
           },
           "video_id": {
             "type": "string",
@@ -2658,7 +2973,6 @@
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "video_id",
           "start_keyframe_id",
           "generated_video_inputs",
@@ -2726,6 +3040,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "speech_to_speech",
@@ -2739,10 +3082,30 @@
             "description": "The id of the audio asset requiring sound isolation."
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for audio isolation."
+            "description": "Deprecated. Use `model_slug` to select the speech-to-speech model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for audio isolation. Alternative to `ai_model_id`."
           },
           "voice_id": {
             "type": "string",
@@ -2754,7 +3117,6 @@
         "type": "object",
         "required": [
           "audio_id",
-          "ai_model_id",
           "voice_id"
         ],
         "title": "GenerateSpeechToSpeechRequest"
@@ -2814,6 +3176,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "speech_to_speech",
@@ -2827,10 +3218,30 @@
             "description": "The id of the audio asset requiring sound isolation."
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for audio isolation."
+            "description": "Deprecated. Use `model_slug` to select the speech-to-speech model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for audio isolation. Alternative to `ai_model_id`."
           },
           "voice_id": {
             "type": "string",
@@ -2880,7 +3291,6 @@
         "type": "object",
         "required": [
           "audio_id",
-          "ai_model_id",
           "voice_id",
           "id",
           "asset_id",
@@ -2945,6 +3355,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "text_to_sound",
@@ -2952,13 +3391,34 @@
             "default": "text_to_sound"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for sound effect generation."
+            "description": "Deprecated. Use `model_slug` to select the sound effect model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for sound effect generation. Alternative to `ai_model_id`."
           },
           "text": {
             "type": "string",
+            "minLength": 1,
             "title": "Text",
             "description": "The text description of the sound effect to generate."
           },
@@ -3018,7 +3478,6 @@
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "text"
         ],
         "title": "GenerateTextToSoundRequest"
@@ -3078,6 +3537,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "text_to_sound",
@@ -3085,13 +3573,34 @@
             "default": "text_to_sound"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for sound effect generation."
+            "description": "Deprecated. Use `model_slug` to select the sound effect model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for sound effect generation. Alternative to `ai_model_id`."
           },
           "text": {
             "type": "string",
+            "minLength": 1,
             "title": "Text",
             "description": "The text description of the sound effect to generate."
           },
@@ -3189,7 +3698,6 @@
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "text",
           "id",
           "asset_id",
@@ -3254,11 +3762,53 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "text_to_speech",
             "title": "Type",
             "default": "text_to_speech"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Optional human-friendly name for the generated asset."
           },
           "voice_id": {
             "type": "string",
@@ -3277,8 +3827,20 @@
               }
             ],
             "title": "Model Id",
-            "description": "Deprecated. Use model_slug to select the model.",
+            "description": "Deprecated. Use `model_slug` to select the model.",
             "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to `model_id`."
           },
           "text": {
             "type": "string",
@@ -3305,18 +3867,6 @@
             "$ref": "#/components/schemas/SupportedLanguage",
             "description": "Language for TTS. See SupportedLanguage enum for valid values. Defaults to 'auto'.",
             "default": "auto"
-          },
-          "model_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Model Slug",
-            "description": "The slug of the model to use. Alternative to model_id."
           }
         },
         "type": "object",
@@ -3381,11 +3931,53 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "text_to_speech",
             "title": "Type",
             "default": "text_to_speech"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Optional human-friendly name for the generated asset."
           },
           "voice_id": {
             "type": "string",
@@ -3404,8 +3996,20 @@
               }
             ],
             "title": "Model Id",
-            "description": "Deprecated. Use model_slug to select the model.",
+            "description": "Deprecated. Use `model_slug` to select the model.",
             "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to `model_id`."
           },
           "text": {
             "type": "string",
@@ -3470,18 +4074,6 @@
             ],
             "title": "Eta Sec",
             "description": "Estimated time until completion in seconds. May be None if no historical data available."
-          },
-          "model_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Model Slug",
-            "description": "The slug of the model to use. Alternative to model_id."
           }
         },
         "type": "object",
@@ -3496,7 +4088,7 @@
         ],
         "title": "GenerateTextToSpeechResponse"
       },
-      "GenerateVideoRequest-Input": {
+      "GenerateVideoRequest": {
         "properties": {
           "workspace_id": {
             "anyOf": [
@@ -3551,11 +4143,53 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "video",
             "title": "Type",
             "default": "video"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Optional human-friendly name for the generated asset."
           },
           "ai_model_id": {
             "anyOf": [
@@ -3568,8 +4202,20 @@
               }
             ],
             "title": "Ai Model Id",
-            "description": "Deprecated. Use model_slug to select the model.",
+            "description": "Deprecated. Use `model_slug` to select the model.",
             "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "Slug of the model to use for the generation. Alternative to `ai_model_id`."
           },
           "start_keyframe_id": {
             "anyOf": [
@@ -3582,7 +4228,7 @@
               }
             ],
             "title": "Start Keyframe Id",
-            "description": "The id of the Image asset to use as the start keyframe. This will be ignored if reference_image_ids is provided."
+            "description": "The id of the Image asset to use as the start keyframe."
           },
           "start_keyframe_url": {
             "anyOf": [
@@ -3610,7 +4256,7 @@
               }
             ],
             "title": "End Keyframe Id",
-            "description": "The id of the Image asset to use as the end keyframe. This will be ignored if reference_image_ids is provided."
+            "description": "The id of the Image asset to use as the end keyframe."
           },
           "end_keyframe_url": {
             "anyOf": [
@@ -3634,11 +4280,18 @@
                 "format": "uuid"
               },
               {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
                 "type": "null"
               }
             ],
             "title": "Audio Id",
-            "description": "The id of the Audio asset to use."
+            "description": "The id of the Audio asset to use, or a list of ids for multi-speaker generation."
           },
           "audio_generation": {
             "anyOf": [
@@ -3663,7 +4316,7 @@
             "title": "Audio Start Ms",
             "description": "Audio start offset in milliseconds. Negative values prepend silence (e.g., -1000 adds 1s silence before audio). Positive values crop from the beginning of the source audio (e.g., 2000 skips the first 2s). Use with generated_video_inputs.duration_ms to control total output length."
           },
-          "reference_image_ids": {
+          "reference_audio_ids": {
             "anyOf": [
               {
                 "items": {
@@ -3676,219 +4329,8 @@
                 "type": "null"
               }
             ],
-            "title": "Reference Image Ids",
-            "description": "The id(s) of the image(s) to reference in the generation. Only used for multi-image video generation and will supersede start_keyframe_id."
-          },
-          "video_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Video Id",
-            "description": "The id of the Video asset to use as motion input for V2V (motion control) models."
-          },
-          "generated_video_inputs": {
-            "$ref": "#/components/schemas/GeneratedVideoInputs",
-            "description": "Inputs for generating the video."
-          },
-          "batch_size": {
-            "type": "integer",
-            "maximum": 8.0,
-            "minimum": 1.0,
-            "title": "Batch Size",
-            "description": "Number of video variations to generate (1-8). When > 1, batch_results will contain all generation results.",
-            "default": 1
-          },
-          "model_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Model Slug",
-            "description": "Slug of the model to use for the generation. Alternative to ai_model_id."
-          }
-        },
-        "type": "object",
-        "required": [
-          "generated_video_inputs"
-        ],
-        "title": "GenerateVideoRequest"
-      },
-      "GenerateVideoRequest-Output": {
-        "properties": {
-          "workspace_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workspace Id"
-          },
-          "agent_thread_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Agent Thread Id",
-            "description": "Optional agent thread ID to associate this generation with."
-          },
-          "generation_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Id",
-            "description": "Optional pre-reserved generation ID. If provided, this ID will be used instead of generating a new one. For batch operations (batch_size > 1), use generation_ids instead."
-          },
-          "generation_ids": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Ids",
-            "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
-          },
-          "type": {
-            "type": "string",
-            "const": "video",
-            "title": "Type",
-            "default": "video"
-          },
-          "ai_model_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Ai Model Id",
-            "description": "Deprecated. Use model_slug to select the model.",
-            "deprecated": true
-          },
-          "start_keyframe_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Start Keyframe Id",
-            "description": "The id of the Image asset to use as the start keyframe. This will be ignored if reference_image_ids is provided."
-          },
-          "start_keyframe_url": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2083,
-                "minLength": 1,
-                "format": "uri"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Start Keyframe Url",
-            "description": "The URL of the image to use as the start keyframe."
-          },
-          "end_keyframe_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "End Keyframe Id",
-            "description": "The id of the Image asset to use as the end keyframe. This will be ignored if reference_image_ids is provided."
-          },
-          "end_keyframe_url": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2083,
-                "minLength": 1,
-                "format": "uri"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "End Keyframe Url",
-            "description": "The URL of the image to use as the end keyframe."
-          },
-          "audio_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Audio Id",
-            "description": "The id of the Audio asset to use."
-          },
-          "audio_generation": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/GenerateTextToSpeechRequest"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional TTS parameters for server-side audio generation. If provided (and audio_id is not), audio will be generated from these params before video generation."
-          },
-          "audio_start_ms": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Audio Start Ms",
-            "description": "Audio start offset in milliseconds. Negative values prepend silence (e.g., -1000 adds 1s silence before audio). Positive values crop from the beginning of the source audio (e.g., 2000 skips the first 2s). Use with generated_video_inputs.duration_ms to control total output length."
+            "title": "Reference Audio Ids",
+            "description": "The id(s) of the audio(s) to reference in the generation."
           },
           "reference_image_ids": {
             "anyOf": [
@@ -3904,7 +4346,23 @@
               }
             ],
             "title": "Reference Image Ids",
-            "description": "The id(s) of the image(s) to reference in the generation. Only used for multi-image video generation and will supersede start_keyframe_id."
+            "description": "The id(s) of the image(s) to reference in the generation."
+          },
+          "reference_video_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Video Ids",
+            "description": "The id(s) of the video(s) to reference in the generation."
           },
           "video_id": {
             "anyOf": [
@@ -3917,7 +4375,7 @@
               }
             ],
             "title": "Video Id",
-            "description": "The id of the Video asset to use as motion input for V2V (motion control) models."
+            "description": "The id of the Video asset to use as input. For V2V (motion control) models this is the driving video; for Google Veo models this triggers video extension."
           },
           "generated_video_inputs": {
             "$ref": "#/components/schemas/GeneratedVideoInputs",
@@ -3930,18 +4388,6 @@
             "title": "Batch Size",
             "description": "Number of video variations to generate (1-8). When > 1, batch_results will contain all generation results.",
             "default": 1
-          },
-          "model_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Model Slug",
-            "description": "Slug of the model to use for the generation. Alternative to ai_model_id."
           }
         },
         "type": "object",
@@ -4005,11 +4451,53 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "video",
             "title": "Type",
             "default": "video"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "Optional human-friendly name for the generated asset."
           },
           "ai_model_id": {
             "anyOf": [
@@ -4022,8 +4510,20 @@
               }
             ],
             "title": "Ai Model Id",
-            "description": "Deprecated. Use model_slug to select the model.",
+            "description": "Deprecated. Use `model_slug` to select the model.",
             "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "Slug of the model to use for the generation. Alternative to `ai_model_id`."
           },
           "start_keyframe_id": {
             "anyOf": [
@@ -4036,7 +4536,7 @@
               }
             ],
             "title": "Start Keyframe Id",
-            "description": "The id of the Image asset to use as the start keyframe. This will be ignored if reference_image_ids is provided."
+            "description": "The id of the Image asset to use as the start keyframe."
           },
           "start_keyframe_url": {
             "anyOf": [
@@ -4064,7 +4564,7 @@
               }
             ],
             "title": "End Keyframe Id",
-            "description": "The id of the Image asset to use as the end keyframe. This will be ignored if reference_image_ids is provided."
+            "description": "The id of the Image asset to use as the end keyframe."
           },
           "end_keyframe_url": {
             "anyOf": [
@@ -4088,11 +4588,18 @@
                 "format": "uuid"
               },
               {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
                 "type": "null"
               }
             ],
             "title": "Audio Id",
-            "description": "The id of the Audio asset to use."
+            "description": "The id of the Audio asset to use, or a list of ids for multi-speaker generation."
           },
           "audio_generation": {
             "anyOf": [
@@ -4117,6 +4624,22 @@
             "title": "Audio Start Ms",
             "description": "Audio start offset in milliseconds. Negative values prepend silence (e.g., -1000 adds 1s silence before audio). Positive values crop from the beginning of the source audio (e.g., 2000 skips the first 2s). Use with generated_video_inputs.duration_ms to control total output length."
           },
+          "reference_audio_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Audio Ids",
+            "description": "The id(s) of the audio(s) to reference in the generation."
+          },
           "reference_image_ids": {
             "anyOf": [
               {
@@ -4131,7 +4654,23 @@
               }
             ],
             "title": "Reference Image Ids",
-            "description": "The id(s) of the image(s) to reference in the generation. Only used for multi-image video generation and will supersede start_keyframe_id."
+            "description": "The id(s) of the image(s) to reference in the generation."
+          },
+          "reference_video_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Video Ids",
+            "description": "The id(s) of the video(s) to reference in the generation."
           },
           "video_id": {
             "anyOf": [
@@ -4144,7 +4683,7 @@
               }
             ],
             "title": "Video Id",
-            "description": "The id of the Video asset to use as motion input for V2V (motion control) models."
+            "description": "The id of the Video asset to use as input. For V2V (motion control) models this is the driving video; for Google Veo models this triggers video extension."
           },
           "generated_video_inputs": {
             "$ref": "#/components/schemas/GeneratedVideoInputs",
@@ -4215,18 +4754,6 @@
             "type": "array",
             "title": "Batch Results",
             "description": "All generation results in the batch. Always populated (even for batch_size=1). The main response fields (id, asset_id, etc.) reflect the first successful generation."
-          },
-          "model_slug": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Model Slug",
-            "description": "Slug of the model to use for the generation. Alternative to ai_model_id."
           }
         },
         "type": "object",
@@ -4295,6 +4822,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "video_to_video",
@@ -4302,10 +4858,30 @@
             "default": "video_to_video"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for video-to-video generation."
+            "description": "Deprecated. Use `model_slug` to select the video-to-video model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to `ai_model_id`."
           },
           "video_id": {
             "type": "string",
@@ -4338,7 +4914,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/KlingO1EditElement"
+                  "$ref": "#/components/schemas/KlingEditElement"
                 },
                 "type": "array"
               },
@@ -4352,13 +4928,12 @@
           "keep_audio": {
             "type": "boolean",
             "title": "Keep Audio",
-            "description": "Whether to preserve the original audio from the input video.",
-            "default": false
+            "description": "Whether to preserve the original audio from the input video. Automatically disabled when generate_audio is enabled.",
+            "default": true
           }
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "video_id",
           "prompt"
         ],
@@ -4420,6 +4995,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "video_to_video",
@@ -4427,10 +5031,30 @@
             "default": "video_to_video"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The id of the model to use for video-to-video generation."
+            "description": "Deprecated. Use `model_slug` to select the video-to-video model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use. Alternative to `ai_model_id`."
           },
           "video_id": {
             "type": "string",
@@ -4463,7 +5087,7 @@
             "anyOf": [
               {
                 "items": {
-                  "$ref": "#/components/schemas/KlingO1EditElement"
+                  "$ref": "#/components/schemas/KlingEditElement"
                 },
                 "type": "array"
               },
@@ -4477,8 +5101,8 @@
           "keep_audio": {
             "type": "boolean",
             "title": "Keep Audio",
-            "description": "Whether to preserve the original audio from the input video.",
-            "default": false
+            "description": "Whether to preserve the original audio from the input video. Automatically disabled when generate_audio is enabled.",
+            "default": true
           },
           "id": {
             "type": "string",
@@ -4521,7 +5145,6 @@
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "video_id",
           "prompt",
           "id",
@@ -4587,6 +5210,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "video_upscale",
@@ -4594,10 +5246,30 @@
             "default": "video_upscale"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The model to use for upscaling."
+            "description": "Deprecated. Use `model_slug` to select the video upscale model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for upscaling. Alternative to `ai_model_id`."
           },
           "video_id": {
             "type": "string",
@@ -4606,17 +5278,32 @@
             "description": "The id of the Video asset to upscale."
           },
           "upscale_factor": {
-            "type": "number",
-            "maximum": 4.0,
-            "exclusiveMinimum": 0.0,
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Upscale Factor",
-            "description": "Scale factor for upscaling (e.g., 1.5 for 1.5x, 2.0 for 2x). Default: 1.5",
-            "default": 1.5
+            "description": "Computed scale factor derived from target_resolution and source video dimensions."
+          },
+          "target_resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Resolution",
+            "description": "Target output resolution. Must be one of: 1080p, 2K, 4K."
           }
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "video_id"
         ],
         "title": "GenerateVideoUpscaleRequest"
@@ -4676,6 +5363,35 @@
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
           },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
+          },
           "type": {
             "type": "string",
             "const": "video_upscale",
@@ -4683,10 +5399,30 @@
             "default": "video_upscale"
           },
           "ai_model_id": {
-            "type": "string",
-            "format": "uuid",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Ai Model Id",
-            "description": "The model to use for upscaling."
+            "description": "Deprecated. Use `model_slug` to select the video upscale model.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model to use for upscaling. Alternative to `ai_model_id`."
           },
           "video_id": {
             "type": "string",
@@ -4695,12 +5431,28 @@
             "description": "The id of the Video asset to upscale."
           },
           "upscale_factor": {
-            "type": "number",
-            "maximum": 4.0,
-            "exclusiveMinimum": 0.0,
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Upscale Factor",
-            "description": "Scale factor for upscaling (e.g., 1.5 for 1.5x, 2.0 for 2x). Default: 1.5",
-            "default": 1.5
+            "description": "Computed scale factor derived from target_resolution and source video dimensions."
+          },
+          "target_resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Resolution",
+            "description": "Target output resolution. Must be one of: 1080p, 2K, 4K."
           },
           "asset_id": {
             "type": "string",
@@ -4743,7 +5495,6 @@
         },
         "type": "object",
         "required": [
-          "ai_model_id",
           "video_id",
           "asset_id",
           "id",
@@ -4752,242 +5503,6 @@
           "progress"
         ],
         "title": "GenerateVideoUpscaleResponse"
-      },
-      "GenerateVideoWithAudioRequest": {
-        "properties": {
-          "workspace_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workspace Id"
-          },
-          "agent_thread_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Agent Thread Id",
-            "description": "Optional agent thread ID to associate this generation with."
-          },
-          "generation_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Id",
-            "description": "Optional pre-reserved generation ID. If provided, this ID will be used instead of generating a new one. For batch operations (batch_size > 1), use generation_ids instead."
-          },
-          "generation_ids": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Ids",
-            "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
-          },
-          "type": {
-            "type": "string",
-            "const": "video_with_audio",
-            "title": "Type",
-            "default": "video_with_audio"
-          },
-          "video_generation_model_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Video Generation Model Id",
-            "description": "ID of the model to use for video-to-video with audio generation (Mirelo Studio)."
-          },
-          "video_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Video Id",
-            "description": "The id of the video asset to add sound effects to."
-          },
-          "prompt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prompt",
-            "description": "Optional prompt to guide the audio generation for the video."
-          }
-        },
-        "type": "object",
-        "required": [
-          "video_generation_model_id",
-          "video_id"
-        ],
-        "title": "GenerateVideoWithAudioRequest",
-        "description": "Video generation request that adds synchronized sound effects to video using Mirelo Studio."
-      },
-      "GenerateVideoWithAudioResponse": {
-        "properties": {
-          "workspace_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Workspace Id"
-          },
-          "agent_thread_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Agent Thread Id",
-            "description": "Optional agent thread ID to associate this generation with."
-          },
-          "generation_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Id",
-            "description": "Optional pre-reserved generation ID. If provided, this ID will be used instead of generating a new one. For batch operations (batch_size > 1), use generation_ids instead."
-          },
-          "generation_ids": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string",
-                  "format": "uuid"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Generation Ids",
-            "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
-          },
-          "type": {
-            "type": "string",
-            "const": "video_with_audio",
-            "title": "Type",
-            "default": "video_with_audio"
-          },
-          "video_generation_model_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Video Generation Model Id",
-            "description": "ID of the model to use for video-to-video with audio generation (Mirelo Studio)."
-          },
-          "video_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Video Id",
-            "description": "The id of the video asset to add sound effects to."
-          },
-          "prompt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prompt",
-            "description": "Optional prompt to guide the audio generation for the video."
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id",
-            "description": "The id of the generation created."
-          },
-          "asset_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "uuid"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Asset Id",
-            "description": "The id of the video asset with audio resulting from the generation. Only present when generation is complete."
-          },
-          "created_at": {
-            "type": "string",
-            "title": "Created At",
-            "description": "Date the generation was submitted."
-          },
-          "status": {
-            "$ref": "#/components/schemas/GenerationStatus",
-            "description": "Status of the generation"
-          },
-          "progress": {
-            "type": "number",
-            "title": "Progress",
-            "description": "Current progress to completion. Between 0-1"
-          },
-          "eta_sec": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Eta Sec",
-            "description": "Estimated time until completion in seconds. May be None if no historical data available."
-          }
-        },
-        "type": "object",
-        "required": [
-          "video_generation_model_id",
-          "video_id",
-          "id",
-          "created_at",
-          "status",
-          "progress"
-        ],
-        "title": "GenerateVideoWithAudioResponse"
       },
       "GenerateVoiceCloneRequest": {
         "properties": {
@@ -5043,6 +5558,35 @@
             ],
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
+          },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
           },
           "type": {
             "type": "string",
@@ -5123,6 +5667,35 @@
             ],
             "title": "Generation Ids",
             "description": "Optional list of pre-reserved generation IDs for batch operations. Length must match batch_size. Mutually exclusive with generation_id."
+          },
+          "reserved_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Id",
+            "description": "Optional pre-reserved asset ID. Used as the produced media+asset resource_id so the client knows the asset's identity at request time. For batch operations (batch_size > 1), use reserved_asset_ids instead. Named distinctly from the response's `asset_id` (the produced asset) so the two don't collide across the request/response inheritance chain \u2014 mirrors generation_id (request) vs id (response)."
+          },
+          "reserved_asset_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reserved Asset Ids",
+            "description": "Optional list of pre-reserved asset IDs for batch operations. Length must match batch_size, parallel to generation_ids. Mutually exclusive with reserved_asset_id."
           },
           "type": {
             "type": "string",
@@ -5257,7 +5830,32 @@
               }
             ],
             "title": "Ai Model Id",
-            "description": "The id of the model used for generation."
+            "description": "Deprecated. Use `model_slug` to identify the model used for generation.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model used for generation. Alternative to `ai_model_id`."
+          },
+          "voice_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voice Name",
+            "description": "The display name of the voice used for generation."
           },
           "voice_id": {
             "anyOf": [
@@ -5370,7 +5968,20 @@
               }
             ],
             "title": "Ai Model Id",
-            "description": "The id of the model used for generation."
+            "description": "Deprecated. Use `model_slug` to identify the model used for generation.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model used for generation. Alternative to `ai_model_id`."
           },
           "aspect_ratio": {
             "anyOf": [
@@ -5545,6 +6156,22 @@
             ],
             "description": "URL of the Audio asset used as the basis for the video."
           },
+          "reference_audio_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Audio Ids",
+            "description": "The id(s) of the audio(s) referenced in the generation."
+          },
           "reference_image_ids": {
             "anyOf": [
               {
@@ -5561,6 +6188,22 @@
             "title": "Reference Image Ids",
             "description": "The id(s) of the image(s) referenced in the generation."
           },
+          "reference_video_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference Video Ids",
+            "description": "The id(s) of the video(s) referenced in the generation."
+          },
           "source_video_id": {
             "anyOf": [
               {
@@ -5572,7 +6215,7 @@
               }
             ],
             "title": "Source Video Id",
-            "description": "The id of the Video asset used as source input for motion control/video-to-video generation."
+            "description": "The id of the Video asset used as source input for motion control, video-to-video, or video extension generation."
           }
         },
         "type": "object",
@@ -5605,7 +6248,20 @@
               }
             ],
             "title": "Ai Model Id",
-            "description": "The id of the model used for generation."
+            "description": "Deprecated. Use `model_slug` to identify the model used for generation.",
+            "deprecated": true
+          },
+          "model_slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Slug",
+            "description": "The slug of the model used for generation. Alternative to `ai_model_id`."
           },
           "resolution": {
             "anyOf": [
@@ -5649,10 +6305,17 @@
                 "$ref": "#/components/schemas/NormalizedPoint"
               },
               {
+                "items": {
+                  "$ref": "#/components/schemas/NormalizedPoint"
+                },
+                "type": "array"
+              },
+              {
                 "type": "null"
               }
             ],
-            "description": "Normalized coordinates for primary speaker position (Character3 only)"
+            "title": "Bounding Box Target",
+            "description": "Normalized coordinates for speaker position(s). A single point for single-speaker; a list for multi-speaker (one per speaker, same length as audio_id list)."
           },
           "character_orientation": {
             "anyOf": [
@@ -5675,6 +6338,34 @@
             "title": "Enhance Prompt",
             "description": "If true, automatically enhance the prompt before generation.",
             "default": false
+          },
+          "multi_prompt": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/VideoShot"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Multi Prompt",
+            "description": "List of shots for multi-shot video generation. When provided, text_prompt is ignored and total duration is the sum of shot durations."
+          },
+          "shot_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "customize"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shot Type",
+            "description": "Shot type for multi-shot generation. Currently only 'customize' is supported."
           }
         },
         "type": "object",
@@ -5698,7 +6389,7 @@
           "input": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/GenerateVideoRequest-Output"
+                "$ref": "#/components/schemas/GenerateVideoRequest"
               },
               {
                 "$ref": "#/components/schemas/GenerateTextToSpeechRequest"
@@ -5725,16 +6416,10 @@
                 "$ref": "#/components/schemas/GenerateVoiceCloneRequest"
               },
               {
-                "$ref": "#/components/schemas/GenerateAudioFromVideoRequest"
-              },
-              {
-                "$ref": "#/components/schemas/GenerateVideoWithAudioRequest"
-              },
-              {
                 "$ref": "#/components/schemas/GenerateVideoToVideoRequest"
               },
               {
-                "$ref": "#/components/schemas/GenerateMotionControlRequest-Output"
+                "$ref": "#/components/schemas/GenerateMotionControlRequest"
               }
             ],
             "title": "Input",
@@ -5742,19 +6427,17 @@
             "discriminator": {
               "propertyName": "type",
               "mapping": {
-                "audio_from_video": "#/components/schemas/GenerateAudioFromVideoRequest",
                 "audio_isolation": "#/components/schemas/GenerateIsolatedAudioRequest",
                 "image": "#/components/schemas/GenerateImageRequest",
                 "image_to_image": "#/components/schemas/GenerateImageRequest",
                 "image_upscale": "#/components/schemas/GenerateImageUpscaleRequest",
-                "motion_control": "#/components/schemas/GenerateMotionControlRequest-Output",
+                "motion_control": "#/components/schemas/GenerateMotionControlRequest",
                 "speech_to_speech": "#/components/schemas/GenerateSpeechToSpeechRequest",
                 "text_to_sound": "#/components/schemas/GenerateTextToSoundRequest",
                 "text_to_speech": "#/components/schemas/GenerateTextToSpeechRequest",
-                "video": "#/components/schemas/GenerateVideoRequest-Output",
+                "video": "#/components/schemas/GenerateVideoRequest",
                 "video_to_video": "#/components/schemas/GenerateVideoToVideoRequest",
                 "video_upscale": "#/components/schemas/GenerateVideoUpscaleRequest",
-                "video_with_audio": "#/components/schemas/GenerateVideoWithAudioRequest",
                 "voice_clone": "#/components/schemas/GenerateVoiceCloneRequest"
               }
             }
@@ -5779,6 +6462,18 @@
             ],
             "title": "Eta Sec",
             "description": "Estimated time remaining in seconds until generation completes."
+          },
+          "estimated_completion_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Completion At",
+            "description": "Absolute UTC timestamp when the generation is estimated to complete. Clients should anchor a countdown to this rather than decaying eta_sec, since it self-corrects as the backend refines the estimate."
           },
           "created_at": {
             "type": "string",
@@ -5820,6 +6515,18 @@
             ],
             "description": "The generated asset. Value is not present unless the status of the generation is 'complete'"
           },
+          "audio_start_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audio Start Ms",
+            "description": "Audio start offset in ms. Negative = prepend silence, positive = crop from start."
+          },
           "error": {
             "anyOf": [
               {
@@ -5858,7 +6565,7 @@
       "GenerationError": {
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/GenerationErrorType",
+            "$ref": "#/components/schemas/ErrorCode",
             "description": "The class of error encountered."
           },
           "message": {
@@ -5873,19 +6580,6 @@
           "message"
         ],
         "title": "GenerationError"
-      },
-      "GenerationErrorType": {
-        "type": "string",
-        "enum": [
-          "UNKNOWN",
-          "MODERATION_FAILED",
-          "MISSING_CREDITS",
-          "RESOURCE_EXHAUSTED",
-          "INVALID_ARGUMENT",
-          "UNAVAILABLE"
-        ],
-        "title": "GenerationErrorType",
-        "description": "Generation error type\n\nNOTE: The backend will try to map any error happening during generation to one of these classes.\n    If it fails to do so it will map onto UNKNOWN.\n\nNOTE: The semantic meaning of these errors types is roughly mapped from the semantic of the gRPC\n    status codes: see https://grpc.io/docs/guides/status-codes/ for details. Not all the gGRPC\n    status codes are mapped here (not needed at the moment)."
       },
       "GenerationStatus": {
         "type": "string",
@@ -5929,6 +6623,17 @@
             "type": "string",
             "title": "Created At",
             "description": "Date the generation was submitted."
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GenerationError"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Generation error if any. Value is not present unless the status of the generation is 'error' and error_message field is not present."
           },
           "error_message": {
             "anyOf": [
@@ -6037,7 +6742,136 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
-      "KlingO1EditElement": {
+      "InputMode": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "description": "Mode name identifying this input combination (e.g., 'image_to_video', 'first_last_frame_to_video', 'reference_to_video', 'video_to_video')."
+          },
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/InputSlot"
+            },
+            "type": "array",
+            "title": "Slots",
+            "description": "Ordered list of input slots available in this mode."
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode",
+          "slots"
+        ],
+        "title": "InputMode",
+        "description": "A named input mode grouping mutually exclusive input slots.\n\nEach mode represents a distinct way to use the model (e.g., image_to_video\nvs first_last_frame_to_video). The frontend selects one mode at a time and\npresents only that mode's slots.\n\nThe text_to_video mode (no input files) is always implicitly available\nfor VIDEO type models and is never included in the inputs list."
+      },
+      "InputSlot": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "Media type: 'image', 'video', or 'audio'."
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "Semantic role distinguishing this slot (e.g., 'start_frame', 'end_frame', 'reference', 'audio_input', 'input_video')."
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "description": "Whether this input is mandatory.",
+            "default": false
+          },
+          "max_count": {
+            "type": "integer",
+            "title": "Max Count",
+            "description": "Maximum number of files for this slot.",
+            "default": 1
+          },
+          "max_file_size_bytes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max File Size Bytes",
+            "description": "Maximum file size in bytes."
+          },
+          "min_dimension_px": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Dimension Px",
+            "description": "Minimum width or height in pixels."
+          },
+          "max_dimension_px": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Dimension Px",
+            "description": "Maximum width or height in pixels."
+          },
+          "min_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Duration Ms",
+            "description": "Minimum duration in milliseconds (video/audio only)."
+          },
+          "max_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Duration Ms",
+            "description": "Maximum duration in milliseconds (video/audio only)."
+          },
+          "max_total_duration_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Total Duration Ms",
+            "description": "Maximum combined duration across all files in this slot in milliseconds (video/audio only)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "role"
+        ],
+        "title": "InputSlot",
+        "description": "A typed input slot describing one kind of input a model accepts.\n\nEach slot has a media type (image, video, audio) and a role that distinguishes\nit from other slots of the same type (e.g., start_frame vs end_frame vs reference)."
+      },
+      "KlingEditElement": {
         "properties": {
           "frontal_image_asset_id": {
             "type": "string",
@@ -6066,8 +6900,8 @@
         "required": [
           "frontal_image_asset_id"
         ],
-        "title": "KlingO1EditElement",
-        "description": "Element for character tracking in Kling O1 Edit.\n\nReference as @Element1, @Element2, etc. in prompt."
+        "title": "KlingEditElement",
+        "description": "Element for character/subject consistency in Kling video generation.\n\nReference as @Element1, @Element2, etc. in prompt."
       },
       "NormalizedPoint": {
         "prefixItems": [
@@ -6240,6 +7074,32 @@
         ],
         "title": "SupportedLanguage"
       },
+      "Uploaded3D": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "uploaded_three_d",
+            "title": "Type",
+            "default": "uploaded_three_d"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "Presigned download URL. For agent-composed assets this is a `.zip` bundle containing the composition + every corpus reference available in S3. For curated corpus rows this is the raw USD file."
+          },
+          "file_format": {
+            "type": "string",
+            "title": "File Format",
+            "description": "Extension of the file at `url` \u2014 `zip` for composed assets, `usda` / `usdc` / `usdz` for curated corpus."
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "file_format"
+        ],
+        "title": "Uploaded3D"
+      },
       "UploadedAudio": {
         "properties": {
           "type": {
@@ -6411,6 +7271,13 @@
           "type": {
             "type": "string",
             "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
           }
         },
         "type": "object",
@@ -6420,6 +7287,29 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "VideoShot": {
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "title": "Prompt",
+            "description": "Prompt for this shot."
+          },
+          "duration_ms": {
+            "type": "integer",
+            "maximum": 15000.0,
+            "minimum": 3000.0,
+            "title": "Duration Ms",
+            "description": "Duration of this shot in milliseconds (3000-15000)."
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt",
+          "duration_ms"
+        ],
+        "title": "VideoShot",
+        "description": "A single shot in a multi-shot video generation."
       },
       "Voice": {
         "properties": {
@@ -6496,6 +7386,69 @@
           "value"
         ],
         "title": "VoiceLabel"
+      },
+      "WorkspaceCreditUsage": {
+        "properties": {
+          "used": {
+            "type": "integer",
+            "title": "Used",
+            "description": "Credits consumed in the current period."
+          },
+          "allocated": {
+            "type": "integer",
+            "title": "Allocated",
+            "description": "Credits allocated to the workspace for the current period."
+          },
+          "available": {
+            "type": "integer",
+            "title": "Available",
+            "description": "Credits currently available in the pool."
+          },
+          "api_usd_micros": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Api Usd Micros",
+            "description": "Segregated API wallet balance in integer micro-dollars (1e-6 USD). Only present while the API wallet is enabled and funded; spent exclusively by programmatic API usage."
+          },
+          "api_credits": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Api Credits",
+            "description": "Display-credit view of api_usd_micros (floor at 140 credits/$). Informational; API charges are USD-denominated."
+          },
+          "api_consumed_usd_micros": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Api Consumed Usd Micros",
+            "description": "Lifetime micro-dollars spent from the API wallet (carried across billing periods \u2014 the wallet has none). Only present while the API wallet is enabled and funded."
+          }
+        },
+        "type": "object",
+        "required": [
+          "used",
+          "allocated",
+          "available"
+        ],
+        "title": "WorkspaceCreditUsage",
+        "description": "Per-workspace credit usage for the current period, from the workspace credit pool.\n\nAll three fields are display credits and stay continuous across the USD\ncutover: for converted pools `available`/`used` are floor views of the\npool's micro-dollar buckets computed on read, and `allocated` serves the\nfrozen credit value, which round-trips exactly (regrants re-denominate\nit at ENG-8818). Pinned by test_display_coherence_usd.py."
       }
     },
     "securitySchemes": {
@@ -6505,5 +7458,11 @@
         "name": "X-API-Key"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Public",
+      "description": "Public endpoints are available to API users."
+    }
+  ]
 }
