@@ -13,7 +13,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           token: ${{ secrets.OPENAPI_SYNC_TOKEN }}
 
@@ -21,7 +21,7 @@ jobs:
         run: python3 scripts/sync_openapi.py
 
       - name: Open or update the sync pull request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.OPENAPI_SYNC_TOKEN }}
           branch: automation/sync-v2-openapi
