@@ -152,6 +152,30 @@
     {
       "source": "/pages/developer/realtime-avatar/:slug*",
       "destination": "/pages/developer/getting_started/quickstart"
+    },
+    {
+      "source": "/pages/app/content-creation/create-element",
+      "destination": "/pages/app/getting-started/references-and-elements"
+    },
+    {
+      "source": "/pages/app/content-creation/elements-101-beginners-guide",
+      "destination": "/pages/app/getting-started/references-and-elements"
+    },
+    {
+      "source": "/pages/app/content-creation/elements-201-content-creators",
+      "destination": "/pages/app/getting-started/references-and-elements"
+    },
+    {
+      "source": "/pages/app/content-creation/speaker-selection",
+      "destination": "/pages/app/content-creation/create-avatar-video"
+    },
+    {
+      "source": "/pages/app/content-creation/upscale-video",
+      "destination": "/pages/app/content-creation/edit-videos-in-composer"
+    },
+    {
+      "source": "/pages/app/getting-started/video-tutorials",
+      "destination": "/pages/app/getting-started/overview"
     }
   ],
   "navbar": {},
