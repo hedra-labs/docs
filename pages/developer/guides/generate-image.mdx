@@ -63,7 +63,9 @@ The array length is bounded per model:
 | Model family | Max reference images |
 |--------------|---------------------|
 | Seedream 4.0, 4.5, 5.0 Lite | 14 |
+| Nano Banana Pro, Nano Banana 2 | 14 |
 | Seedream 5.0 Pro | 10 |
+| Nano Banana | 3 |
 | Grok Imagine (I2I) | 3 |
 
 ```bash
@@ -89,11 +91,12 @@ Supply an integer `seed` to reproduce a generation. The same prompt, model, and
 seed will render the same image. Omit `seed` to let the provider randomize as
 before.
 
-Seed is supported on the fal-backed image models, including the Flux family,
-Flux Kontext, Flux.2, Nano Banana, Nano Banana Pro (fal), Ideogram V2, Sana,
-and Dreamina 3.1. Providers document their own accepted ranges — a `seed`
-outside that range returns a `400`. Check `GET /models?types=image` for the
-per-model bound.
+Seed is supported on the fal-backed image models (Flux family, Flux Kontext,
+Flux.2, Nano Banana / Nano Banana Pro (fal), Ideogram V2, Sana, Dreamina 3.1)
+and on the Google-dispatched Nano Banana, Nano Banana 2, and Nano Banana Pro
+models. Providers document their own accepted ranges — a `seed` outside that
+range returns a `400`. The Google Nano Banana roots publish no explicit range.
+Check `GET /models?types=image` for the per-model bound.
 
 ```bash
 curl -X POST https://api.hedra.com/web-app/public/generations \
