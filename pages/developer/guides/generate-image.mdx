@@ -84,6 +84,8 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 ```
 
 Each model publishes its own minimum and maximum in `GET /models?types=image`.
+Sending more references than a model's cap returns a `400` — the request is
+rejected before dispatch instead of silently discarding the extras.
 
 ## Reproducible output with `seed`
 
