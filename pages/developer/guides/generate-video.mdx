@@ -87,7 +87,7 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 | `start_keyframe_id` | Asset ID of the start image (required for I2V models) |
 | `end_keyframe_id` | Asset ID of the end image |
 | `generated_video_inputs.aspect_ratio` | Output aspect ratio. Grok Video accepts `"16:9"`, `"4:3"`, `"3:2"`, `"1:1"`, `"2:3"`, `"3:4"`, and `"9:16"`; `fal/grok-video-i2v` also accepts `"auto"` to match the start frame. Other models advertise their own supported set. |
-| `generated_video_inputs.resolution` | Output resolution, e.g. `"480p"`, `"720p"`. Each model has its own default when omitted (Grok Video renders and bills at the published `"480p"` default). |
+| `generated_video_inputs.resolution` | Output resolution, e.g. `"480p"`, `"720p"`. Each model has its own default when omitted (Grok Video renders and bills at the published `"480p"` default). A value that isn't on a model's menu falls back to that same default rather than failing the submit. |
 | `generated_video_inputs.duration_ms` | Duration in milliseconds. Grok Video accepts any whole second from `1000` to `15000`. |
 | `generated_video_inputs.seed` | Integer seed for reproducible output on models that support it: `fal/veo-2-t2v`, every Veo 3 and Veo 3 Fast slug, `google/veo-31`, `google/veo-31-fast`, all three `fal/qwen-happy-horse-*` slugs, and `byteplus/seedance-15-pro`. Omit to get a fresh random seed on each call. Not accepted on `fal/veo-2-i2v` or on the Seedance 2.0 family. |
 | `batch_size` | Generate 1-8 variations at once (default: 1) |
