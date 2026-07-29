@@ -40,6 +40,18 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 | `resolution` | A resolution supported by the selected model |
 | `batch_size` | Generate 1-8 variations at once (default: 1) |
 | `enhance_prompt` | Set to `true` to automatically enhance the prompt |
+| `guidance_scale` | Prompt-adherence knob for FLUX.1 [dev], FLUX.2 [klein] 9B, and Sana. Published as `guidance` for FLUX.2 [flex] |
+| `num_inference_steps` | Denoising steps for FLUX.1 [dev], FLUX.2 [klein] 9B, and Sana. Published as `steps` for FLUX.2 [flex] |
+
+<Note>
+  `guidance_scale` and `num_inference_steps` are only accepted by models whose
+  provider documents them. Each accepted model publishes its own allowed range
+  on its input schema — call `GET /models?types=image` and read the range from
+  the target slug's schema before setting a value. Sending a value outside that
+  range returns a 400, and sending either field to a model that doesn't accept
+  it is also rejected. Omitting a field falls back to the provider's own
+  default. These knobs don't change the billed price on any model.
+</Note>
 
 <Note>
   When `batch_size` is greater than 1, include a `generation_ids` array containing

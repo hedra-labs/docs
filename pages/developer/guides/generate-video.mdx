@@ -89,7 +89,19 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 | `generated_video_inputs.aspect_ratio` | e.g. `"16:9"`, `"9:16"`, `"1:1"` |
 | `generated_video_inputs.resolution` | e.g. `"540p"`, `"720p"` |
 | `generated_video_inputs.duration_ms` | Duration in milliseconds |
+| `generated_video_inputs.cfg_scale` | Prompt-adherence knob accepted by Kling video models |
 | `batch_size` | Generate 1-8 variations at once (default: 1) |
+
+<Note>
+  `cfg_scale` is only accepted by video models whose provider documents it
+  (Kling 1.6, 2.1, 2.5 Turbo, 2.6, and 3.0 endpoints). Each accepted model
+  publishes its own allowed range on its input schema — call
+  `GET /models?types=video` and read the range from the target slug's schema
+  before setting a value. Sending a value outside that range returns a 400,
+  and sending `cfg_scale` to a model that doesn't accept it is also rejected.
+  Omitting it falls back to the provider's own default. This knob doesn't
+  change the billed price on any model.
+</Note>
 
 <Note>
   When `batch_size` is greater than 1, include a `generation_ids` array containing
