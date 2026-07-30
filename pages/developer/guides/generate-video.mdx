@@ -89,7 +89,22 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 | `generated_video_inputs.aspect_ratio` | e.g. `"16:9"`, `"9:16"`, `"1:1"` |
 | `generated_video_inputs.resolution` | e.g. `"540p"`, `"720p"` |
 | `generated_video_inputs.duration_ms` | Duration in milliseconds |
+| `generated_video_inputs.negative_prompt` | What to avoid in the generated video (supported models only) |
 | `batch_size` | Generate 1-8 variations at once (default: 1) |
+
+<Note>
+  `negative_prompt` is accepted only on models whose provider exposes it. Supported
+  slugs today are all Kling 1.6, 2.1, 2.5 Turbo, 2.6 Pro, and V3 variants (each
+  capped at 2500 characters by fal), plus `fal/veo-2-t2v`, the Veo 3 and
+  Veo 3 Fast slugs on fal, and the Vertex-direct `google/veo-31` and
+  `google/veo-31-fast` (no length cap). Models such as `fal/veo-2-i2v`,
+  `fal/kling-21-pro-t2v`, `google/gemini-omni-flash`, the Flux.2 [pro]/[max]
+  tiers, and Imagen 4 do not accept the field because their provider does not
+  publish one. Omitting the field preserves the provider's own default (for
+  example, fal's Kling default of "blur, distort, and low quality" still
+  applies). Use `GET /models?types=video` to see which slugs accept
+  `negative_prompt` and any per-slug length cap.
+</Note>
 
 <Note>
   When `batch_size` is greater than 1, include a `generation_ids` array containing
