@@ -51,8 +51,9 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 
 `aspect_ratio` and `resolution` are optional on every image model. Omitting them
 falls back to the provider's own default — `image_size: auto` on FLUX.2 edits,
-`1:1` on Grok Imagine, match-input on Nano Banana / Gemini — instead of failing
-the request. Call `GET /models?types=image` for the exact allowed values on each
+`1:1` on Grok Imagine, match-input on Nano Banana / Gemini, and each model's
+published `default_resolution` at `1:1` on Seedream — instead of failing the
+request. Call `GET /models?types=image` for the exact allowed values on each
 model.
 
 ## Reference images
@@ -62,9 +63,12 @@ The array length is bounded per model:
 
 | Model family | Max reference images |
 |--------------|---------------------|
+| GPT Image | 16 |
 | Seedream 4.0, 4.5, 5.0 Lite | 14 |
 | Nano Banana Pro, Nano Banana 2 | 14 |
 | Seedream 5.0 Pro | 10 |
+| FLUX.2 Pro / Flex / Max (edits) | 8 |
+| FLUX.2 Klein (edits) | 4 |
 | Nano Banana | 3 |
 | Grok Imagine (I2I) | 3 |
 
