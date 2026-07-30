@@ -27,6 +27,40 @@ curl https://api.hedra.com/web-app/public/models \
   -H "X-API-Key: $HEDRA_API_KEY"
 ```
 
+### Step 4: Read a model's constraints and defaults
+
+Each model in the response advertises the exact bounds it enforces and the
+value it substitutes for any dispatch-shaping field you omit. Read this before
+you submit so you know what a request will render — and be billed for — without
+trial-and-error.
+
+**Media-input constraints.** Every media-input field (start frame, source
+video, audio reference, and so on) publishes the limits the API already
+enforces:
+
+- `max_file_size_bytes` — the byte cap for that slot. The platform caps images
+  at 30 MB, audio at 100 MiB, and video at 500 MiB by default; individual model
+  slots tighten this further (for example, Veo 3.1 caps input frames at 20 MB).
+- `min_dimension_px` / `max_dimension_px` — pixel floors and ceilings for
+  images and video frames (for example, Happy Horse requires 300×300 or above).
+- `min_duration_ms` / `max_duration_ms` — per-file duration windows for video
+  inputs.
+- `max_total_duration_ms` — the combined-duration ceiling for a multi-file
+  audio slot (for example, Seedance 2.0 accepts up to 15 seconds of audio
+  reference across all files).
+
+A key only appears when something actually checks it, so a missing bound means
+that dimension is unconstrained for that model.
+
+**Dispatch defaults.** Any field the model resolves on your behalf when you
+omit it now publishes the substituted value as the JSON Schema `default`. For
+example, Seedream 4.0 publishes `"default": "1:1"` for `aspect_ratio` and
+`"default": "2160p (4K UHD)"` for `resolution` — a prompt-only submit renders
+and bills at those settings. When a field has no safe substitute (for example,
+a duration menu with more than one length), no default is published and the
+field is required. Always check the published `default` before shipping a
+prompt-only integration.
+
 ### Guides
 
 <CardGroup cols={2}>

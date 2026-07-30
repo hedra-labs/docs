@@ -66,3 +66,10 @@ supported resolutions, aspect ratios, and input requirements.
 curl "https://api.hedra.com/web-app/public/models?types=image" \
   -H "X-API-Key: $HEDRA_API_KEY"
 ```
+
+Each model also advertises the value it substitutes when you omit
+`aspect_ratio` or `resolution`. If a field publishes a JSON Schema `default`,
+that is the exact setting your request will render and be billed at when the
+field is absent — for example, Seedream 4.0 defaults to `"1:1"` at `2160p
+(4K UHD)`. Check these before shipping a prompt-only submit so the output
+matches your expectations.

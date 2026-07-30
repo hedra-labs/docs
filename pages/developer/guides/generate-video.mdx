@@ -96,6 +96,27 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
   one client-generated UUID for each variation.
 </Note>
 
+## Discover model constraints and defaults
+
+`GET /models?types=video` is the source of truth for what a given video model
+will accept. For each input slot the response publishes:
+
+- `max_file_size_bytes` for start frames, end frames, and source videos (up to
+  the 30 MB image / 500 MiB video platform ceilings, tightened per model — for
+  example, Veo 3.1 caps input frames at 20 MB).
+- `min_dimension_px` and `max_dimension_px` for image frames where the model
+  declares a floor or ceiling.
+- `min_duration_ms` and `max_duration_ms` on source-video slots, and
+  `max_total_duration_ms` across a multi-file audio-reference slot (for
+  example, Seedance 2.0 accepts up to 15 seconds of reference audio in total).
+
+The response also publishes a JSON Schema `default` for any dispatch-shaping
+field the model resolves on your behalf — for example, veed-fabric-10 defaults
+`resolution` to `"720p"`. Where no default is published (for example,
+`duration_ms` on a model that lists more than one length), the field is
+effectively required: omit it and the request will fail rather than fall back
+to a chosen length.
+
 ## Poll for completion
 
 ```bash

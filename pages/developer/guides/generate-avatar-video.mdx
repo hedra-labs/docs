@@ -12,7 +12,8 @@ export HEDRA_API_KEY="your_api_key"
 Avatar videos are driven by audio—the character in the image will lip-sync and
 move to the provided audio. Hedra Avatar (`together/hedra-avatar`) requires an
 image and audio input. Use `GET /models?types=video` to read its current output
-and input-duration limits before submitting long-form work.
+limits, input file-size caps, and image-dimension bounds before submitting
+long-form work.
 
 ## Step 1: Upload your audio
 
@@ -73,8 +74,12 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 ```
 
 <Note>
-  The model catalog reports output limits separately from limits on each input
-  slot. Check both before uploading long audio.
+  The model catalog reports output limits separately from the constraints on
+  each input slot (`max_file_size_bytes`, `min_dimension_px`,
+  `max_dimension_px`). Read both before uploading. Hedra Avatar currently
+  truncates audio longer than the model's output ceiling rather than rejecting
+  it, so audio-duration bounds are intentionally not published — pre-trim your
+  audio to the length you want billed.
 </Note>
 
 ### Inline audio generation
