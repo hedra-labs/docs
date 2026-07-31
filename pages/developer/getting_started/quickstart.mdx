@@ -50,16 +50,34 @@ enforces:
   reference across all files).
 
 A key only appears when something actually checks it, so a missing bound means
-that dimension is unconstrained for that model.
+that dimension is unconstrained for that model. These bounds now apply
+uniformly whether you attach media by URL upload or by `{"source": "asset"}`
+reference — an asset whose stored dimensions or duration are outside the
+declared window is rejected before dispatch.
+
+**Prompt length.** Text-prompt fields publish `minLength` and `maxLength` for
+the 76 models whose provider documents a limit — for example, ElevenLabs v3
+caps at 5,000 characters, Flash v2.5 at 40,000, Veo 3 at 20,000, GPT Image at
+32,000. Validating prompt length client-side saves a mid-generation rejection
+and, for text-to-speech, avoids being billed per character for a request the
+provider will refuse.
 
 **Dispatch defaults.** Any field the model resolves on your behalf when you
-omit it now publishes the substituted value as the JSON Schema `default`. For
+omit it publishes the substituted value as the JSON Schema `default`. For
 example, Seedream 4.0 publishes `"default": "1:1"` for `aspect_ratio` and
 `"default": "2160p (4K UHD)"` for `resolution` — a prompt-only submit renders
 and bills at those settings. When a field has no safe substitute (for example,
 a duration menu with more than one length), no default is published and the
 field is required. Always check the published `default` before shipping a
 prompt-only integration.
+
+**Mode-dependent required fields.** Some models expose several modes behind a
+discriminator field (for example, `quality: standard` versus `quality: pro` on
+Minimax Hailuo). When one mode requires a sizing field that another mode
+resolves for you, the schema publishes an `anyOf` of `required` branches so
+you can tell from the contract which extra fields your chosen mode demands.
+Read `anyOf` before submitting: omitting a field a branch requires is a
+validation error, not a substitution.
 
 ### Guides
 

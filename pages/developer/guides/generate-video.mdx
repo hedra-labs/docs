@@ -117,6 +117,17 @@ field the model resolves on your behalf — for example, veed-fabric-10 defaults
 effectively required: omit it and the request will fail rather than fall back
 to a chosen length.
 
+For models that expose multiple modes behind a discriminator (for example,
+Minimax Hailuo's `quality: standard` versus `quality: pro`), the schema
+publishes an `anyOf` of `required` branches — one branch per mode. This lets
+you tell before you submit which sizing fields your chosen mode demands: on
+Minimax Hailuo, `quality: standard` requires `duration_ms` while `quality: pro`
+does not.
+
+`text_prompt` publishes `minLength` and `maxLength` on the models whose
+provider documents a cap. Validating client-side avoids a rejection late in
+generation.
+
 ## Poll for completion
 
 ```bash
