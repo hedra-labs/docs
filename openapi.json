@@ -1562,11 +1562,12 @@
           "UNKNOWN",
           "INVALID_ARGUMENT",
           "NOT_FOUND",
+          "GONE",
           "ALREADY_EXISTS",
           "ALREADY_IN_PROGRESS",
           "UNAUTHORIZED",
           "PERMISSION_DENIED",
-          "MISSING_CREDITS",
+          "INSUFFICIENT_BALANCE",
           "MODERATION_FAILED",
           "FAILED_PRECONDITION",
           "DEADLINE_EXCEEDED",
@@ -1710,7 +1711,19 @@
               }
             ],
             "title": "Resolution",
-            "description": "The resolution to use formatted like '540p', '1080p', '1440p (2K QHD)', etc."
+            "description": "The resolution to use. Valid values depend on the model: some offer pixel-height tokens like '540p', '1080p' or '1440p (2K QHD)', while others offer '1K', '2K' and '4K'. Read the model's advertised resolutions rather than assuming one vocabulary \u2014 a token the model does not offer is rejected."
+          },
+          "output_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Format",
+            "description": "Output image encoding, for models whose provider endpoint accepts one (e.g. 'png', 'jpeg', 'webp'). None keeps the encoding the model already sends, so nothing about the request changes."
           },
           "start_keyframe_id": {
             "anyOf": [
@@ -1780,6 +1793,54 @@
             "title": "Enhance Prompt",
             "description": "If true, automatically enhance the prompt before generation.",
             "default": false
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed",
+            "description": "Seed for reproducible output, for models whose provider accepts one. None leaves the argument out of the provider request entirely, so the provider's own random-seed behavior applies."
+          },
+          "negative_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Negative Prompt",
+            "description": "What to avoid in the generated image, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies."
+          },
+          "guidance_scale": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guidance Scale",
+            "description": "How closely the model follows the prompt, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies. Per-model bounds are published on each model's input schema."
+          },
+          "num_inference_steps": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Num Inference Steps",
+            "description": "Denoising steps to run, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies. Per-model bounds are published on each model's input schema."
           }
         },
         "type": "object",
@@ -1921,7 +1982,19 @@
               }
             ],
             "title": "Resolution",
-            "description": "The resolution to use formatted like '540p', '1080p', '1440p (2K QHD)', etc."
+            "description": "The resolution to use. Valid values depend on the model: some offer pixel-height tokens like '540p', '1080p' or '1440p (2K QHD)', while others offer '1K', '2K' and '4K'. Read the model's advertised resolutions rather than assuming one vocabulary \u2014 a token the model does not offer is rejected."
+          },
+          "output_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Format",
+            "description": "Output image encoding, for models whose provider endpoint accepts one (e.g. 'png', 'jpeg', 'webp'). None keeps the encoding the model already sends, so nothing about the request changes."
           },
           "start_keyframe_id": {
             "anyOf": [
@@ -1991,6 +2064,54 @@
             "title": "Enhance Prompt",
             "description": "If true, automatically enhance the prompt before generation.",
             "default": false
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed",
+            "description": "Seed for reproducible output, for models whose provider accepts one. None leaves the argument out of the provider request entirely, so the provider's own random-seed behavior applies."
+          },
+          "negative_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Negative Prompt",
+            "description": "What to avoid in the generated image, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies."
+          },
+          "guidance_scale": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Guidance Scale",
+            "description": "How closely the model follows the prompt, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies. Per-model bounds are published on each model's input schema."
+          },
+          "num_inference_steps": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Num Inference Steps",
+            "description": "Denoising steps to run, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies. Per-model bounds are published on each model's input schema."
           },
           "asset_id": {
             "type": "string",
@@ -6353,6 +6474,42 @@
             "title": "Duration Ms",
             "description": "Duration of the video in milliseconds."
           },
+          "generate_audio": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generate Audio",
+            "description": "Whether to generate native audio, for models with an audio toggle. None preserves the legacy default (audio on); an explicit false is forwarded to the provider and charges the model's audio-off price."
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed",
+            "description": "Seed for reproducible output, for models whose provider accepts one. None leaves the argument out of the provider request entirely, so the provider's own random-seed behavior applies."
+          },
+          "negative_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Negative Prompt",
+            "description": "What to avoid in the generated video, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies."
+          },
           "bounding_box_target": {
             "anyOf": [
               {
@@ -6420,6 +6577,18 @@
             ],
             "title": "Shot Type",
             "description": "Shot type for multi-shot generation. Currently only 'customize' is supported."
+          },
+          "cfg_scale": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cfg Scale",
+            "description": "How closely the model follows the prompt, for models whose provider accepts it. None leaves the argument out of the provider request entirely, so the provider's own default applies. Per-model bounds are published on each model's input schema."
           }
         },
         "type": "object",
@@ -6622,10 +6791,75 @@
             "$ref": "#/components/schemas/ErrorCode",
             "description": "The class of error encountered."
           },
+          "reason_code": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GenerationReasonCode"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Which of several situations sharing `type` actually occurred, when the provider named one. Clients key user-facing copy off the (`type`, `reason_code`) pair and must treat an unrecognized value as absent, falling back to the copy for `type` alone. Absent means `type` says everything we know \u2014 not that the finer situation was ruled out."
+          },
           "message": {
             "type": "string",
             "title": "Message",
             "description": "The error message."
+          },
+          "param": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Param",
+            "description": "The input field this failure blames, as the rejecting side named it. Set only when the failure is about one specific field \u2014 typically an `INVALID_ARGUMENT` schema rejection \u2014 so clients can point at it without parsing `message`. Absent means the failure is not attributable to a single field."
+          },
+          "violations": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Violations",
+            "description": "Every field-level problem this failure reported, as `field`/`message` pairs in the rejecting side's own vocabulary \u2014 so a caller with several bad fields can fix them all in one pass instead of one per round-trip. `param` remains the primary field. Absent when the failure named at most one field."
+          },
+          "credits_needed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Credits Needed",
+            "description": "Credits the generation required. Set only for `INSUFFICIENT_BALANCE`, and only when the failing check knew the cost."
+          },
+          "credits_available": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Credits Available",
+            "description": "Credits the account had when the generation was rejected. Set only for `INSUFFICIENT_BALANCE`. Paired with `credits_needed` so clients can render the shortfall without parsing `message`."
           }
         },
         "type": "object",
@@ -6634,6 +6868,15 @@
           "message"
         ],
         "title": "GenerationError"
+      },
+      "GenerationReasonCode": {
+        "type": "string",
+        "enum": [
+          "MODERATION_LIKENESS",
+          "MODERATION_OUTPUT_TRANSIENT"
+        ],
+        "title": "GenerationReasonCode",
+        "description": "Fine-grained generation reason codes, published as ``reason_code``.\n\nThe second level under the coarse ``ErrorCode`` (AIP-193), mirroring\n``AgentErrorCode`` on the agent side. ``ErrorCode`` drives HTTP status and\nis deliberately small; this says which of several situations sharing that\ncode actually occurred, and it is what clients key user-facing copy off.\n\n``ErrorCode`` also carries the default retryability, but it cannot always\nbe right: one coarse code can cover both a deterministic refusal and a\nnondeterministic one. Where a provider draws that distinction and we can\nread it, the reason code is what refines it \u2014 see\n``MODERATION_OUTPUT_TRANSIENT``.\n\n``MODERATION_FAILED`` is the motivating case. It currently renders one\nsentence \u2014 \"Try rephrasing your prompt\" \u2014 for every moderation rejection,\nwhich is wrong advice when a provider refused a reference image or video\nfor depicting a real person: the prompt is not the problem and rephrasing\nit cannot help. Providers name that case distinctly (BytePlus as the\n``.PrivacyInformation`` sub-code, Google as a likeness message), so the\ndistinction is theirs, not ours to infer.\n\nAppend-only, and pinned by ``test/lint/test_error_codes_are_append_only``:\nclients switch on these string values."
       },
       "GenerationStatus": {
         "type": "string",
@@ -6838,6 +7081,12 @@
             "description": "Whether this input is mandatory.",
             "default": false
           },
+          "min_count": {
+            "type": "integer",
+            "title": "Min Count",
+            "description": "Minimum number of files for this slot when it is used. A slot that is present at all carries at least one file, so the default is 1; it rises where the provider needs more.",
+            "default": 1
+          },
           "max_count": {
             "type": "integer",
             "title": "Max Count",
@@ -6923,7 +7172,7 @@
           "role"
         ],
         "title": "InputSlot",
-        "description": "A typed input slot describing one kind of input a model accepts.\n\nEach slot has a media type (image, video, audio) and a role that distinguishes\nit from other slots of the same type (e.g., start_frame vs end_frame vs reference)."
+        "description": "A typed input slot describing one kind of input a model accepts.\n\nEach slot has a media type (image, video, audio) and a role that distinguishes\nit from other slots of the same type (e.g., start_frame vs end_frame vs reference).\n\nEvery constraint below is **enforced**, not advisory \u2014 a slot is published\nto `/models` and to the v3 JSON Schema, so declaring a limit nothing checks\nwould advertise a promise we don't keep:\n\n- `min_count` / `max_count` \u2014 published as the public list's\n  `minItems`/`maxItems`, so submit validation rejects both ends;\n  `max_count` is re-checked at the v3 gateway (before any download) and at\n  dispatch for reference media.\n- `max_file_size_bytes` \u2014 tightens the per-kind ingestion cap (never\n  widens it). Ingestion-scoped: it applies when the file enters the\n  system, not to an asset reference \u2014 asset rows store no byte size.\n  On an image slot this is not written here:\n  `VideoModel.declarative_input_modes` stamps it from the model's\n  `max_input_image_bytes`, so a value set on the slot is overwritten.\n- `min_dimension_px` / `max_dimension_px` \u2014 checked at v3 ingestion against\n  the image header or the video's ffprobe, before the asset row and the\n  moderation call, and on asset references against the row's stored\n  width/height.\n- `min_duration_ms` / `max_duration_ms` \u2014 checked at v3 ingestion, against\n  the ffprobe result on a video slot and the decoded length on an audio one,\n  on asset references against the row's stored `duration_ms`, and again by\n  the dispatch video validator. Both kinds get the shared\n  `DURATION_MAX_TOLERANCE_MS` grace on the maximum; the minimum is exact.\n- `max_total_duration_ms` \u2014 checked across the slot's files at dispatch,\n  for audio and video alike."
       },
       "KlingEditElement": {
         "properties": {
