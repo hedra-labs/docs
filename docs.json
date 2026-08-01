@@ -41,7 +41,7 @@
     },
     "products": [
       {
-        "product": "Hedra Agent",
+        "product": "Agent platform",
         "description": "Create with the agent and manual tools",
         "icon": "message-circle",
         "groups": [
@@ -105,9 +105,23 @@
         ]
       },
       {
-        "product": "Hedra API",
-        "description": "Build with Hedra models and APIs",
+        "product": "Developer platform",
+        "description": "Unified accelerated inference for visual media",
         "icon": "code",
+        "groups": [
+          {
+            "group": "API Reference",
+            "openapi": {
+              "source": "/openapi-v3.json",
+              "directory": "api-reference/v3"
+            }
+          }
+        ]
+      },
+      {
+        "product": "Legacy API",
+        "description": "The v2 generations API, supported for existing integrations",
+        "icon": "archive",
         "groups": [
           {
             "group": "Getting Started",
