@@ -1,4 +1,4 @@
-name: Sync v2 OpenAPI
+name: Sync OpenAPI schemas
 
 on:
   workflow_dispatch:
@@ -17,19 +17,39 @@ jobs:
         with:
           token: ${{ secrets.OPENAPI_SYNC_TOKEN }}
 
-      - name: Sync the production schema
-        run: python3 scripts/sync_openapi.py
+      - name: Sync the v3 schema
+        run: |
+          python3 scripts/sync_openapi.py \
+            --source https://api.hedra.com/v3/openapi.json \
+            --output openapi-v3.json \
+            --overrides openapi-v3-overrides.json
+
+      - name: Sync the v2 (legacy) schema
+        run: |
+          python3 scripts/sync_openapi.py \
+            --source https://api.hedra.com/public/openapi.json \
+            --output openapi.json \
+            --overrides openapi-overrides.json
 
       - name: Open or update the sync pull request
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.OPENAPI_SYNC_TOKEN }}
-          branch: automation/sync-v2-openapi
+          branch: automation/sync-openapi
           delete-branch: true
-          commit-message: Sync v2 OpenAPI schema
-          title: "chore: Sync v2 OpenAPI schema"
+          commit-message: Sync OpenAPI schemas
+          title: "chore: Sync OpenAPI schemas"
           body: |
-            Refreshes `openapi.json` from the production FastAPI schema at
-            `https://api.hedra.com/public/openapi.json` and reapplies the
-            documentation-only annotations in `openapi-overrides.json`.
+            Refreshes both published schemas and reapplies the
+            documentation-only annotations layered on top of them.
+
+            - `openapi-v3.json` from `https://api.hedra.com/v3/openapi.json`,
+              with `openapi-v3-overrides.json` applied.
+            - `openapi.json` (v2, legacy) from
+              `https://api.hedra.com/public/openapi.json`, with
+              `openapi-overrides.json` applied.
+
+            The v3 schema carries a `POST /models/{slug}` operation per model,
+            so model launches and retirements show up here as added or removed
+            endpoints.
           labels: documentation

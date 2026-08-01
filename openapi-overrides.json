@@ -1,8 +1,12 @@
 {
+  "info": {
+    "title": "Hedra API v2 (Legacy)",
+    "description": "The v2 generations API. New integrations should use the [Hedra API](https://api.hedra.com/v3), which reaches every image, video, and audio model through a single submit-and-poll surface. v2 remains supported for existing integrations."
+  },
   "servers": [
     {
       "url": "https://api.hedra.com/web-app/public",
-      "description": "Hedra Public API"
+      "description": "Hedra API v2 (Legacy)"
     }
   ],
   "paths": {
