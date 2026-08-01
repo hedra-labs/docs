@@ -125,8 +125,9 @@ Minimax Hailuo, `quality: standard` requires `duration_ms` while `quality: pro`
 does not.
 
 `text_prompt` publishes `minLength` and `maxLength` on the models whose
-provider documents a cap. Validating client-side avoids a rejection late in
-generation.
+provider documents a cap, and every video model publishes `"pattern": "\\S"`
+to reject a whitespace-only prompt at validation. Validating client-side
+avoids a rejection late in generation.
 
 ## Poll for completion
 

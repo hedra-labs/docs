@@ -78,4 +78,6 @@ The `text_prompt` field publishes `minLength` and `maxLength` for models whose
 provider documents a cap — for example, GPT Image accepts up to 32,000
 characters, Imagen 4 up to 5,000, Recraft v3 up to 1,000. Validate prompt
 length client-side to turn what would be a mid-generation rejection into a
-field-level error before you submit.
+field-level error before you submit. Every image model also publishes
+`"pattern": "\\S"` on `text_prompt`, so a whitespace-only prompt fails
+validation instead of reaching the provider.

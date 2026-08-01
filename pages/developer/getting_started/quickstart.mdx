@@ -60,7 +60,9 @@ the 76 models whose provider documents a limit — for example, ElevenLabs v3
 caps at 5,000 characters, Flash v2.5 at 40,000, Veo 3 at 20,000, GPT Image at
 32,000. Validating prompt length client-side saves a mid-generation rejection
 and, for text-to-speech, avoids being billed per character for a request the
-provider will refuse.
+provider will refuse. Prompt fields also publish `"pattern": "\\S"` — a
+whitespace-only prompt is rejected at validation on every model that accepts
+one, rather than 400ing at dispatch.
 
 **Dispatch defaults.** Any field the model resolves on your behalf when you
 omit it publishes the substituted value as the JSON Schema `default`. For
