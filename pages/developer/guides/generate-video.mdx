@@ -111,18 +111,34 @@ will accept. For each input slot the response publishes:
   example, Seedance 2.0 accepts up to 15 seconds of reference audio in total).
 
 The response also publishes a JSON Schema `default` for any dispatch-shaping
-field the model resolves on your behalf — for example, veed-fabric-10 defaults
-`resolution` to `"720p"`. Where no default is published (for example,
-`duration_ms` on a model that lists more than one length), the field is
-effectively required: omit it and the request will fail rather than fall back
-to a chosen length.
+field the model resolves on your behalf — for example, veed-fabric-10,
+`hedra-avatar` and `hedra-character-3` all default `resolution` to `"720p"`.
 
-For models that expose multiple modes behind a discriminator (for example,
-Minimax Hailuo's `quality: standard` versus `quality: pro`), the schema
-publishes an `anyOf` of `required` branches — one branch per mode. This lets
-you tell before you submit which sizing fields your chosen mode demands: on
-Minimax Hailuo, `quality: standard` requires `duration_ms` while `quality: pro`
-does not.
+For `resolution`, `aspect_ratio`, and `duration_ms`, requiredness follows the
+size of the model's menu: a menu of two or more values makes the field
+`required` (a prompt-only submit to a multi-resolution model fails with a
+field-level error instead of picking a value for you), a menu of exactly one
+value stays optional, and models that never accept a menu — audio-driven
+avatar models take their length from the driving audio, HiDream-O1 edits let
+the provider pick from the reference image — omit the field entirely.
+
+Multi-mode models publish an `anyOf` of branches, one per mode. Each branch
+carries `required`, narrowed `enum` menus, and — where a mode rejects a
+field another mode requires — a `false` schema for the forbidden field:
+
+- Kling-o3 at `quality: standard` accepts `resolution: ["720p"]`, while
+  `quality: pro` accepts `["1080p", "4K"]` — two of the three values in the
+  merged menu are invalid whatever tier you pick.
+- Minimax Hailuo requires `duration_ms` at `quality: standard` and does not
+  at `quality: pro`; `minimax-hailuo-02` and `minimax-hailuo-23` publish
+  disjoint resolution and duration menus per tier.
+- Vidu Q3 no longer advertises `360p` on any mode, since the provider
+  rejects it end-to-end.
+- Flux Kontext Max's image mode publishes `"aspect_ratio": false`, so
+  passing `aspect_ratio` alongside `images` fails validation.
+
+Match your intended mode to one `anyOf` branch and submit the fields it
+lists.
 
 `text_prompt` publishes `minLength` and `maxLength` on the models whose
 provider documents a cap, and every video model publishes `"pattern": "\\S"`

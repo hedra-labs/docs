@@ -64,22 +64,58 @@ provider will refuse. Prompt fields also publish `"pattern": "\\S"` — a
 whitespace-only prompt is rejected at validation on every model that accepts
 one, rather than 400ing at dispatch.
 
-**Dispatch defaults.** Any field the model resolves on your behalf when you
-omit it publishes the substituted value as the JSON Schema `default`. For
-example, Seedream 4.0 publishes `"default": "1:1"` for `aspect_ratio` and
-`"default": "2160p (4K UHD)"` for `resolution` — a prompt-only submit renders
-and bills at those settings. When a field has no safe substitute (for example,
-a duration menu with more than one length), no default is published and the
-field is required. Always check the published `default` before shipping a
-prompt-only integration.
+**Sizing requiredness and dispatch defaults.** `resolution`, `aspect_ratio`,
+and `duration_ms` are classified per model from what the model actually offers:
 
-**Mode-dependent required fields.** Some models expose several modes behind a
-discriminator field (for example, `quality: standard` versus `quality: pro` on
-Minimax Hailuo). When one mode requires a sizing field that another mode
-resolves for you, the schema publishes an `anyOf` of `required` branches so
-you can tell from the contract which extra fields your chosen mode demands.
-Read `anyOf` before submitting: omitting a field a branch requires is a
-validation error, not a substitution.
+- **Menu of two or more values** — the field is `required`. Omitting it is a
+  field-level validation error rather than a silent substitution to a value
+  you did not pick. A prompt-only submit to Seedream 4.0, for example, no
+  longer renders a 2160×2160 square without you naming a size.
+- **Menu of exactly one value** — the field stays optional and the single
+  value is still published, so a schema-driven client can pick it up. Veo 2
+  renders 5 seconds and only 5 seconds; you are not forced to restate its
+  `duration_ms`.
+- **Derived from an input you already supplied** — audio-driven avatar
+  models take their length from the driving audio; video extensions take
+  it from the source clip. The field is not required and no default is
+  published.
+- **Absent** — models that never accept a menu do not publish the knob at
+  all. HiDream-O1 edit variants, for example, omit `resolution` because
+  their provider picks the magnitude from the reference image; a field you
+  cannot read on the wire cannot be billed for a value you never received.
+
+Where a field does publish a JSON Schema `default`, that is the exact value
+the request will render and be billed at when the field is absent — for
+example, `hedra-avatar` and `hedra-character-3` publish `"default": "720p"`
+for `resolution`, and veed-fabric-10 publishes `"default": "720p"`.
+
+**Mode-dependent menus and forbidden fields.** Some models expose several
+modes behind a discriminator (for example, `quality: standard` versus
+`quality: pro` on Minimax Hailuo, or a text mode versus an image mode on
+Flux Kontext Max) and each mode accepts a different subset of the top-level
+menu. The schema publishes an `anyOf` of branches, one per mode, and each
+branch carries the full contract for its mode:
+
+- `required` lists the fields the mode demands.
+- `properties.<field>.enum` narrows the top-level enum to the values the
+  mode accepts. Kling-o3 at `quality: standard`, for example, publishes
+  `resolution: ["720p"]` on its branch while `quality: pro` publishes
+  `["1080p", "4K"]` — two of the three values in the merged menu are
+  invalid whatever tier you pick.
+- `properties.<field>: false` marks a field the mode rejects outright.
+  Flux Kontext Max's image mode publishes `"aspect_ratio": false`, so
+  passing `aspect_ratio` alongside `images` fails validation instead of
+  400ing at dispatch.
+
+Match your intended mode to one `anyOf` branch and submit the fields it
+lists.
+
+**Guidance strings.** Fields that need a plain-English note beyond the type
+publish it under a `guidance` key alongside `description`. For example, on
+`hedra-avatar` and `hedra-character-3` the `duration_ms` field explains that
+the value trims or pads the driving audio and is billed accordingly. Read
+`guidance` when building a schema-driven form or explaining a field to end
+users.
 
 ### Guides
 
