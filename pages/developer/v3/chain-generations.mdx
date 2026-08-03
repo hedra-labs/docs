@@ -1,6 +1,6 @@
 ---
-title: "Chain generations"
-description: "Feed one job's output into the next submit, and handle the 48-hour retention window."
+title: "Chain v3 generations with asset_id"
+description: "Reuse a completed v3 job's output as an asset_id in the next submit, and handle the EXPIRED status and 48-hour media retention window."
 ---
 
 Every job that completes in the v3 API returns an `outputs[]` array. Each item
