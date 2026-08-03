@@ -1,0 +1,114 @@
+---
+title: "Model catalog"
+sidebarTitle: "Model catalog"
+description: "Every image, video, and audio model available on the Hedra v3 API — with the ids you submit to and the capabilities that distinguish each family."
+---
+
+The Hedra v3 API dispatches every leading image, video, and audio model behind
+one endpoint, one key, and one bill. This page is a human-readable tour of the
+catalog and the newest additions.
+
+For the always-current, machine-readable list — including exact input schemas,
+resolution and duration menus, and prices — use:
+
+```bash
+# List every model with its id, human name, and modality.
+curl https://api.hedra.com/v3/models \
+  -H "Authorization: Key $HEDRA_KEY"
+
+# Full typed input schema for one model.
+curl https://api.hedra.com/v3/models/{id}/openapi.json \
+  -H "Authorization: Key $HEDRA_KEY"
+```
+
+Each model below lists the public id you submit to; find its **Run a model**
+entry in the API Reference for a copyable request body and every input field.
+
+## Recently added
+
+### Image models
+
+**Ideogram V4** — `ideogram-v4`
+
+Text-to-image with three render tiers merged into one public id. Select a tier
+with `input.quality` (`turbo`, `balanced`, or `quality`). Priced per output
+megapixel. Strong for poster-ready text and layout.
+
+**MAI-Image-2.5** — `mai-image-2-5`
+
+Microsoft AI's image model. Base and pro tiers are merged into one id;
+select a tier with `input.quality`. Supports both text-to-image and edit modes.
+
+**HiDream-O1-Image** — `hidream-o1-image`
+
+Standard and Dev tiers merged into one id (select with `input.quality`).
+Supports text-to-image, edit, and subject personalization from up to 10
+reference images.
+
+**Qwen Image 2.0** — `qwen-image-2`
+
+Alibaba's Qwen image model. Standard and pro tiers merged into one id
+(select with `input.quality`). Supports text-to-image and edit with 1–3
+reference images per edit.
+
+**Reve 2.1** — `reve-21`, `reve-21-edit`, `reve-21-remix`
+
+Three input modes, each exposed as a separate public id:
+
+- `reve-21` — text-to-image
+- `reve-21-edit` — single-source edit
+- `reve-21-remix` — remix with 1–8 reference images
+
+### Video models
+
+**Vidu Q3** — `vidu-q3`, `vidu-q3-reference`
+
+Video with native dialogue and sound up to **16 seconds** — the longest single
+clip in the catalog. Generate from a text prompt, a start frame, or between a
+start and end frame. `standard` and `turbo` tiers via `input.quality`. The
+separate `vidu-q3-reference` model takes 1–4 reference images
+(reference-to-video).
+
+**Luma Ray 3.2** — `luma-ray-32`
+
+Text-to-video at 540p, 720p, or 1080p, in 5- or 10-second clips.
+
+**Wan 2.7** — `wan-2-7`
+
+Alibaba's video model with native audio, exposed under one public id. Three
+input modes:
+
+- Text-to-video, 2–15 seconds.
+- Image-to-video from a first frame with an optional last frame, 2–15 seconds.
+- Reference-to-video from up to 4 reference images, 2–10 seconds — keeps
+  subjects consistent across the clip.
+
+**LTX-2.3** — `ltx-2-3`
+
+Fast and Pro tiers merged into one id (select with `input.quality`). Supports
+resolutions up to 4K (2160p); Fast reaches 20 seconds. Audio is synthesised in
+the same forward pass as the video — there is no audio-off toggle.
+
+**PixVerse V6** — `pixverse-v6`
+
+Text-to-video and image-to-video at 360p, 540p, 720p, or 1080p, in 1–15
+second clips. Native audio via the `generate_audio` toggle. Accepts `seed` for
+reproducibility.
+
+## How to pick a model
+
+1. **List what's available for your modality.** `GET /v3/models` returns every
+   model with its id, human name, and modality.
+2. **Read the model's typed schema.** `GET /v3/models/{id}/openapi.json` returns
+   the exact input fields — resolution menus, duration bounds, whether the
+   model accepts reference frames, and so on.
+3. **Estimate the cost.** `POST /v3/models/{id}/estimate` returns the credit
+   cost for a specific request body before you run it.
+4. **Submit the job.** `POST /v3/models/{id}` returns a `job_id`; poll it with
+   `GET /v3/jobs/{job_id}/status` and read the output at `GET /v3/jobs/{job_id}`.
+
+<Note>
+  New model families are added continuously. Prefer `GET /v3/models` at runtime
+  over hard-coding a specific model id when your integration should follow the
+  latest release.
+</Note>
