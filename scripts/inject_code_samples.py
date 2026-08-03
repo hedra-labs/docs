@@ -9,10 +9,12 @@ Sources, per operation:
                 `METHOD /path` lines join directly to spec operations), with
                 JSON bodies synthesized from the spec
 
-Mintlify renders x-codeSamples in place of its auto-generated examples, which
-is why cURL is re-injected explicitly. An operation missing from an SDK's
-reference.md (e.g. the SDK regen PR lags a model launch) just skips that
-language — the spec sync must never be blocked on SDK freshness.
+docs.json sets `api.examples.autogenerate: false`, so these samples are the
+ONLY examples Mintlify shows — which is why cURL is injected explicitly, and
+why the v2 (legacy) spec gets a cURL-only pass (`--curl-only`) despite having
+no SDKs. An operation missing from an SDK's reference.md (e.g. the SDK regen
+PR lags a model launch) just skips that language — the spec sync must never be
+blocked on SDK freshness.
 """
 
 from __future__ import annotations
@@ -54,6 +56,11 @@ def parse_args() -> argparse.Namespace:
         "--spec",
         type=Path,
         default=REPOSITORY_ROOT / "openapi-v3.json",
+    )
+    parser.add_argument(
+        "--curl-only",
+        action="store_true",
+        help="Inject only synthesized cURL samples (for specs with no SDKs, e.g. v2)",
     )
     for language, source in REFERENCE_SOURCES.items():
         parser.add_argument(
@@ -230,18 +237,44 @@ def json_body_example(operation: dict[str, Any], document: dict[str, Any]) -> st
     return json.dumps(example, indent=2)
 
 
+def is_file_field(field: dict) -> bool:
+    # OpenAPI 3.0 marks upload fields format:binary; 3.1 uses contentMediaType.
+    return field.get("format") == "binary" or "contentMediaType" in field
+
+
+def auth_header(operation: dict[str, Any], document: dict[str, Any]) -> str:
+    """Bearer when the spec offers it (v3 — matches the SDKs), else the apiKey
+    header scheme (v2's X-API-Key)."""
+    schemes = document.get("components", {}).get("securitySchemes", {})
+    referenced = [
+        name
+        for requirement in operation.get("security") or document.get("security") or []
+        for name in requirement
+        if name in schemes
+    ] or list(schemes)
+    for name in referenced:
+        scheme = schemes[name]
+        if scheme.get("type") == "http" and scheme.get("scheme") == "bearer":
+            return "Authorization: Bearer $HEDRA_API_KEY"
+    for name in referenced:
+        scheme = schemes[name]
+        if scheme.get("type") == "apiKey" and scheme.get("in") == "header":
+            return f"{scheme['name']}: $HEDRA_API_KEY"
+    return "Authorization: Bearer $HEDRA_API_KEY"
+
+
 def build_curl(
     method: str, path: str, operation: dict[str, Any], document: dict[str, Any]
 ) -> str:
     server = document.get("servers", [{}])[0].get("url", "https://api.hedra.com/v3")
     lines = [f'curl "{server}{path}"' if method == "get" else f'curl -X {method.upper()} "{server}{path}"']
-    lines.append('  -H "Authorization: Bearer $HEDRA_API_KEY"')
+    lines.append(f'  -H "{auth_header(operation, document)}"')
     content = operation.get("requestBody", {}).get("content", {})
     if "multipart/form-data" in content:
         schema = resolve_ref(content["multipart/form-data"].get("schema", {}), document)
         for name in schema.get("required", []):
             field = resolve_ref(schema.get("properties", {}).get(name, {}), document)
-            if field.get("format") == "binary":
+            if is_file_field(field):
                 lines.append(f'  -F "{name}=@/path/to/{name}"')
             else:
                 lines.append(f'  -F "{name}=..."')
@@ -265,7 +298,7 @@ def build_cli(
         schema = resolve_ref(content["multipart/form-data"].get("schema", {}), document)
         for name in schema.get("required", []):
             field = resolve_ref(schema.get("properties", {}).get(name, {}), document)
-            value = f"./path/to/{name}" if field.get("format") == "binary" else "..."
+            value = f"./path/to/{name}" if is_file_field(field) else "..."
             parts.append(f"--{name.replace('_', '-')} {value}")
     for flag, _flag_type in entry["flags"]:
         if flag == "--json":
@@ -284,6 +317,9 @@ def main() -> None:
 
     references: dict[str, Any] = {}
     for language in REFERENCE_SOURCES:
+        if args.curl_only:
+            references[language] = None
+            continue
         source = getattr(args, f"{language}_ref")
         try:
             references[language] = load_text(source)

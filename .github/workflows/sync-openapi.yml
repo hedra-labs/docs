@@ -37,6 +37,11 @@ jobs:
             --output openapi.json \
             --overrides openapi-overrides.json
 
+      # autogenerate:false in docs.json means x-codeSamples are the only
+      # examples shown, so the SDK-less v2 spec still needs cURL samples.
+      - name: Inject cURL samples into the v2 schema
+        run: python3 scripts/inject_code_samples.py --spec openapi.json --curl-only
+
       - name: Open or update the sync pull request
         uses: peter-evans/create-pull-request@v8
         with:

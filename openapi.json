@@ -77,7 +77,14 @@
             "sidebarTitle": "List Available AI Models"
           }
         },
-        "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models."
+        "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/web-app/public/models\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\"\n"
+          }
+        ]
       }
     },
     "/voices": {
@@ -114,7 +121,14 @@
             "sidebarTitle": "List Available Voices"
           }
         },
-        "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos."
+        "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/web-app/public/voices\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\"\n"
+          }
+        ]
       }
     },
     "/assets": {
@@ -187,7 +201,14 @@
             "sidebarTitle": "List Uploaded & Generated Assets"
           }
         },
-        "description": "Retrieve your uploaded and generated assets by asset type, with optional filtering by IDs."
+        "description": "Retrieve your uploaded and generated assets by asset type, with optional filtering by IDs.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/web-app/public/assets\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\"\n"
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -238,7 +259,14 @@
             "sidebarTitle": "Create Asset"
           }
         },
-        "description": "Create a new asset record before uploading a supported file to use in generations."
+        "description": "Create a new asset record before uploading a supported file to use in generations.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/web-app/public/assets\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"name\": \"name\",\n  \"type\": \"text\"\n}'\n"
+          }
+        ]
       }
     },
     "/assets/{id}/upload": {
@@ -303,7 +331,14 @@
             "sidebarTitle": "Upload Asset"
           }
         },
-        "description": "Upload the file contents for a previously created asset."
+        "description": "Upload the file contents for a previously created asset.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/web-app/public/assets/{id}/upload\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\" \\\n  -F \"file=@/path/to/file\"\n"
+          }
+        ]
       }
     },
     "/generations": {
@@ -462,7 +497,14 @@
             "sidebarTitle": "List Your Generations"
           }
         },
-        "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt."
+        "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/web-app/public/generations\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\"\n"
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -617,7 +659,14 @@
             "sidebarTitle": "Generate Asset"
           }
         },
-        "description": "Start a new image, video, or audio generation using your chosen model and inputs."
+        "description": "Start a new image, video, or audio generation using your chosen model and inputs.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/web-app/public/generations\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"generated_video_inputs\": {\n    \"text_prompt\": \"text_prompt\"\n  }\n}'\n"
+          }
+        ]
       }
     },
     "/generations/{generation_id}/status": {
@@ -672,7 +721,14 @@
             "sidebarTitle": "Get Generation Status"
           }
         },
-        "description": "Check the status of a generation and retrieve the resulting asset when it completes."
+        "description": "Check the status of a generation and retrieve the resulting asset when it completes.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/web-app/public/generations/{generation_id}/status\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\"\n"
+          }
+        ]
       }
     },
     "/billing/credits": {
@@ -705,7 +761,14 @@
             "sidebarTitle": "Get Your Credit Balance"
           }
         },
-        "description": "Retrieve the current API credit balance for your account."
+        "description": "Retrieve the current API credit balance for your account.",
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/web-app/public/billing/credits\" \\\n  -H \"X-API-Key: $HEDRA_API_KEY\"\n"
+          }
+        ]
       }
     }
   },
