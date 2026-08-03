@@ -110,6 +110,12 @@
         "icon": "code",
         "groups": [
           {
+            "group": "Guides",
+            "pages": [
+              "pages/developer/v3/chain-generations"
+            ]
+          },
+          {
             "group": "API Reference",
             "openapi": {
               "source": "/openapi-v3.json",
