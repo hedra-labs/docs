@@ -110,6 +110,12 @@
         "icon": "code",
         "groups": [
           {
+            "group": "Guides",
+            "pages": [
+              "pages/developer/v3/model-catalog"
+            ]
+          },
+          {
             "group": "Concepts",
             "pages": [
               "pages/developer/v3/quality-levels"
