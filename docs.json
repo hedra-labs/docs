@@ -110,6 +110,12 @@
         "icon": "code",
         "groups": [
           {
+            "group": "Getting Started",
+            "pages": [
+              "pages/developer/v3/quickstart"
+            ]
+          },
+          {
             "group": "Guides",
             "pages": [
               "pages/developer/v3/chain-generations",
@@ -127,7 +133,146 @@
             "openapi": {
               "source": "/openapi-v3.json",
               "directory": "api-reference/v3"
-            }
+            },
+            "pages": [
+              {
+                "group": "Run a model",
+                "pages": [
+                  "POST /models/dreamina-31",
+                  "POST /models/elevenlabs-flash-multilingual-v2",
+                  "POST /models/elevenlabs-flash-v2",
+                  "POST /models/elevenlabs-multilingual-v2",
+                  "POST /models/elevenlabs-v3",
+                  "POST /models/flux-11-pro",
+                  "POST /models/flux-11-ultra",
+                  "POST /models/flux-dev",
+                  "POST /models/flux-kontext-max",
+                  "POST /models/flux-kontext-pro",
+                  "POST /models/flux2-flex",
+                  "POST /models/flux2-klein-9b",
+                  "POST /models/flux2-max",
+                  "POST /models/flux2-pro",
+                  "POST /models/gemini-omni-flash",
+                  "POST /models/gpt-image-15",
+                  "POST /models/gpt-image-2",
+                  "POST /models/grok-imagine",
+                  "POST /models/grok-video",
+                  "POST /models/happy-horse",
+                  "POST /models/hedra-avatar",
+                  "POST /models/hedra-character-3",
+                  "POST /models/hidream-o1-image",
+                  "POST /models/ideogram-v2",
+                  "POST /models/ideogram-v4",
+                  "POST /models/imagen3",
+                  "POST /models/imagen4",
+                  "POST /models/kling-16",
+                  "POST /models/kling-21-master",
+                  "POST /models/kling-25-turbo",
+                  "POST /models/kling-26-pro",
+                  "POST /models/kling-ai-avatar-v2",
+                  "POST /models/kling-o1",
+                  "POST /models/kling-o3",
+                  "POST /models/kling-v3",
+                  "POST /models/ltx-2-3",
+                  "POST /models/luma-ray-32",
+                  "POST /models/mai-image-2-5",
+                  "POST /models/minimax-hailuo-02",
+                  "POST /models/minimax-hailuo-23",
+                  "POST /models/minimax-speech-25-hd-preview",
+                  "POST /models/minimax-speech-25-turbo-preview",
+                  "POST /models/nano-banana",
+                  "POST /models/nano-banana-2",
+                  "POST /models/nano-banana-pro",
+                  "POST /models/omnihuman-15",
+                  "POST /models/pixverse-v6",
+                  "POST /models/qwen-image-2",
+                  "POST /models/recraft-v3",
+                  "POST /models/reve-21",
+                  "POST /models/reve-21-edit",
+                  "POST /models/reve-21-remix",
+                  "POST /models/sana",
+                  "POST /models/seedance-15-pro",
+                  "POST /models/seedance-20",
+                  "POST /models/seedance-20-mini",
+                  "POST /models/seedream-40",
+                  "POST /models/seedream-45",
+                  "POST /models/seedream-50-lite",
+                  "POST /models/seedream-50-pro",
+                  "POST /models/sora-2-pro",
+                  "POST /models/veed-fabric-10",
+                  "POST /models/veo-2",
+                  "POST /models/veo-3",
+                  "POST /models/veo-31",
+                  "POST /models/vidu-q3",
+                  "POST /models/vidu-q3-reference",
+                  "POST /models/wan-2-7"
+                ]
+              },
+              {
+                "group": "Models",
+                "pages": [
+                  "GET /models",
+                  "GET /models/{model}",
+                  "GET /models/{model}/jobs",
+                  "GET /models/{model}/voices",
+                  "GET /models/{model}/openapi.json",
+                  "POST /models/{model}/estimate"
+                ]
+              },
+              {
+                "group": "Jobs",
+                "pages": [
+                  "GET /jobs",
+                  "GET /jobs/{job_id}",
+                  "GET /jobs/{job_id}/status",
+                  "GET /jobs/{job_id}/logs",
+                  "GET /jobs/{job_id}/stream"
+                ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "GET /webhooks/public-key",
+                  "GET /webhooks/default",
+                  "PUT /webhooks/default",
+                  "DELETE /webhooks/default",
+                  "POST /webhooks/default/test",
+                  "GET /webhooks/deliveries",
+                  "POST /webhooks/deliveries/{job_id}/redeliver",
+                  "WEBHOOK job.completed",
+                  "WEBHOOK job.failed"
+                ]
+              },
+              {
+                "group": "Log drains",
+                "pages": [
+                  "GET /log-drains",
+                  "POST /log-drains",
+                  "GET /log-drains/{drain_id}",
+                  "PATCH /log-drains/{drain_id}",
+                  "DELETE /log-drains/{drain_id}",
+                  "POST /log-drains/{drain_id}/test"
+                ]
+              },
+              {
+                "group": "Access",
+                "pages": [
+                  "POST /keys",
+                  "GET /keys",
+                  "POST /keys/{key_id}/rotate",
+                  "DELETE /keys/{key_id}",
+                  "POST /tokens",
+                  "POST /files"
+                ]
+              },
+              {
+                "group": "Billing",
+                "pages": [
+                  "GET /balance",
+                  "GET /usage"
+                ]
+              }
+            ]
           }
         ]
       },

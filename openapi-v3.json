@@ -46478,24 +46478,16 @@
   },
   "tags": [
     {
-      "name": "Models",
-      "description": "Discover models and estimate cost."
-    },
-    {
       "name": "Run a model",
       "description": "One typed submit endpoint per model \u2014 titled `Run <name> (<id>)`, so the model you know by name is the operation you call. Every one returns the same `202` job envelope; track it under Jobs."
     },
     {
+      "name": "Models",
+      "description": "Discover models and estimate cost."
+    },
+    {
       "name": "Jobs",
       "description": "Poll, stream, and list submitted jobs."
-    },
-    {
-      "name": "Access",
-      "description": "API keys, browser tokens, and file uploads."
-    },
-    {
-      "name": "Billing",
-      "description": "Balance and usage, in US dollars."
     },
     {
       "name": "Webhooks",
@@ -46504,6 +46496,14 @@
     {
       "name": "Log drains",
       "description": "Stream signed job lifecycle logs to HTTPS destinations.\n\n**Why the last batch failed.** `last_error` is the same error envelope a failed job returns from `GET /jobs/{job_id}`, not a free-text diagnostic. It is null until a batch fails and is cleared again on the next success. Its `code` comes from the one error vocabulary this API uses, narrowed for drain delivery to this set:\n\n| `code` | Means |\n| --- | --- |\n| `DEADLINE_EXCEEDED` | Your destination did not respond before the delivery timeout. |\n| `UNAVAILABLE` | Your destination could not be reached (DNS, TLS, or connection failure) or answered `5xx` \u2014 or redirected, which is never followed. |\n| `RESOURCE_EXHAUSTED` | Your destination answered `429`. |\n| `UNAUTHORIZED` | Your destination answered `401`. |\n| `PERMISSION_DENIED` | Your destination answered `403`. |\n| `NOT_FOUND` | Your destination answered `404`. |\n| `INVALID_ARGUMENT` | Your destination answered some other `4xx`. |\n| `FAILED_PRECONDITION` | The URL is not a permitted log drain target \u2014 it resolves to a blocked address range. Fix the URL; retrying will not help. |\n| `INTERNAL` | Hedra could not prepare the batch. |\n| `UNKNOWN` | No classification is available, including for drains that last failed before this field became structured. |\n\n`retryable` describes the condition, not what Hedra did: every failed batch is requeued until the drain auto-disables, so it answers whether fixing the destination and re-enabling is likely to help. The `message` is a fixed summary \u2014 your destination's URL, headers, credentials, and response body are never echoed back, so treat your own logs, not this field, as the record of what your destination returned.\n\n`disabled_reason` answers a different question and stays its own small vocabulary: `consecutive_failures` when five batches in a row failed, `disabled_by_user` when you turned the drain off."
+    },
+    {
+      "name": "Access",
+      "description": "API keys, browser tokens, and file uploads."
+    },
+    {
+      "name": "Billing",
+      "description": "Balance and usage, in US dollars."
     }
   ],
   "webhooks": {

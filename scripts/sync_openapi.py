@@ -55,6 +55,19 @@ def merge(target: dict[str, Any], override: dict[str, Any]) -> None:
             target[key] = value
 
 
+def apply_tag_order(document: dict[str, Any], order: list[str]) -> None:
+    """Reorder the top-level tags array without pinning upstream tag content.
+
+    Tags named in ``order`` come first, in that order; tags the source adds
+    later keep their relative order after them.
+    """
+    tags = document.get("tags")
+    if not isinstance(tags, list):
+        return
+    rank = {name: index for index, name in enumerate(order)}
+    tags.sort(key=lambda tag: rank.get(tag.get("name"), len(order)))
+
+
 def main() -> None:
     args = parse_args()
     document = load_source(args.source)
@@ -64,7 +77,14 @@ def main() -> None:
     if not isinstance(overrides, dict):
         raise ValueError("OpenAPI overrides must contain a JSON object")
 
+    tag_order = overrides.pop("x-tag-order", None)
     merge(document, overrides)
+    if tag_order is not None:
+        if not isinstance(tag_order, list) or not all(
+            isinstance(name, str) for name in tag_order
+        ):
+            raise ValueError("x-tag-order must be a list of tag names")
+        apply_tag_order(document, tag_order)
     args.output.write_text(json.dumps(document, indent=2) + "\n")
 
 
