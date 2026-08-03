@@ -1,0 +1,106 @@
+---
+title: "Quality levels"
+sidebarTitle: "Quality levels"
+description: "Select a v3 model's speed and fidelity tier with the required input.quality parameter, and read the tier that ran back on job results and webhooks."
+---
+
+Some models publish more than one quality tier — a faster/cheaper variant beside
+a higher-fidelity one. In the v3 API those tiers live on a single public model
+id, and you pick the tier per request with a required `input.quality` string.
+
+## When it applies
+
+Only models that offer more than one tier expose `input.quality`. For every
+other model the field is not accepted. To see the accepted values for a specific
+model, call `GET /v3/models/{model}` (or `GET /v3/models/{model}/openapi.json`)
+and read the `quality` enum on that model's input schema.
+
+Today the merged public model ids and their published levels are:
+
+| Model | `input.quality` values |
+|-------|------------------------|
+| `gpt-image-2` | `low`, `medium`, `high` |
+| `veo-3` | `standard`, `fast` |
+| `veo-31` | `standard`, `fast` |
+| `seedance-20` | `standard`, `fast` |
+| `kling-v3` | `standard`, `pro` |
+| `kling-o3` | `standard`, `pro` |
+| `kling-ai-avatar-v2` | `standard`, `pro` |
+| `minimax-hailuo-02` | `standard`, `pro` |
+| `minimax-hailuo-23` | `standard`, `pro`, `fast-standard`, `fast-pro` |
+
+`GET /v3/models` is the source of truth — always trust the enum published there
+over any static list.
+
+## How to submit
+
+Pass `input.quality` alongside the rest of your inputs:
+
+```bash
+curl -X POST https://api.hedra.com/v3/models/veo-3 \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {
+      "prompt": "A hot-air balloon drifting over a canyon at dawn",
+      "quality": "fast",
+      "aspect_ratio": "16:9",
+      "resolution": "720p",
+      "duration_ms": 6000
+    }
+  }'
+```
+
+```bash
+curl -X POST https://api.hedra.com/v3/models/gpt-image-2 \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {
+      "prompt": "a space cat, studio lighting",
+      "quality": "medium",
+      "aspect_ratio": "1:1",
+      "resolution": "1K"
+    }
+  }'
+```
+
+## Validation errors
+
+- A missing `input.quality` on a model that requires one returns `400
+  INVALID_ARGUMENT` listing the accepted values.
+- An unknown value returns `400 INVALID_ARGUMENT` with the same value list.
+- Sending `quality` to a model that has no quality levels also returns `400
+  INVALID_ARGUMENT`.
+
+## Retired level-specific model ids
+
+The old level-specific slugs (for example `veo-3-fast`, `gpt-image-2-medium`,
+`kling-v3-pro-t2v`) no longer resolve. Every v3 surface that took a model id —
+submit, estimate, model detail, and per-model job listing — returns `404` with
+a message pointing at the public id and the `quality` value to send instead:
+
+```
+Model 'veo-3-fast' is not a v3 model id. Use model 'veo-3' with input.quality 'fast'.
+```
+
+Update any hard-coded model ids in your integration to the merged id and move
+the tier into `input.quality`.
+
+## Reading which tier ran
+
+Both `GET /v3/jobs/{job_id}` (`ResultResponse`) and `GET /v3/jobs`
+(`JobSummary`) now carry a `quality` field, and webhook payloads include it as
+well. It reports the tier the job actually ran at, and is omitted for models
+that do not offer quality levels — so you can log or branch on the tier without
+re-parsing the request you submitted.
+
+```json
+{
+  "job_id": "job_...",
+  "model": "veo-3",
+  "quality": "fast",
+  "status": "COMPLETED",
+  "outputs": [{ "url": "https://..." }]
+}
+```
