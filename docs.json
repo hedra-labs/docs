@@ -116,6 +116,12 @@
             ]
           },
           {
+            "group": "Concepts",
+            "pages": [
+              "pages/developer/v3/quality-levels"
+            ]
+          },
+          {
             "group": "API Reference",
             "openapi": {
               "source": "/openapi-v3.json",
