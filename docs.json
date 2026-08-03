@@ -113,6 +113,13 @@
             "group": "Guides",
             "pages": [
               "pages/developer/v3/chain-generations"
+              "pages/developer/v3/model-catalog"
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "pages/developer/v3/quality-levels"
             ]
           },
           {
