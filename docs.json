@@ -119,6 +119,8 @@
             "group": "Guides",
             "pages": [
               "pages/developer/v3/chain-generations",
+              "pages/developer/v3/webhooks",
+              "pages/developer/v3/log-drains",
               "pages/developer/v3/model-catalog"
             ]
           },
