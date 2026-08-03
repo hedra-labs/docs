@@ -112,6 +112,7 @@
           {
             "group": "Guides",
             "pages": [
+              "pages/developer/v3/chain-generations"
               "pages/developer/v3/model-catalog"
             ]
           },
