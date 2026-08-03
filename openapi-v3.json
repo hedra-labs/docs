@@ -301,6 +301,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/jobs\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.list()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.list();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.list();\nwhile (page.hasNextPage()) {\n    page = page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs list\n"
+          }
         ]
       }
     },
@@ -572,6 +594,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/jobs/{job_id}\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.get(\n    job_id=\"job_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.get(\"job_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs get \\\n  --job-id job_id\n"
           }
         ]
       }
@@ -862,6 +906,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/jobs/{job_id}/status\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.get_status(\n    job_id=\"job_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.getStatus(\"job_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs get-status \\\n  --job-id job_id\n"
           }
         ]
       }
@@ -1167,6 +1233,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/jobs/{job_id}/logs\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.list_job_logs(\n    job_id=\"job_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.listJobLogs(\"job_id\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.listJobLogs(\"job_id\");\nwhile (page.hasNextPage()) {\n    page = page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs list-job-logs \\\n  --job-id job_id\n"
+          }
         ]
       }
     },
@@ -1455,6 +1543,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/jobs/{job_id}/stream\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.stream(\n    job_id=\"job_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.stream(\"job_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs stream \\\n  --job-id job_id\n"
+          }
         ]
       }
     },
@@ -1694,7 +1804,29 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/models\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.models.list()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.list();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra models list\n"
+          }
+        ]
       }
     },
     "/models/{model}": {
@@ -1926,7 +2058,29 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/models/{model}\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.models.get(\n    model=\"model\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.get(\"model\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra models get \\\n  --model model\n"
+          }
+        ]
       }
     },
     "/models/{model}/jobs": {
@@ -2230,6 +2384,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/models/{model}/jobs\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.models.list_model_jobs(\n    model=\"model\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.models.listModelJobs(\"model\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.models.listModelJobs(\"model\");\nwhile (page.hasNextPage()) {\n    page = page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra models list-model-jobs \\\n  --model model\n"
+          }
         ]
       }
     },
@@ -2463,7 +2639,29 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/models/{model}/voices\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.models.list_voices(\n    model=\"model\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.listVoices(\"model\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra models list-voices \\\n  --model model\n"
+          }
+        ]
       }
     },
     "/models/{model}/openapi.json": {
@@ -2698,7 +2896,29 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/models/{model}/openapi.json\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.models.get_openapi(\n    model=\"model\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.getOpenapi(\"model\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra models get-openapi \\\n  --model model\n"
+          }
+        ]
       }
     },
     "/models/{model}/estimate": {
@@ -2980,6 +3200,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/{model}/estimate\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {}\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.models.estimate(\n    model=\"model\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.estimate(\"model\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra models estimate \\\n  --model model \\\n  --json '{\n  \"input\": {}\n}'\n"
+          }
         ]
       }
     },
@@ -3248,6 +3490,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/keys\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"name\": \"name\",\n  \"scopes\": [\n    \"jobs:read\"\n  ],\n  \"kind\": \"personal\",\n  \"workspace_id\": \"workspace_id\",\n  \"expires_at\": \"2026-01-01T00:00:00Z\"\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.keys.create()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.create();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra keys create \\\n  --json '{\n  \"name\": \"name\",\n  \"scopes\": [\n    \"jobs:read\"\n  ],\n  \"kind\": \"personal\",\n  \"workspace_id\": \"workspace_id\",\n  \"expires_at\": \"2026-01-01T00:00:00Z\"\n}'\n"
           }
         ]
       },
@@ -3525,6 +3789,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/keys\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.keys.list()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.list();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra keys list\n"
           }
         ]
       }
@@ -3808,6 +4094,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/keys/{key_id}/rotate\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"grace_period_seconds\": 0.0\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.keys.rotate(\n    key_id=\"key_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.rotate(\"key_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra keys rotate \\\n  --key-id key_id \\\n  --json '{\n  \"grace_period_seconds\": 0.0\n}'\n"
+          }
         ]
       }
     },
@@ -4072,6 +4380,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X DELETE \"https://api.hedra.com/v3/keys/{key_id}\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.keys.revoke(\n    key_id=\"key_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.revoke(\"key_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra keys revoke \\\n  --key-id key_id\n"
           }
         ]
       }
@@ -4341,6 +4671,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/tokens\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"ttl_seconds\": 1,\n  \"scopes\": [\n    \"jobs:read\"\n  ]\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.tokens.create()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.tokens.create();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra tokens create \\\n  --json '{\n  \"ttl_seconds\": 1,\n  \"scopes\": [\n    \"jobs:read\"\n  ]\n}'\n"
           }
         ]
       }
@@ -4622,6 +4974,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/files\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -F \"file=@/path/to/file\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.files.upload(\n    file=\"example_file\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.files.upload({\n    file: fs.createReadStream(\"/path/to/your/file\")\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra files upload \\\n  --file ./path/to/file\n"
+          }
         ]
       }
     },
@@ -4880,6 +5254,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/balance\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.billing.get_balance()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getBalance();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra billing get-balance\n"
           }
         ]
       }
@@ -5191,6 +5587,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/usage\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.billing.get_usage()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getUsage();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra billing get-usage\n"
+          }
         ]
       }
     },
@@ -5410,7 +5828,29 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/webhooks/public-key\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.webhooks.get_public_key()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getPublicKey();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra webhooks get-public-key\n"
+          }
+        ]
       }
     },
     "/webhooks/default": {
@@ -5668,6 +6108,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/webhooks/default\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.webhooks.get_default()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getDefault();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra webhooks get-default\n"
           }
         ]
       },
@@ -5936,6 +6398,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X PUT \"https://api.hedra.com/v3/webhooks/default\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"url\": \"url\"\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.webhooks.put_default(\n    url=\"url\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.putDefault({\n    url: \"url\"\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra webhooks put-default \\\n  --json '{\n  \"url\": \"url\"\n}'\n"
+          }
         ]
       },
       "delete": {
@@ -6185,6 +6669,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X DELETE \"https://api.hedra.com/v3/webhooks/default\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.webhooks.delete_default()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.deleteDefault();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra webhooks delete-default\n"
           }
         ]
       }
@@ -6444,6 +6950,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/webhooks/default/test\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.webhooks.test_default()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.testDefault();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra webhooks test-default\n"
           }
         ]
       }
@@ -6738,6 +7266,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/webhooks/deliveries\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.webhooks.list_deliveries()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.webhooks.listDeliveries();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.webhooks.listDeliveries();\nwhile (page.hasNextPage()) {\n    page = page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra webhooks list-deliveries\n"
+          }
         ]
       }
     },
@@ -7011,6 +7561,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/webhooks/deliveries/{job_id}/redeliver\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.webhooks.redeliver(\n    job_id=\"job_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.redeliver(\"job_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra webhooks redeliver \\\n  --job-id job_id\n"
+          }
         ]
       }
     },
@@ -7269,6 +7841,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/log-drains\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.log_drains.list_log_drains()\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.listLogDrains();\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra log-drains list-log-drains\n"
           }
         ]
       },
@@ -7536,6 +8130,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/log-drains\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"name\": \"name\",\n  \"url\": \"url\"\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.log_drains.create_log_drain(\n    name=\"name\",\n    url=\"url\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.createLogDrain({\n    name: \"name\",\n    url: \"url\"\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra log-drains create-log-drain \\\n  --json '{\n  \"name\": \"name\",\n  \"url\": \"url\"\n}'\n"
           }
         ]
       }
@@ -7808,6 +8424,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl \"https://api.hedra.com/v3/log-drains/{drain_id}\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.log_drains.get_log_drain(\n    drain_id=\"drain_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.getLogDrain(\"drain_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra log-drains get-log-drain \\\n  --drain-id drain_id\n"
           }
         ]
       },
@@ -8089,6 +8727,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X PATCH \"https://api.hedra.com/v3/log-drains/{drain_id}\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"name\": \"name\",\n  \"url\": \"url\",\n  \"format\": \"ndjson\",\n  \"secret\": \"secret\",\n  \"headers\": null,\n  \"enabled\": true,\n  \"batch_size\": 1.0\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.log_drains.update_log_drain(\n    drain_id=\"drain_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.updateLogDrain(\"drain_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra log-drains update-log-drain \\\n  --drain-id drain_id \\\n  --json '{\n  \"name\": \"name\",\n  \"url\": \"url\",\n  \"format\": \"ndjson\",\n  \"secret\": \"secret\",\n  \"headers\": null,\n  \"enabled\": true,\n  \"batch_size\": 1.0\n}'\n"
+          }
         ]
       },
       "delete": {
@@ -8351,6 +9011,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X DELETE \"https://api.hedra.com/v3/log-drains/{drain_id}\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.log_drains.delete_log_drain(\n    drain_id=\"drain_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.deleteLogDrain(\"drain_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra log-drains delete-log-drain \\\n  --drain-id drain_id\n"
           }
         ]
       }
@@ -8623,6 +9305,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/log-drains/{drain_id}/test\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\"\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.log_drains.test_log_drain(\n    drain_id=\"drain_id\",\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.testLogDrain(\"drain_id\");\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra log-drains test-log-drain \\\n  --drain-id drain_id\n"
           }
         ]
       }
@@ -8967,6 +9671,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/dreamina-31\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputDreamina31\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_dreamina31(\n    input=InputDreamina31(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"540p\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitDreamina31({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-dreamina-31 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -9309,6 +10035,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/elevenlabs-flash-multilingual-v2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputElevenlabsFlashMultilingualV2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_elevenlabs_flash_multilingual_v2(\n    input=InputElevenlabsFlashMultilingualV2(\n        text=\"text\",\n        voice_id=\"voice_id\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsFlashMultilingualV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-elevenlabs-flash-multilingual-v2 \\\n  --json '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
           }
         ]
       }
@@ -9653,6 +10401,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/elevenlabs-flash-v2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputElevenlabsFlashV2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_elevenlabs_flash_v2(\n    input=InputElevenlabsFlashV2(\n        text=\"text\",\n        voice_id=\"voice_id\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsFlashV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-elevenlabs-flash-v2 \\\n  --json '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -9995,6 +10765,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/elevenlabs-multilingual-v2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputElevenlabsMultilingualV2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_elevenlabs_multilingual_v2(\n    input=InputElevenlabsMultilingualV2(\n        text=\"text\",\n        voice_id=\"voice_id\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMultilingualV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-elevenlabs-multilingual-v2 \\\n  --json '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
           }
         ]
       }
@@ -10339,6 +11131,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/elevenlabs-v3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputElevenlabsV3\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_elevenlabs_v3(\n    input=InputElevenlabsV3(\n        text=\"text\",\n        voice_id=\"voice_id\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsV3({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-elevenlabs-v3 \\\n  --json '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -10681,6 +11495,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux-11-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFlux11Pro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux11pro(\n    input=InputFlux11Pro(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"540p\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux11Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux-11-pro \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
           }
         ]
       }
@@ -11025,6 +11861,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux-11-ultra\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFlux11Ultra\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux11ultra(\n    input=InputFlux11Ultra(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux11Ultra({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux-11-ultra \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -11367,6 +12225,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux-dev\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFluxDev\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux_dev(\n    input=InputFluxDev(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"540p\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxDev({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux-dev \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
           }
         ]
       }
@@ -11711,6 +12591,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux-kontext-max\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFluxKontextMax\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux_kontext_max(\n    input=InputFluxKontextMax(\n        prompt=\"prompt\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxKontextMax({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux-kontext-max \\\n  --json '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -12053,6 +12955,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux-kontext-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFluxKontextPro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux_kontext_pro(\n    input=InputFluxKontextPro(\n        prompt=\"prompt\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxKontextPro({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux-kontext-pro \\\n  --json '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -12397,6 +13321,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux2-flex\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFlux2Flex\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux2flex(\n    input=InputFlux2Flex(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Flex({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux2-flex \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -12739,6 +13685,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux2-klein-9b\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFlux2Klein9B\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux2klein9b(\n    input=InputFlux2Klein9B(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Klein9B({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux2-klein-9b \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -13083,6 +14051,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux2-max\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFlux2Max\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux2max(\n    input=InputFlux2Max(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Max({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux2-max \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -13425,6 +14415,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/flux2-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputFlux2Pro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_flux2pro(\n    input=InputFlux2Pro(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-flux2-pro \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -13769,6 +14781,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/gemini-omni-flash\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputGeminiOmniFlash\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_gemini_omni_flash(\n    input=InputGeminiOmniFlash(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGeminiOmniFlash({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-gemini-omni-flash \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -14111,6 +15145,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/gpt-image-15\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputGptImage15\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_gpt_image15(\n    input=InputGptImage15(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage15({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-gpt-image-15 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -14455,6 +15511,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/gpt-image-2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"low\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputGptImage2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_gpt_image2(\n    input=InputGptImage2(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"1K\",\n        quality=\"low\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\",\n        quality: \"low\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-gpt-image-2 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"low\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -14797,6 +15875,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/grok-imagine\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputGrokImagine\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_grok_imagine(\n    input=InputGrokImagine(\n        prompt=\"prompt\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokImagine({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-grok-imagine \\\n  --json '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -15141,6 +16241,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/grok-video\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 1000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputGrokVideo\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_grok_video(\n    input=InputGrokVideo(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"480p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokVideo({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-grok-video \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 1000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -15483,6 +16605,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/happy-horse\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputHappyHorse\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_happy_horse(\n    input=InputHappyHorse(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"720p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHappyHorse({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-happy-horse \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
           }
         ]
       }
@@ -15827,6 +16971,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/hedra-avatar\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputHedraAvatar, InputHedraAvatarStartImage_Url, InputHedraAvatarAudio_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_hedra_avatar(\n    input=InputHedraAvatar(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"540p\",\n        start_image=InputHedraAvatarStartImage_Url(\n            url=\"url\",\n        ),\n        audio=InputHedraAvatarAudio_Url(\n            url=\"url\",\n        ),\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraAvatar({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-hedra-avatar \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -16169,6 +17335,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/hedra-character-3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputHedraCharacter3, InputHedraCharacter3StartImage_Url, InputHedraCharacter3Audio_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_hedra_character3(\n    input=InputHedraCharacter3(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"540p\",\n        start_image=InputHedraCharacter3StartImage_Url(\n            url=\"url\",\n        ),\n        audio=InputHedraCharacter3Audio_Url(\n            url=\"url\",\n        ),\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraCharacter3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-hedra-character-3 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
           }
         ]
       }
@@ -16513,6 +17701,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/hidream-o1-image\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputHidreamO1Image\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_hidream_o1image(\n    input=InputHidreamO1Image(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"540p\",\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHidreamO1Image({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\",\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-hidream-o1-image \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -16855,6 +18065,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/ideogram-v2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputIdeogramV2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_ideogram_v2(\n    input=InputIdeogramV2(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitIdeogramV2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-ideogram-v2 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -17199,6 +18431,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/ideogram-v4\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"turbo\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputIdeogramV4\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_ideogram_v4(\n    input=InputIdeogramV4(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"720p\",\n        quality=\"turbo\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitIdeogramV4({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        quality: \"turbo\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-ideogram-v4 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"turbo\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -17541,6 +18795,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/imagen3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputImagen3\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_imagen3(\n    input=InputImagen3(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitImagen3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-imagen3 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -17885,6 +19161,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/imagen4\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputImagen4\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_imagen4(\n    input=InputImagen4(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"1K\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitImagen4({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-imagen4 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -18227,6 +19525,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-16\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKling16\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling16(\n    input=InputKling16(\n        prompt=\"prompt\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling16({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-16 \\\n  --json '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -18571,6 +19891,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-21-master\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKling21Master\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling21master(\n    input=InputKling21Master(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling21Master({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-21-master \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -18913,6 +20255,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-25-turbo\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKling25Turbo\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling25turbo(\n    input=InputKling25Turbo(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling25Turbo({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-25-turbo \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -19257,6 +20621,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-26-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKling26Pro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling26pro(\n    input=InputKling26Pro(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling26Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-26-pro \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -19599,6 +20985,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-ai-avatar-v2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"quality\": \"standard\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKlingAiAvatarV2, InputKlingAiAvatarV2StartImage_Url, InputKlingAiAvatarV2Audio_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling_ai_avatar_v2(\n    input=InputKlingAiAvatarV2(\n        aspect_ratio=\"16:9\",\n        start_image=InputKlingAiAvatarV2StartImage_Url(\n            url=\"url\",\n        ),\n        audio=InputKlingAiAvatarV2Audio_Url(\n            url=\"url\",\n        ),\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingAiAvatarV2({\n    input: {\n        aspect_ratio: \"16:9\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-ai-avatar-v2 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"quality\": \"standard\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
           }
         ]
       }
@@ -19943,6 +21351,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-o1\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKlingO1\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling_o1(\n    input=InputKlingO1(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO1({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-o1 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -20285,6 +21715,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-o3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKlingO3\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling_o3(\n    input=InputKlingO3(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        duration_ms=1,\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1,\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-o3 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
           }
         ]
       }
@@ -20629,6 +22081,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/kling-v3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"resolution\": \"1080p\",\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputKlingV3\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_kling_v3(\n    input=InputKlingV3(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        duration_ms=1,\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingV3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1,\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-kling-v3 \\\n  --json '{\n  \"input\": {\n    \"resolution\": \"1080p\",\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 3000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -20971,6 +22445,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/ltx-2-3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 6000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"fast\",\n    \"resolution\": \"1080p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputLtx23\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_ltx23(\n    input=InputLtx23(\n        prompt=\"prompt\",\n        resolution=\"1080p\",\n        duration_ms=1,\n        aspect_ratio=\"16:9\",\n        quality=\"fast\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLtx23({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"1080p\",\n        duration_ms: 1,\n        aspect_ratio: \"16:9\",\n        quality: \"fast\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-ltx-2-3 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 6000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"fast\",\n    \"resolution\": \"1080p\"\n  }\n}'\n"
           }
         ]
       }
@@ -21315,6 +22811,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/luma-ray-32\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputLumaRay32\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_luma_ray32(\n    input=InputLumaRay32(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"540p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLumaRay32({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-luma-ray-32 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 5000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -21657,6 +23175,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/mai-image-2-5\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputMaiImage25\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_mai_image25(\n    input=InputMaiImage25(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMaiImage25({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-mai-image-2-5 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
           }
         ]
       }
@@ -22001,6 +23541,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/minimax-hailuo-02\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"duration_ms\": 6000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputMinimaxHailuo02\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_minimax_hailuo02(\n    input=InputMinimaxHailuo02(\n        prompt=\"prompt\",\n        duration_ms=1,\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo02({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1,\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-minimax-hailuo-02 \\\n  --json '{\n  \"input\": {\n    \"duration_ms\": 6000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -22343,6 +23905,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/minimax-hailuo-23\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"duration_ms\": 6000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputMinimaxHailuo23\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_minimax_hailuo23(\n    input=InputMinimaxHailuo23(\n        prompt=\"prompt\",\n        duration_ms=1,\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo23({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1,\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-minimax-hailuo-23 \\\n  --json '{\n  \"input\": {\n    \"duration_ms\": 6000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
           }
         ]
       }
@@ -22687,6 +24271,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/minimax-speech-25-hd-preview\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputMinimaxSpeech25HdPreview\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_minimax_speech25hd_preview(\n    input=InputMinimaxSpeech25HdPreview(\n        text=\"text\",\n        voice_id=\"voice_id\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxSpeech25HdPreview({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-minimax-speech-25-hd-preview \\\n  --json '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -23029,6 +24635,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/minimax-speech-25-turbo-preview\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputMinimaxSpeech25TurboPreview\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_minimax_speech25turbo_preview(\n    input=InputMinimaxSpeech25TurboPreview(\n        text=\"text\",\n        voice_id=\"voice_id\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxSpeech25TurboPreview({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-minimax-speech-25-turbo-preview \\\n  --json '{\n  \"input\": {\n    \"text\": \"text\",\n    \"voice_id\": \"voice_id\"\n  }\n}'\n"
           }
         ]
       }
@@ -23373,6 +25001,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/nano-banana\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputNanoBanana\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_nano_banana(\n    input=InputNanoBanana(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"1K\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBanana({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-nano-banana \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -23715,6 +25365,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/nano-banana-2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputNanoBanana2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_nano_banana2(\n    input=InputNanoBanana2(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"1K\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBanana2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-nano-banana-2 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
           }
         ]
       }
@@ -24059,6 +25731,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/nano-banana-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputNanoBananaPro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_nano_banana_pro(\n    input=InputNanoBananaPro(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"1K\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBananaPro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-nano-banana-pro \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1K\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -24401,6 +26095,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/omnihuman-15\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputOmnihuman15, InputOmnihuman15StartImage_Url, InputOmnihuman15Audio_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_omnihuman15(\n    input=InputOmnihuman15(\n        start_image=InputOmnihuman15StartImage_Url(\n            url=\"url\",\n        ),\n        audio=InputOmnihuman15Audio_Url(\n            url=\"url\",\n        ),\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitOmnihuman15({\n    input: {\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-omnihuman-15 \\\n  --json '{\n  \"input\": {\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
           }
         ]
       }
@@ -24745,6 +26461,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/pixverse-v6\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"duration_ms\": 1000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"360p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputPixverseV6\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_pixverse_v6(\n    input=InputPixverseV6(\n        prompt=\"prompt\",\n        resolution=\"360p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitPixverseV6({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"360p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-pixverse-v6 \\\n  --json '{\n  \"input\": {\n    \"duration_ms\": 1000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"360p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -25087,6 +26825,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/qwen-image-2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputQwenImage2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_qwen_image2(\n    input=InputQwenImage2(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"540p\",\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitQwenImage2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\",\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-qwen-image-2 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
           }
         ]
       }
@@ -25431,6 +27191,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/recraft-v3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputRecraftV3\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_recraft_v3(\n    input=InputRecraftV3(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"540p\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitRecraftV3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-recraft-v3 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -25773,6 +27555,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/reve-21\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"4:1\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputReve21\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_reve21(\n    input=InputReve21(\n        prompt=\"prompt\",\n        aspect_ratio=\"4:1\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-reve-21 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"4:1\",\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -26117,6 +27921,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/reve-21-edit\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"4:1\",\n    \"images\": [\n      {\n        \"source\": \"url\",\n        \"url\": \"https://example.com\"\n      }\n    ],\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputReve21Edit, InputReve21EditImagesItem_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_reve21edit(\n    input=InputReve21Edit(\n        prompt=\"prompt\",\n        aspect_ratio=\"4:1\",\n        images=[\n            InputReve21EditImagesItem_Url(\n                url=\"url\",\n            )\n        ],\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21Edit({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\",\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-reve-21-edit \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"4:1\",\n    \"images\": [\n      {\n        \"source\": \"url\",\n        \"url\": \"https://example.com\"\n      }\n    ],\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -26459,6 +28285,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/reve-21-remix\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"4:1\",\n    \"images\": [\n      {\n        \"source\": \"url\",\n        \"url\": \"https://example.com\"\n      }\n    ],\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputReve21Remix, InputReve21RemixImagesItem_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_reve21remix(\n    input=InputReve21Remix(\n        prompt=\"prompt\",\n        aspect_ratio=\"4:1\",\n        images=[\n            InputReve21RemixImagesItem_Url(\n                url=\"url\",\n            )\n        ],\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21Remix({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\",\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-reve-21-remix \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"4:1\",\n    \"images\": [\n      {\n        \"source\": \"url\",\n        \"url\": \"https://example.com\"\n      }\n    ],\n    \"prompt\": \"prompt\"\n  }\n}'\n"
           }
         ]
       }
@@ -26803,6 +28651,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/sana\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSana\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_sana(\n    input=InputSana(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"540p\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSana({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-sana \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -27145,6 +29015,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/seedance-15-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSeedance15Pro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_seedance15pro(\n    input=InputSeedance15Pro(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"480p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance15Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-seedance-15-pro \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\"\n  }\n}'\n"
           }
         ]
       }
@@ -27489,6 +29381,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/seedance-20\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"resolution\": \"480p\",\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSeedance20\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_seedance20(\n    input=InputSeedance20(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"480p\",\n        duration_ms=1,\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance20({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1,\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-seedance-20 \\\n  --json '{\n  \"input\": {\n    \"resolution\": \"480p\",\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -27831,6 +29745,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/seedance-20-mini\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSeedance20Mini\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_seedance20mini(\n    input=InputSeedance20Mini(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"480p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance20Mini({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-seedance-20-mini \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\"\n  }\n}'\n"
           }
         ]
       }
@@ -28175,6 +30111,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/seedream-40\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1080p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSeedream40\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_seedream40(\n    input=InputSeedream40(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"1080p\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream40({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1080p\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-seedream-40 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1080p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -28517,6 +30475,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/seedream-45\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1440p (2K QHD)\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSeedream45\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_seedream45(\n    input=InputSeedream45(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"1440p (2K QHD)\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream45({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1440p (2K QHD)\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-seedream-45 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1440p (2K QHD)\"\n  }\n}'\n"
           }
         ]
       }
@@ -28861,6 +30841,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/seedream-50-lite\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1440p (2K QHD)\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSeedream50Lite\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_seedream50lite(\n    input=InputSeedream50Lite(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"1440p (2K QHD)\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream50Lite({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1440p (2K QHD)\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-seedream-50-lite \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1440p (2K QHD)\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -29203,6 +31205,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/seedream-50-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1080p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSeedream50Pro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_seedream50pro(\n    input=InputSeedream50Pro(\n        prompt=\"prompt\",\n        aspect_ratio=\"1:1\",\n        resolution=\"1080p\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream50Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1080p\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-seedream-50-pro \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"1:1\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"1080p\"\n  }\n}'\n"
           }
         ]
       }
@@ -29547,6 +31571,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/sora-2-pro\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputSora2Pro\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_sora2pro(\n    input=InputSora2Pro(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"720p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSora2Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-sora-2-pro \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -29889,6 +31935,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/veed-fabric-10\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputVeedFabric10, InputVeedFabric10StartImage_Url, InputVeedFabric10Audio_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_veed_fabric10(\n    input=InputVeedFabric10(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"480p\",\n        start_image=InputVeedFabric10StartImage_Url(\n            url=\"url\",\n        ),\n        audio=InputVeedFabric10Audio_Url(\n            url=\"url\",\n        ),\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeedFabric10({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"480p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-veed-fabric-10 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"audio\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    },\n    \"prompt\": \"prompt\",\n    \"resolution\": \"480p\",\n    \"start_image\": {\n      \"source\": \"url\",\n      \"url\": \"https://example.com\"\n    }\n  }\n}'\n"
           }
         ]
       }
@@ -30233,6 +32301,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/veo-2\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputVeo2\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_veo2(\n    input=InputVeo2(\n        prompt=\"prompt\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo2({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-veo-2 \\\n  --json '{\n  \"input\": {\n    \"prompt\": \"prompt\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -30575,6 +32665,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/veo-3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputVeo3\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_veo3(\n    input=InputVeo3(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"720p\",\n        duration_ms=1,\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1,\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-veo-3 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 4000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
           }
         ]
       }
@@ -30919,6 +33031,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/veo-31\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputVeo31\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_veo31(\n    input=InputVeo31(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"720p\",\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo31({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-veo-31 \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -31261,6 +33395,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/vidu-q3\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"duration_ms\": 1000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputViduQ3\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_vidu_q3(\n    input=InputViduQ3(\n        prompt=\"prompt\",\n        resolution=\"360p\",\n        duration_ms=1,\n        quality=\"standard\",\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitViduQ3({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"360p\",\n        duration_ms: 1,\n        quality: \"standard\"\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-vidu-q3 \\\n  --json '{\n  \"input\": {\n    \"duration_ms\": 1000,\n    \"prompt\": \"prompt\",\n    \"quality\": \"standard\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
           }
         ]
       }
@@ -31605,6 +33761,28 @@
           {
             "BearerToken": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/vidu-q3-reference\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 1000,\n    \"images\": [\n      {\n        \"source\": \"url\",\n        \"url\": \"https://example.com\"\n      }\n    ],\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputViduQ3Reference, InputViduQ3ReferenceImagesItem_Url\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_vidu_q3reference(\n    input=InputViduQ3Reference(\n        prompt=\"prompt\",\n        aspect_ratio=\"16:9\",\n        resolution=\"360p\",\n        duration_ms=1,\n        images=[\n            InputViduQ3ReferenceImagesItem_Url(\n                url=\"url\",\n            )\n        ],\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitViduQ3Reference({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"360p\",\n        duration_ms: 1,\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-vidu-q3-reference \\\n  --json '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"duration_ms\": 1000,\n    \"images\": [\n      {\n        \"source\": \"url\",\n        \"url\": \"https://example.com\"\n      }\n    ],\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          }
         ]
       }
     },
@@ -31947,6 +34125,28 @@
           },
           {
             "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/wan-2-7\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"duration_ms\": 2000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
+          },
+          {
+            "lang": "python",
+            "label": "hedra-python",
+            "source": "from hedra import Hedra, InputWan27\n\nclient = Hedra(api_key=\"YOUR_API_KEY\")\n\nclient.jobs.submit_wan27(\n    input=InputWan27(\n        prompt=\"prompt\",\n        resolution=\"720p\",\n        duration_ms=1,\n    ),\n)\n"
+          },
+          {
+            "lang": "typescript",
+            "label": "hedra-node",
+            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitWan27({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+          },
+          {
+            "lang": "bash",
+            "label": "Hedra CLI",
+            "source": "hedra jobs submit-wan-2-7 \\\n  --json '{\n  \"input\": {\n    \"duration_ms\": 2000,\n    \"prompt\": \"prompt\",\n    \"resolution\": \"720p\"\n  }\n}'\n"
           }
         ]
       }

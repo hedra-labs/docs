@@ -24,6 +24,9 @@ jobs:
             --output openapi-v3.json \
             --overrides openapi-v3-overrides.json
 
+      - name: Inject SDK code samples into the v3 schema
+        run: python3 scripts/inject_code_samples.py
+
       - name: Regenerate the v3 API Reference navigation
         run: python3 scripts/generate_v3_reference_nav.py
 
@@ -47,7 +50,9 @@ jobs:
             documentation-only annotations layered on top of them.
 
             - `openapi-v3.json` from `https://api.hedra.com/v3/openapi.json`,
-              with `openapi-v3-overrides.json` applied.
+              with `openapi-v3-overrides.json` applied and `x-codeSamples`
+              (cURL / hedra-python / hedra-node / Hedra CLI) injected from the
+              SDK repos' generated `reference.md` files.
             - `openapi.json` (v2, legacy) from
               `https://api.hedra.com/public/openapi.json`, with
               `openapi-overrides.json` applied.
