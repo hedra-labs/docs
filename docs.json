@@ -387,5 +387,10 @@
   },
   "icons": {
     "library": "tabler"
+  },
+  "api": {
+    "examples": {
+      "autogenerate": false
+    }
   }
 }
