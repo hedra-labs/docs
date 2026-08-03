@@ -24,6 +24,9 @@ jobs:
             --output openapi-v3.json \
             --overrides openapi-v3-overrides.json
 
+      - name: Regenerate the v3 API Reference navigation
+        run: python3 scripts/generate_v3_reference_nav.py
+
       - name: Sync the v2 (legacy) schema
         run: |
           python3 scripts/sync_openapi.py \
