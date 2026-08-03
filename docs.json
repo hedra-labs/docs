@@ -110,6 +110,12 @@
         "icon": "code",
         "groups": [
           {
+            "group": "Getting Started",
+            "pages": [
+              "pages/developer/v3/quickstart"
+            ]
+          },
+          {
             "group": "Guides",
             "pages": [
               "pages/developer/v3/chain-generations",

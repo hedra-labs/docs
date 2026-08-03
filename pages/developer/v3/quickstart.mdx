@@ -1,0 +1,94 @@
+---
+title: "Developer Platform Quickstart"
+sidebarTitle: "Quickstart"
+description: "Create an API key, fund the API wallet, and run your first generation on the Hedra v3 API in minutes."
+---
+
+Every leading image, video, and audio model behind one endpoint, one key, and
+one bill. Browse the [model catalog](https://www.hedra.com/develop/models),
+pick a model, and ship — the same key and the same job lifecycle work for all
+of them.
+
+### Step 1: Create an API key
+
+Generate a key in the [developer console](https://www.hedra.com/develop/api-keys).
+Every request authenticates with it:
+
+```
+Authorization: Key <key_id>:<secret>
+```
+
+### Step 2: Fund the API wallet
+
+The API bills a **prepaid wallet** held in US dollars. It is separate from your
+Hedra Studio balance, and a workspace starts with **$0.00** in it — nothing you
+buy or hold in Studio moves money into it. Until it is funded, every generation
+is refused with `402 INSUFFICIENT_BALANCE`.
+
+Add funds in the [developer console](https://www.hedra.com/develop/billing),
+and read the wallet any time with `GET /balance`.
+
+<Note>
+  Uploading inputs with `POST /files` is free and works on an empty wallet, so
+  you can stage a request end-to-end and only meet the billing gate at submit.
+</Note>
+
+### Step 3: Pick a model
+
+`GET /models` lists every model with its `id` and human `name`, so a model you
+know by name ("GPT Image 2") maps straight to the id you submit to
+(`gpt-image-2`). Each model publishes its typed input schema at
+`GET /models/{id}/openapi.json`.
+
+```bash
+curl https://api.hedra.com/v3/models -H "Authorization: Key $HEDRA_KEY"
+```
+
+To know the price before you run, ask for an estimate:
+
+```bash
+curl -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"input": {"prompt": "a space cat", "quality": "medium", "aspect_ratio": "1:1", "resolution": "1K"}}'
+```
+
+### Step 4: Submit, poll, download
+
+Every generation follows the same lifecycle: submit a job, poll it, then read
+the output URL.
+
+```bash
+# 1. Submit — capture the job id from the 202 ack
+JOB_ID=$(curl -sS -X POST https://api.hedra.com/v3/models/gpt-image-2 \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"input": {"prompt": "a space cat", "quality": "medium", "aspect_ratio": "1:1", "resolution": "1K"}}' | jq -r .job_id)
+
+# 2. Poll until status is COMPLETED (or FAILED)
+curl https://api.hedra.com/v3/jobs/$JOB_ID/status -H "Authorization: Key $HEDRA_KEY"
+
+# 3. Read the result — outputs[].url holds the generated file
+curl https://api.hedra.com/v3/jobs/$JOB_ID -H "Authorization: Key $HEDRA_KEY"
+```
+
+Generated media is retained for **48 hours** after a job completes — download
+outputs to your own storage, or chain them into the next job by `asset_id`.
+
+### Next steps
+
+<CardGroup cols={2}>
+  <Card title="Model catalog" href="/pages/developer/v3/model-catalog">
+    Every model behind the endpoint, with ids, names, and what each one is for.
+  </Card>
+  <Card title="Chain generations" href="/pages/developer/v3/chain-generations">
+    Reuse a completed job's output as an asset in the next submit.
+  </Card>
+  <Card title="Quality levels" href="/pages/developer/v3/quality-levels">
+    How the quality tiers map to cost and latency across models.
+  </Card>
+</CardGroup>
+
+### Enterprise
+
+For volume pricing and custom limits, [talk to us](https://www.hedra.com/enterprise).
