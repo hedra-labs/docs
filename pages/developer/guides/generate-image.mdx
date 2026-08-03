@@ -1,6 +1,6 @@
 ---
 title: "Generate an Image"
-description: "Generate images from text prompts using the Hedra API."
+description: "Generate images from text prompts with the Hedra API using models like Nano Banana Pro, including aspect ratio, resolution, and batch options."
 ---
 
 All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
@@ -66,3 +66,10 @@ supported resolutions, aspect ratios, and input requirements.
 curl "https://api.hedra.com/web-app/public/models?types=image" \
   -H "X-API-Key: $HEDRA_API_KEY"
 ```
+
+<Note>
+  The four `fal/nano-banana*` image slugs have been retired. Callers should
+  use `google/nano-banana` or `google/nano-banana-pro` instead — see
+  [Retired Models](/pages/developer/guides/retired-models).
+</Note>
+

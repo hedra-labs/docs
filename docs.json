@@ -142,7 +142,8 @@
               "pages/developer/guides/generate-video",
               "pages/developer/guides/generate-avatar-video",
               "pages/developer/guides/generate-audio",
-              "pages/developer/guides/automate-with-n8n"
+              "pages/developer/guides/automate-with-n8n",
+              "pages/developer/guides/retired-models"
             ]
           },
           {

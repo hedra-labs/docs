@@ -1,0 +1,67 @@
+---
+title: "Retired image and video model slugs"
+description: "List of retired Hedra API model slugs, their replacement slugs, and the error responses returned when callers address a retired slug."
+---
+
+From time to time, Hedra retires a model slug — usually because a
+functionally equivalent slug already exists, or because the retired slug
+was priced higher than an equally fast alternative. Retired slugs stop
+resolving on `POST /generations` and return an error before any generation
+row is created or credits are charged.
+
+<Note>
+  `GET /models` is the source of truth for currently available slugs. If a
+  slug is missing from that response, it is no longer callable — switch to
+  the replacement below.
+</Note>
+
+## Currently retired slugs
+
+| Retired slug | Replacement | Type | Notes |
+|--------------|-------------|------|-------|
+| `fal/nano-banana-t2i` | `google/nano-banana` | Image (text-to-image) | Same underlying model (`gemini-2.5-flash-image`). |
+| `fal/nano-banana-i2i` | `google/nano-banana` | Image (image-to-image) | Same underlying model (`gemini-2.5-flash-image`). |
+| `fal/nano-banana-pro-t2i` | `google/nano-banana-pro` | Image (text-to-image) | Same underlying model (`gemini-3-pro-image`). |
+| `fal/nano-banana-pro-i2i` | `google/nano-banana-pro` | Image (image-to-image) | Same underlying model (`gemini-3-pro-image`). |
+| `fal/veed-fabric-10-fast` (public id `veed-fabric-10-fast`) | `veed-fabric-10` | Video (avatar) | Same `image`, `audio`, and `resolution` inputs; base slug ran just as fast in production and costs 25% fewer credits per second. |
+
+## Error responses
+
+### Nano Banana `fal/*` slugs
+
+Requests that address any of the four retired `fal/nano-banana*` slugs fail
+at submit with:
+
+```
+400 INVALID_ARGUMENT
+```
+
+Switch `model_slug` to `google/nano-banana` or `google/nano-banana-pro` —
+the request body is otherwise unchanged.
+
+### `veed-fabric-10-fast`
+
+Requests to `veed-fabric-10-fast` on `POST /v3/models/{slug}` now return:
+
+```
+410 GONE
+```
+
+The response carries a structured `replaced_by` pointer identifying
+`veed-fabric-10` as the successor. The successor takes the identical
+`image`, `audio`, and `resolution` inputs — migrating is a one-token
+change to the model id.
+
+## How to avoid calling a retired slug
+
+Prefer looking models up by slug through `GET /models` at startup and
+whenever you add support for a new one, rather than hard-coding a slug in
+your client:
+
+```bash
+curl "https://api.hedra.com/web-app/public/models" \
+  -H "X-API-Key: $HEDRA_API_KEY"
+```
+
+Any slug not present in that response has been retired or was never
+available in your environment. Do not fall back to a hard-coded string.
