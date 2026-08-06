@@ -1,6 +1,6 @@
 ---
 title: "Generate Audio"
-description: "Convert text to speech using the Hedra API."
+description: "Convert text to speech with the Hedra API — list voices, submit a text-to-speech request, and honor each model's published text-length cap."
 ---
 
 All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
@@ -49,6 +49,14 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 | `stability` | `0.0` (most stable) to `1.0` (most variable). Default: `1.0` |
 | `speed` | `0.7` (slowest) to `1.2` (fastest). Default: `1.0` |
 | `language` | e.g. `"English"`, `"Spanish"`, `"French"`, `"Japanese"`. Default: `"auto"` |
+
+<Note>
+  Text-to-speech is billed per character, so an over-long `text` is billed
+  before the provider rejects it. `GET /models?types=voice` publishes each
+  voice model's `maxLength` — for example, ElevenLabs v3 caps at 5,000
+  characters, Multilingual v2 at 10,000, Flash v2 at 30,000, and Flash v2.5
+  at 40,000. Validate `text.length` client-side before submitting.
+</Note>
 
 ## Step 3: Poll for completion
 

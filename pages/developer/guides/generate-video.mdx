@@ -1,6 +1,6 @@
 ---
 title: "Generate a Video"
-description: "Generate videos from images and text prompts using the Hedra API."
+description: "Generate text-to-video and image-to-video with the Hedra API — upload keyframes, submit a request, and read per-model input constraints and defaults."
 ---
 
 All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
@@ -95,6 +95,55 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
   When `batch_size` is greater than 1, include a `generation_ids` array containing
   one client-generated UUID for each variation.
 </Note>
+
+## Discover model constraints and defaults
+
+`GET /models?types=video` is the source of truth for what a given video model
+will accept. For each input slot the response publishes:
+
+- `max_file_size_bytes` for start frames, end frames, and source videos (up to
+  the 30 MB image / 500 MiB video platform ceilings, tightened per model — for
+  example, Veo 3.1 caps input frames at 20 MB).
+- `min_dimension_px` and `max_dimension_px` for image frames where the model
+  declares a floor or ceiling.
+- `min_duration_ms` and `max_duration_ms` on source-video slots, and
+  `max_total_duration_ms` across a multi-file audio-reference slot (for
+  example, Seedance 2.0 accepts up to 15 seconds of reference audio in total).
+
+The response also publishes a JSON Schema `default` for any dispatch-shaping
+field the model resolves on your behalf — for example, veed-fabric-10,
+`hedra-avatar` and `hedra-character-3` all default `resolution` to `"720p"`.
+
+For `resolution`, `aspect_ratio`, and `duration_ms`, requiredness follows the
+size of the model's menu: a menu of two or more values makes the field
+`required` (a prompt-only submit to a multi-resolution model fails with a
+field-level error instead of picking a value for you), a menu of exactly one
+value stays optional, and models that never accept a menu — audio-driven
+avatar models take their length from the driving audio, HiDream-O1 edits let
+the provider pick from the reference image — omit the field entirely.
+
+Multi-mode models publish an `anyOf` of branches, one per mode. Each branch
+carries `required`, narrowed `enum` menus, and — where a mode rejects a
+field another mode requires — a `false` schema for the forbidden field:
+
+- Kling-o3 at `quality: standard` accepts `resolution: ["720p"]`, while
+  `quality: pro` accepts `["1080p", "4K"]` — two of the three values in the
+  merged menu are invalid whatever tier you pick.
+- Minimax Hailuo requires `duration_ms` at `quality: standard` and does not
+  at `quality: pro`; `minimax-hailuo-02` and `minimax-hailuo-23` publish
+  disjoint resolution and duration menus per tier.
+- Vidu Q3 no longer advertises `360p` on any mode, since the provider
+  rejects it end-to-end.
+- Flux Kontext Max's image mode publishes `"aspect_ratio": false`, so
+  passing `aspect_ratio` alongside `images` fails validation.
+
+Match your intended mode to one `anyOf` branch and submit the fields it
+lists.
+
+`text_prompt` publishes `minLength` and `maxLength` on the models whose
+provider documents a cap, and every video model publishes `"pattern": "\\S"`
+to reject a whitespace-only prompt at validation. Validating client-side
+avoids a rejection late in generation.
 
 ## Poll for completion
 
