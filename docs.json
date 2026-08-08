@@ -147,6 +147,7 @@
                   "POST /models/elevenlabs-v3",
                   "POST /models/flux-11-pro",
                   "POST /models/flux-11-ultra",
+                  "POST /models/flux-3",
                   "POST /models/flux-dev",
                   "POST /models/flux-kontext-max",
                   "POST /models/flux-kontext-pro",
@@ -178,6 +179,7 @@
                   "POST /models/ltx-2-3",
                   "POST /models/luma-ray-32",
                   "POST /models/mai-image-2-5",
+                  "POST /models/minimax-h3",
                   "POST /models/minimax-hailuo-02",
                   "POST /models/minimax-hailuo-23",
                   "POST /models/minimax-speech-25-hd-preview",
@@ -196,6 +198,7 @@
                   "POST /models/seedance-15-pro",
                   "POST /models/seedance-20",
                   "POST /models/seedance-20-mini",
+                  "POST /models/seedance-25",
                   "POST /models/seedream-40",
                   "POST /models/seedream-45",
                   "POST /models/seedream-50-lite",
@@ -207,7 +210,8 @@
                   "POST /models/veo-31",
                   "POST /models/vidu-q3",
                   "POST /models/vidu-q3-reference",
-                  "POST /models/wan-2-7"
+                  "POST /models/wan-2-7",
+                  "POST /models/{model}"
                 ]
               },
               {
