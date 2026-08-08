@@ -1226,9 +1226,6 @@
                 "$ref": "#/components/schemas/UploadedVideo"
               },
               {
-                "$ref": "#/components/schemas/Uploaded3D"
-              },
-              {
                 "$ref": "#/components/schemas/GeneratedAudio"
               },
               {
@@ -1251,7 +1248,6 @@
                 "generated_video": "#/components/schemas/GeneratedVideo",
                 "uploaded_audio": "#/components/schemas/UploadedAudio",
                 "uploaded_image": "#/components/schemas/UploadedImage",
-                "uploaded_three_d": "#/components/schemas/Uploaded3D",
                 "uploaded_video": "#/components/schemas/UploadedVideo",
                 "voice": "#/components/schemas/Voice"
               }
@@ -7441,32 +7437,6 @@
         ],
         "title": "SupportedLanguage"
       },
-      "Uploaded3D": {
-        "properties": {
-          "type": {
-            "type": "string",
-            "const": "uploaded_three_d",
-            "title": "Type",
-            "default": "uploaded_three_d"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url",
-            "description": "Presigned download URL. For agent-composed assets this is a `.zip` bundle containing the composition + every corpus reference available in S3. For curated corpus rows this is the raw USD file."
-          },
-          "file_format": {
-            "type": "string",
-            "title": "File Format",
-            "description": "Extension of the file at `url` \u2014 `zip` for composed assets, `usda` / `usdc` / `usdz` for curated corpus."
-          }
-        },
-        "type": "object",
-        "required": [
-          "url",
-          "file_format"
-        ],
-        "title": "Uploaded3D"
-      },
       "UploadedAudio": {
         "properties": {
           "type": {
@@ -7815,7 +7785,7 @@
           "available"
         ],
         "title": "WorkspaceCreditUsage",
-        "description": "Per-workspace credit usage for the current period, from the workspace credit pool.\n\nAll three fields are display credits and stay continuous across the USD\ncutover: for converted pools `available`/`used` are floor views of the\npool's micro-dollar buckets computed on read, and `allocated` serves the\nfrozen credit value, which round-trips exactly (regrants re-denominate\nit at ENG-8818). Pinned by test_display_coherence_usd.py."
+        "description": "Per-workspace credit usage for the current period, from the workspace\ncredit pool. `used`/`allocated`/`available` are display credits; the\n`api_*` fields expose the segregated, USD-denominated API wallet."
       }
     },
     "securitySchemes": {
