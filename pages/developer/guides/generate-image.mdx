@@ -36,8 +36,11 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 
 | Field | Description |
 |-------|-------------|
-| `aspect_ratio` | e.g. `"16:9"`, `"9:16"`, `"1:1"` |
-| `resolution` | A resolution supported by the selected model |
+| `aspect_ratio` | e.g. `"16:9"`, `"9:16"`, `"1:1"`. Omit to use the provider's default. |
+| `resolution` | A resolution supported by the selected model. Omit to use the provider's default. |
+| `images` | Array of reference image URLs for image-to-image models (see [Reference images](#reference-images)) |
+| `seed` | Integer seed for reproducible output (see [Reproducible output](#reproducible-output-with-seed)) |
+| `output_format` | `"jpeg"`, `"png"`, or `"webp"` — allowed values vary per model |
 | `batch_size` | Generate 1-8 variations at once (default: 1) |
 | `enhance_prompt` | Set to `true` to automatically enhance the prompt |
 
@@ -45,6 +48,82 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
   When `batch_size` is greater than 1, include a `generation_ids` array containing
   one client-generated UUID for each variation.
 </Note>
+
+`aspect_ratio` and `resolution` are optional on every image model. Omitting them
+falls back to the provider's own default — `image_size: auto` on FLUX.2 edits,
+`1:1` on Grok Imagine, match-input on Nano Banana / Gemini, and each model's
+published `default_resolution` at `1:1` on Seedream — instead of failing the
+request. Call `GET /models?types=image` for the exact allowed values on each
+model.
+
+## Reference images
+
+Image-to-image models accept reference images through an `images` array of URLs.
+The array length is bounded per model:
+
+| Model family | Max reference images |
+|--------------|---------------------|
+| GPT Image | 16 |
+| Seedream 4.0, 4.5, 5.0 Lite | 14 |
+| Nano Banana Pro, Nano Banana 2 | 14 |
+| Seedream 5.0 Pro | 10 |
+| FLUX.2 Pro / Flex / Max (edits) | 8 |
+| FLUX.2 Klein (edits) | 4 |
+| Nano Banana | 3 |
+| Grok Imagine (I2I) | 3 |
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "image",
+    "text_prompt": "The same character wearing a red jacket",
+    "model_slug": "bytedance/seedream-4-0",
+    "images": [
+      "https://example.com/ref1.jpg",
+      "https://example.com/ref2.jpg"
+    ]
+  }'
+```
+
+Each model publishes its own minimum and maximum in `GET /models?types=image`.
+Sending more references than a model's cap returns a `400` — the request is
+rejected before dispatch instead of silently discarding the extras.
+
+## Reproducible output with `seed`
+
+Supply an integer `seed` to reproduce a generation. The same prompt, model, and
+seed will render the same image. Omit `seed` to let the provider randomize as
+before.
+
+Seed is supported on the fal-backed image models (Flux family, Flux Kontext,
+Flux.2, Nano Banana / Nano Banana Pro (fal), Ideogram V2, Sana, Dreamina 3.1)
+and on the Google-dispatched Nano Banana, Nano Banana 2, and Nano Banana Pro
+models. Providers document their own accepted ranges — a `seed` outside that
+range returns a `400`. The Google Nano Banana roots publish no explicit range.
+Check `GET /models?types=image` for the per-model bound.
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "image",
+    "text_prompt": "A golden retriever sitting in a field of sunflowers",
+    "model_slug": "fal/flux-1.1-pro",
+    "seed": 42
+  }'
+```
+
+## Output encoding
+
+Pass `output_format` to control how the image is encoded and skip a
+decode/re-encode round trip on your side. Allowed values vary per model — most
+fal-backed roots accept `"jpeg"` and `"png"`, and some (including Flux.2 Klein
+9B, Nano Banana, and Sana) also accept `"webp"`. If `output_format` is omitted
+the model returns its current default. Call `GET /models?types=image` for the
+values each model accepts.
 
 ## Poll for completion
 
@@ -60,7 +139,8 @@ When complete, the response includes an `asset_id` for the generated image.
 ## Available image models
 
 Use `GET /models?types=image` to list image models and their current slugs,
-supported resolutions, aspect ratios, and input requirements.
+supported resolutions, aspect ratios, seed ranges, output formats, and
+reference-image caps.
 
 ```bash
 curl "https://api.hedra.com/web-app/public/models?types=image" \
