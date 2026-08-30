@@ -1,6 +1,6 @@
 ---
 title: "Generate an Avatar Video"
-description: "Create talking-head avatar videos using the Hedra API."
+description: "Create talking-head avatar videos with Hedra Avatar by supplying a portrait image plus uploaded or inline-generated audio through the Hedra API."
 ---
 
 All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
@@ -121,3 +121,9 @@ curl https://api.hedra.com/web-app/public/generations/{generation_id}/status \
 ```
 
 When `status` is `"complete"`, the response includes an `asset_id` for the generated video.
+
+<Note>
+  `veed-fabric-10-fast` has been retired. Use `veed-fabric-10` for VEED
+  Fabric avatar videos — the input contract is identical. See
+  [Retired Models](/pages/developer/guides/retired-models).
+</Note>
