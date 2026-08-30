@@ -1,6 +1,6 @@
 ---
 title: "Generate an Image"
-description: "Generate images from text prompts using the Hedra API."
+description: "Generate images from text prompts with the Hedra API: choose a model, set aspect ratio and resolution, and poll for the finished asset."
 ---
 
 All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
@@ -40,6 +40,15 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
 | `resolution` | A resolution supported by the selected model |
 | `batch_size` | Generate 1-8 variations at once (default: 1) |
 | `enhance_prompt` | Set to `true` to automatically enhance the prompt |
+| `negative_prompt` | What to avoid in the generated image (supported models only) |
+
+<Note>
+  `negative_prompt` is accepted only on models whose provider exposes it —
+  currently `fal/flux2-klein-9b-t2i`, `fal/flux2-klein-9b-i2i`, `fal/ideogram-v2`,
+  and `fal/sana`. Omit the field to preserve each provider's default behavior.
+  Use `GET /models?types=image` to see which slugs accept `negative_prompt` and
+  any per-slug length cap.
+</Note>
 
 <Note>
   When `batch_size` is greater than 1, include a `generation_ids` array containing
