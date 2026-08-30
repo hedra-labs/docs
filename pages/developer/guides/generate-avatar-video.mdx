@@ -1,6 +1,6 @@
 ---
 title: "Generate an Avatar Video"
-description: "Create talking-head avatar videos using the Hedra API."
+description: "Generate lip-synced avatar videos from a portrait and audio with the Hedra Avatar model, including inline TTS and multi-speaker scenes."
 ---
 
 All examples use the base URL `https://api.hedra.com/web-app/public` and require an `X-API-Key` header.
@@ -110,6 +110,43 @@ curl -X POST https://api.hedra.com/web-app/public/generations \
     }
   }'
 ```
+
+### Multi-speaker generation
+
+Hedra Avatar (`together/hedra-avatar`, and its legacy sibling
+`together/hedra-character-3`) can drive up to four speakers in one frame. Pass
+`audio_id` as a list — one audio per speaker, played in list order — and
+`bounding_box_target` as a list of normalized `[x, y]` points, one per audio in
+the same order, positioning each speaker in the start frame. Coordinates run
+from `[0, 0]` at the top-left to `[1, 1]` at the bottom-right.
+
+Billing is the sum of the audio durations.
+
+```bash
+curl -X POST https://api.hedra.com/web-app/public/generations \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $HEDRA_API_KEY" \
+  -d '{
+    "type": "video",
+    "model_slug": "together/hedra-avatar",
+    "start_keyframe_id": "{image_asset_id}",
+    "audio_id": ["{audio_asset_id_1}", "{audio_asset_id_2}"],
+    "generated_video_inputs": {
+      "text_prompt": "Two people having a conversation",
+      "bounding_box_target": [[0.3, 0.5], [0.7, 0.5]],
+      "aspect_ratio": "16:9",
+      "resolution": "720p"
+    }
+  }'
+```
+
+<Note>
+  Up to four audios per generation. The lengths of `audio_id` and
+  `bounding_box_target` must match, or the request is rejected with a 400.
+  Single-speaker submits are unchanged — pass `audio_id` as a string, and
+  `bounding_box_target` as either a single `[x, y]` point (to select who
+  speaks in a frame with several people) or omit it entirely.
+</Note>
 
 ## Step 4: Poll for completion
 
