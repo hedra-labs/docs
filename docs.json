@@ -140,13 +140,21 @@
               {
                 "group": "Run a model",
                 "pages": [
+                  "POST /models/creatify-aurora",
                   "POST /models/dreamina-31",
+                  "POST /models/elevenlabs-audio-isolation",
+                  "POST /models/elevenlabs-english-sts-v2",
                   "POST /models/elevenlabs-flash-multilingual-v2",
                   "POST /models/elevenlabs-flash-v2",
+                  "POST /models/elevenlabs-multilingual-sts-v2",
                   "POST /models/elevenlabs-multilingual-v2",
+                  "POST /models/elevenlabs-music",
+                  "POST /models/elevenlabs-sound-effects",
                   "POST /models/elevenlabs-v3",
+                  "POST /models/elevenlabs-voice-clone",
                   "POST /models/flux-11-pro",
                   "POST /models/flux-11-ultra",
+                  "POST /models/flux-3",
                   "POST /models/flux-dev",
                   "POST /models/flux-kontext-max",
                   "POST /models/flux-kontext-pro",
@@ -158,10 +166,12 @@
                   "POST /models/gpt-image-15",
                   "POST /models/gpt-image-2",
                   "POST /models/grok-imagine",
+                  "POST /models/grok-imagine-20",
                   "POST /models/grok-video",
                   "POST /models/happy-horse",
                   "POST /models/hedra-avatar",
                   "POST /models/hedra-character-3",
+                  "POST /models/heygen-photo-avatar-4",
                   "POST /models/hidream-o1-image",
                   "POST /models/ideogram-v2",
                   "POST /models/ideogram-v4",
@@ -170,14 +180,19 @@
                   "POST /models/kling-16",
                   "POST /models/kling-21-master",
                   "POST /models/kling-25-turbo",
+                  "POST /models/kling-26-motion-control",
                   "POST /models/kling-26-pro",
                   "POST /models/kling-ai-avatar-v2",
                   "POST /models/kling-o1",
                   "POST /models/kling-o3",
+                  "POST /models/kling-o3-edit",
+                  "POST /models/kling-o3-reference",
                   "POST /models/kling-v3",
+                  "POST /models/kling-v3-motion-control",
                   "POST /models/ltx-2-3",
                   "POST /models/luma-ray-32",
                   "POST /models/mai-image-2-5",
+                  "POST /models/minimax-h3",
                   "POST /models/minimax-hailuo-02",
                   "POST /models/minimax-hailuo-23",
                   "POST /models/minimax-speech-25-hd-preview",
@@ -196,18 +211,29 @@
                   "POST /models/seedance-15-pro",
                   "POST /models/seedance-20",
                   "POST /models/seedance-20-mini",
+                  "POST /models/seedance-25",
                   "POST /models/seedream-40",
                   "POST /models/seedream-45",
                   "POST /models/seedream-50-lite",
                   "POST /models/seedream-50-pro",
                   "POST /models/sora-2-pro",
+                  "POST /models/topaz-image-upscaler",
+                  "POST /models/topaz-image-upscaler-wonder",
+                  "POST /models/topaz-video-upscaler",
+                  "POST /models/topaz-video-upscaler-hyperion-2-5",
+                  "POST /models/topaz-video-upscaler-starlight-fast",
+                  "POST /models/topaz-video-upscaler-starlight-hq",
+                  "POST /models/topaz-video-upscaler-starlight-precise",
                   "POST /models/veed-fabric-10",
+                  "POST /models/veed-video-background-removal",
                   "POST /models/veo-2",
                   "POST /models/veo-3",
                   "POST /models/veo-31",
                   "POST /models/vidu-q3",
                   "POST /models/vidu-q3-reference",
-                  "POST /models/wan-2-7"
+                  "POST /models/wan-2-7",
+                  "POST /models/wan-3-0",
+                  "POST /models/{model}"
                 ]
               },
               {
@@ -217,6 +243,7 @@
                   "GET /models/{model}",
                   "GET /models/{model}/jobs",
                   "GET /models/{model}/voices",
+                  "GET /models/{model}/voices/search",
                   "GET /models/{model}/openapi.json",
                   "POST /models/{model}/estimate"
                 ]
@@ -271,7 +298,8 @@
                 "group": "Billing",
                 "pages": [
                   "GET /balance",
-                  "GET /usage"
+                  "GET /usage",
+                  "GET /transactions"
                 ]
               }
             ]
