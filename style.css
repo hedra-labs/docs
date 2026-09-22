@@ -1,20 +1,22 @@
 /*
- * The legacy API quickstart shows a different heading and subtitle from its
- * <title> and meta description. Mintlify renders all four from the `title`
- * and `description` frontmatter fields, so the page renders its own heading
- * and subtitle, and these rules hide Mintlify's.
+ * A page whose visible heading and subtitle differ from its <title> and meta
+ * description renders them in a `.page-header` block. Mintlify renders all four
+ * from the `title` and `description` frontmatter fields, so these rules hide
+ * Mintlify's heading and subtitle on such a page, and the heading's entry in
+ * "On this page".
  */
-#content-area:has(#legacy-quickstart-header) #page-title,
-#content-area:has(#legacy-quickstart-header) #header .prose,
-#table-of-contents-content a[href="#legacy-hedra-api-quickstart-guide"] {
+#content-area:has(.page-header) #page-title,
+#content-area:has(.page-header) #header .prose,
+#table-of-contents-content a[href="#legacy-hedra-api-quickstart-guide"],
+#table-of-contents-content a[href="#hedra-developer-platform"] {
   display: none;
 }
 
-#legacy-quickstart-header {
+.page-header {
   margin-top: -1rem;
 }
 
-#legacy-quickstart-header h1 {
+.page-header h1 {
   margin: 0;
   font-size: 1.875rem;
   font-weight: 600;
@@ -23,13 +25,13 @@
 }
 
 @media (min-width: 640px) {
-  #legacy-quickstart-header h1 {
+  .page-header h1 {
     font-size: 2.25rem;
     line-height: 2.5rem;
   }
 }
 
-#legacy-quickstart-header p {
+.page-header p {
   margin-top: 0.5rem;
   font-size: 1.125rem;
 }
