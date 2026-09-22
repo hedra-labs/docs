@@ -286,7 +286,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "pages/developer/getting_started/quickstart"
+              "pages/developer/legacy/quickstart"
             ]
           },
           {
@@ -319,6 +319,14 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/pages/developer/getting_started",
+      "destination": "/pages/developer/v3/quickstart"
+    },
+    {
+      "source": "/pages/developer/getting_started/quickstart",
+      "destination": "/pages/developer/v3/quickstart"
+    },
     {
       "source": "/pages/developer/realtime-avatar",
       "destination": "/pages/developer/v3/quickstart"
