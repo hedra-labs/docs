@@ -321,11 +321,11 @@
   "redirects": [
     {
       "source": "/pages/developer/realtime-avatar",
-      "destination": "/pages/developer/getting_started/quickstart"
+      "destination": "/pages/developer/v3/quickstart"
     },
     {
       "source": "/pages/developer/realtime-avatar/:slug*",
-      "destination": "/pages/developer/getting_started/quickstart"
+      "destination": "/pages/developer/v3/quickstart"
     },
     {
       "source": "/pages/app/content-creation/create-element",
