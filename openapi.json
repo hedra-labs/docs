@@ -73,7 +73,7 @@
         },
         "x-mint": {
           "metadata": {
-            "title": "List Available AI Models",
+            "title": "List Available AI Models (Legacy API)",
             "sidebarTitle": "List Available AI Models"
           }
         },
@@ -117,7 +117,7 @@
         ],
         "x-mint": {
           "metadata": {
-            "title": "List Available Voices",
+            "title": "List Available Voices (Legacy API)",
             "sidebarTitle": "List Available Voices"
           }
         },
@@ -197,7 +197,7 @@
         },
         "x-mint": {
           "metadata": {
-            "title": "List Uploaded & Generated Assets",
+            "title": "List Uploaded & Generated Assets (Legacy API)",
             "sidebarTitle": "List Uploaded & Generated Assets"
           }
         },
@@ -255,7 +255,7 @@
         },
         "x-mint": {
           "metadata": {
-            "title": "Create Asset",
+            "title": "Create Asset (Legacy API)",
             "sidebarTitle": "Create Asset"
           }
         },
@@ -327,7 +327,7 @@
         },
         "x-mint": {
           "metadata": {
-            "title": "Upload Asset",
+            "title": "Upload Asset (Legacy API)",
             "sidebarTitle": "Upload Asset"
           }
         },
@@ -493,7 +493,7 @@
         },
         "x-mint": {
           "metadata": {
-            "title": "List Your Generations",
+            "title": "List Your Generations (Legacy API)",
             "sidebarTitle": "List Your Generations"
           }
         },
@@ -655,7 +655,7 @@
         },
         "x-mint": {
           "metadata": {
-            "title": "Generate Asset",
+            "title": "Generate Asset (Legacy API)",
             "sidebarTitle": "Generate Asset"
           }
         },
@@ -717,7 +717,7 @@
         },
         "x-mint": {
           "metadata": {
-            "title": "Get Generation Status",
+            "title": "Get Generation Status (Legacy API)",
             "sidebarTitle": "Get Generation Status"
           }
         },
@@ -757,7 +757,7 @@
         ],
         "x-mint": {
           "metadata": {
-            "title": "Get Your Credit Balance",
+            "title": "Get Your Credit Balance (Legacy API)",
             "sidebarTitle": "Get Your Credit Balance"
           }
         },
