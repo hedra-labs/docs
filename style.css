@@ -1,0 +1,52 @@
+/*
+ * A page whose visible heading and subtitle differ from its <title> and meta
+ * description renders them in a `.page-header` block. Mintlify renders all four
+ * from the `title` and `description` frontmatter fields, so these rules hide
+ * Mintlify's heading and subtitle on such a page, and the heading's entry in
+ * "On this page".
+ */
+#content-area:has(.page-header) #page-title,
+#content-area:has(.page-header) #header .prose,
+body:has(.page-header) #table-of-contents-content a[href="#legacy-hedra-api-quickstart-guide"],
+body:has(.page-header) #table-of-contents-content a[href="#hedra-developer-platform"] {
+  display: none;
+}
+
+.page-header {
+  margin-top: -1rem;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 2.25rem;
+}
+
+@media (min-width: 640px) {
+  .page-header h1 {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+}
+
+.page-header p {
+  margin-top: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.75rem;
+  color: rgb(107 114 128);
+}
+
+@media (min-width: 640px) {
+  .page-header p {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+}
+
+.dark .page-header p {
+  color: rgb(156 163 175);
+}
