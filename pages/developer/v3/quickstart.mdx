@@ -44,8 +44,8 @@ and read the wallet any time with `GET /balance`.
 ### Step 3: Pick a model
 
 `GET /models` lists every model with its `id` and display `name`, so a model
-you know by name ("GPT Image 2") gives you the id you submit to
-(`gpt-image-2`). Each model publishes its typed input schema at
+you know by name ("GPT Image 2") gives you the id for its submit path
+(`POST /models/gpt-image-2`). Each model publishes its typed input schema at
 `GET /models/{id}/openapi.json`.
 
 ```bash
@@ -87,7 +87,7 @@ your own storage, or pass an output's `asset_id` as input to the next job.
 
 <CardGroup cols={2}>
   <Card title="Model catalog" href="/pages/developer/v3/model-catalog">
-    Every model, with its id, name, and what it is for.
+    Every model, with its id, name, and purpose.
   </Card>
   <Card title="Chain generations" href="/pages/developer/v3/chain-generations">
     Pass a completed job's output as input to the next job.
