@@ -1,0 +1,167 @@
+---
+title: "Receive job results with webhooks"
+description: "Register a webhook per job or a default endpoint for the account, verify the ed25519 signature on each delivery, and inspect or replay deliveries."
+sidebarTitle: "Webhooks"
+---
+
+Instead of polling `GET /v3/jobs/{job_id}` until a job finishes, register a webhook and Hedra POSTs the result to you. A job fires exactly one terminal event — `job.completed` or `job.failed` — chosen from its final status when the delivery goes out.
+
+## Register a webhook
+
+There are two ways to say where deliveries go:
+
+- **Per job** — pass `webhook` at submit, next to `input`. This URL applies to that job only.
+- **Account default** — store one endpoint with `PUT /webhooks/default`. It receives the terminal event for every job that names no per-job `webhook`.
+
+A per-job URL always wins over the default; the default only covers jobs that didn't set one.
+
+```bash
+# Per job: pass the URL at submit
+curl -X POST https://api.hedra.com/v3/models/gpt-image-2 \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": {"prompt": "a space cat", "aspect_ratio": "1:1", "resolution": "1K"},
+    "webhook": "https://example.com/hedra/webhook"
+  }'
+
+# Account default: one endpoint for every job without a per-job URL
+curl -X PUT https://api.hedra.com/v3/webhooks/default \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/hedra/webhook", "enabled": true}'
+```
+
+Setting `enabled: false` pauses the default endpoint without discarding the URL; `DELETE /webhooks/default` removes it entirely. To check the wiring before running a real job, `POST /webhooks/default/test` fires a test delivery at the stored endpoint and reports what it answered:
+
+```bash
+curl -X POST https://api.hedra.com/v3/webhooks/default/test \
+  -H "Authorization: Key $HEDRA_KEY"
+# → {"ok": true, "response_status": 200, "error": null}
+```
+
+## The payload
+
+The body is the same envelope `GET /v3/jobs/{job_id}` returns, minus its poll-only fields (`logs`, `cost`, `currency`) — poll the job if you need those.
+
+```json
+{
+  "job_id": "job_5f3a…",
+  "model": "gpt-image-2",
+  "quality": "medium",
+  "status": "COMPLETED",
+  "prompt": "a space cat",
+  "outputs": [
+    {
+      "status": "COMPLETED",
+      "asset_id": "asset_9b41…",
+      "url": "https://…",
+      "content_type": "image/png",
+      "width": 1024,
+      "height": 1024,
+      "error": null
+    }
+  ],
+  "metrics": { "processing_time_ms": 6314 },
+  "error": null
+}
+```
+
+On `job.failed`, `status` is `FAILED` and `error` carries the same error envelope the poll endpoint returns.
+
+<Note>
+  Generated media is retained for **48 hours** after a job completes, measured
+  from the original completion time. Download `outputs[].url` (or chain
+  `outputs[].asset_id`) promptly — a delivery replayed after the window carries
+  `EXPIRED` outputs with `url: null`.
+</Note>
+
+## Verify the signature
+
+Every delivery is signed with Hedra's ed25519 key — the same key for every account, so you can fetch it once and cache it:
+
+```bash
+curl https://api.hedra.com/v3/webhooks/public-key -H "Authorization: Key $HEDRA_KEY"
+# → {"algorithm": "ed25519", "public_key": "<base64>"}
+```
+
+Each POST carries these headers:
+
+| Header | Signed | Meaning |
+| --- | --- | --- |
+| `X-Hedra-Webhook-Id` | yes | Deduplication id — the job's own id, byte-identical across every retry and replay. |
+| `X-Hedra-Webhook-Timestamp` | yes | Unix epoch seconds the delivery was signed at; reject it when more than 5 minutes old. |
+| `X-Hedra-Webhook-Event` | yes | `job.completed` or `job.failed`. |
+| `X-Hedra-Webhook-Redelivery` | yes | `true` when an operator asked for this event to be sent again. |
+| `X-Hedra-Webhook-Attempt` | no | 1-based attempt number; informational only — do not branch on it. |
+| `X-Hedra-Webhook-Signature` | — | Hex-encoded ed25519 signature over the canonical string below. |
+
+The signature covers a canonical string of **five newline-separated fields, in this order**:
+
+```
+{X-Hedra-Webhook-Timestamp}
+{X-Hedra-Webhook-Id}
+{X-Hedra-Webhook-Event}
+{X-Hedra-Webhook-Redelivery}
+{sha256 hex digest of the raw request body}
+```
+
+Hash the body **exactly as received**, before any JSON parsing or re-serialization:
+
+```python
+import base64
+import hashlib
+import time
+
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+public_key = Ed25519PublicKey.from_public_bytes(base64.b64decode(PUBLIC_KEY_B64))
+
+def verify(headers: dict[str, str], raw_body: bytes) -> bool:
+    timestamp = headers["X-Hedra-Webhook-Timestamp"]
+    if abs(time.time() - int(timestamp)) > 300:
+        return False
+    canonical = "\n".join([
+        timestamp,
+        headers["X-Hedra-Webhook-Id"],
+        headers["X-Hedra-Webhook-Event"],
+        headers["X-Hedra-Webhook-Redelivery"],
+        hashlib.sha256(raw_body).hexdigest(),
+    ]).encode()
+    try:
+        public_key.verify(bytes.fromhex(headers["X-Hedra-Webhook-Signature"]), canonical)
+        return True
+    except InvalidSignature:
+        return False
+```
+
+The signature deliberately covers the deduplication id and the redelivery flag, not just the body — both decide whether you process a duplicate, so an unsigned copy of either would let anyone who captured a delivery replay it past your idempotency check. Verify *before* acting on any header.
+
+## Retries and deduplication
+
+Delivery is **at-least-once**. A `2xx` from your endpoint is success; anything else — including a redirect, which is never followed — is retried. Hedra makes up to **12 attempts over approximately 6 hours**, backing off 10s, 30s, 90s, 4m30s, 13m30s, 40m30s, then hourly. Because the retry window is bounded, acknowledge with a `2xx` first and do your own processing asynchronously.
+
+Deduplicate on **`X-Hedra-Webhook-Id`**. It identifies the *event* — it is the job's own id and is byte-identical across every retry and replay. Do **not** hash the request body: each attempt re-signs the output URLs, so the body legitimately differs between attempts of the same event.
+
+The one exception is `X-Hedra-Webhook-Redelivery: true`: an operator asked for this event to be sent again, so process it even if you have already recorded that id — that request is the whole reason it was sent.
+
+## Inspect and replay deliveries
+
+`GET /v3/webhooks/deliveries` lists every delivery with its `status` (`PENDING`, `DELIVERING`, `DELIVERED`, `FAILED`), its `source` (`per_job` or `default`), cumulative `attempts`, the latest outcome (`last_response_status`, `last_error`), and its replay history.
+
+```bash
+curl "https://api.hedra.com/v3/webhooks/deliveries?limit=20" \
+  -H "Authorization: Key $HEDRA_KEY"
+```
+
+An endpoint that is unreachable for the whole retry window is marked `FAILED` and not retried again. Replay it:
+
+```bash
+curl -X POST https://api.hedra.com/v3/webhooks/deliveries/$JOB_ID/redeliver \
+  -H "Authorization: Key $HEDRA_KEY"
+```
+
+A replay re-sends on the same delivery record — the webhook id stays the same, every attempt of the replayed cycle carries `X-Hedra-Webhook-Redelivery: true`, and the previous outcome is archived in the delivery's `redeliveries` list. A replay answers `409` while a delivery for the job is still in flight.
+
+`last_error` is a structured error envelope, not free text: a stable `code` (`DEADLINE_EXCEEDED`, `UNAVAILABLE`, `RESOURCE_EXHAUSTED`, and so on — the same vocabulary the rest of the API uses), a fixed `message`, and `retryable`, which tells you whether replaying is likely to help. One code is permanent and stops the ladder immediately: `FAILED_PRECONDITION` means the URL resolves to a blocked address range (or redirects to one) — fix the URL; replaying will not help. Your endpoint's URL, headers, and response body are never echoed back, so treat your own logs as the record of what your endpoint returned.

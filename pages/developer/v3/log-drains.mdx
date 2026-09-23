@@ -1,0 +1,112 @@
+---
+title: "Stream job logs with log drains"
+description: "Create a log drain to stream every job's lifecycle events to your own HTTPS endpoint as signed NDJSON or OTLP batches, and operate it in production."
+sidebarTitle: "Log drains"
+---
+
+A log drain streams the lifecycle log of **every job in your workspace** — the same events `GET /v3/jobs/{job_id}/logs` serves per job — to an HTTPS endpoint you run, in batched POSTs, as they happen. Use it to feed your observability stack (Datadog, an OpenTelemetry collector, your own service) without polling each job for its logs.
+
+Each drained event is one of the job's customer-visible lifecycle records: `queued`, `started`, `moderation.passed`, `provider.submitted`, `provider.error`, `retry.scheduled`, `progress`, `finalizing`, `download.ready`, `completed`, `failed`, or `recovered`, with a `level` of `info`, `warning`, or `error`.
+
+## Create a drain
+
+```bash
+curl -X POST https://api.hedra.com/v3/log-drains \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "production",
+    "url": "https://logs.example.com/hedra",
+    "format": "ndjson",
+    "secret": "'$DRAIN_SECRET'",
+    "batch_size": 1000
+  }'
+```
+
+- `format` picks the wire encoding: `ndjson` (the default) or `otlp`.
+- `secret` signs every NDJSON post and is **required when `format` is `ndjson`** (64–4096 characters). It is write-only — reads never echo it back.
+- `headers` (optional) are extra headers sent with every post — typically your receiver's authentication. Also write-only: reads expose only `header_names`.
+- `batch_size` caps log lines per post (1–5000, default 1000).
+
+You can create multiple drains; each receives every event independently. Before relying on one, fire a test batch:
+
+```bash
+curl -X POST https://api.hedra.com/v3/log-drains/$DRAIN_ID/test \
+  -H "Authorization: Key $HEDRA_KEY"
+# → {"ok": true, "response_status": 200, "error": null}
+```
+
+## NDJSON format
+
+NDJSON posts arrive with `Content-Type: application/x-ndjson` — one JSON object per line, newline-terminated. Fields that are null are omitted.
+
+```json
+{"timestamp":"2026-08-03T17:41:02.114Z","level":"info","message":"Job started","hedra_log_id":"log_184223","hedra_job_id":"job_5f3a…","hedra_model":"gpt-image-2","hedra_event":"started","hedra_source":"worker"}
+{"timestamp":"2026-08-03T17:41:09.882Z","level":"info","message":"Job completed","hedra_log_id":"log_184229","hedra_job_id":"job_5f3a…","hedra_model":"gpt-image-2","hedra_event":"completed","hedra_source":"worker","hedra_data":{…}}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `timestamp` | ISO-8601 instant the event was recorded. |
+| `level` | `info`, `warning`, or `error`. |
+| `message` | Human-readable summary of the event. |
+| `hedra_log_id` | Unique id of this log line — use it to deduplicate. |
+| `hedra_job_id` | The job the event belongs to (`job_<uuid>`). |
+| `hedra_model` | The model id the job ran on. |
+| `hedra_event` | The lifecycle event type (see the list above). |
+| `hedra_source` | Which component recorded it: `api`, `worker`, `provider`, or `cron`. |
+| `hedra_data` | Structured detail specific to the event type; omitted when there is none. |
+
+Every NDJSON post carries `X-Hedra-Signature`: the hex-encoded **HMAC-SHA256 of the raw request body**, keyed with the drain's `secret`. Verify it before trusting a batch:
+
+```python
+import hashlib
+import hmac
+
+def verify(raw_body: bytes, signature: str, secret: str) -> bool:
+    expected = hmac.new(secret.encode(), raw_body, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(expected, signature)
+```
+
+## OTLP format
+
+With `format: "otlp"`, each batch is posted as one binary-protobuf `ExportLogsServiceRequest` (`Content-Type: application/x-protobuf`) — the encoding every OTLP/HTTP logs receiver must accept. Point `url` at your receiver's logs path, for example an OpenTelemetry Collector's `https://collector.example.com:4318/v1/logs`, and put the receiver's authentication in `headers`:
+
+```bash
+curl -X POST https://api.hedra.com/v3/log-drains \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "otel-collector",
+    "url": "https://collector.example.com:4318/v1/logs",
+    "format": "otlp",
+    "headers": {"Authorization": "Bearer '$COLLECTOR_TOKEN'"}
+  }'
+```
+
+Each lifecycle event becomes one OTLP log record: `timestamp` maps to the record's time, `level` maps to severity (`INFO`, `WARN`, `ERROR`), `message` is the body, and the `hedra_*` fields arrive as record attributes (`hedra_job_id`, `hedra_model`, `hedra_event`, `hedra_source`, …), so you can filter and group on them in your backend. A `secret` is optional for OTLP drains — receivers authenticate with `headers` instead.
+
+## Delivery and failure handling
+
+Delivery is **at-least-once**: a batch your endpoint doesn't acknowledge with a `2xx` is requeued and delivered again, so deduplicate on `hedra_log_id` if double-processing matters to you. Redirects are never followed.
+
+Each failed batch increments the drain's `consecutive_failures`; any successful batch resets it to zero. After **five consecutive failures** the drain auto-disables: `enabled` flips to `false` and `disabled_reason` reports `consecutive_failures` (a drain you paused yourself reports `disabled_by_user`). Re-enabling clears the counter:
+
+```bash
+curl -X PATCH https://api.hedra.com/v3/log-drains/$DRAIN_ID \
+  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"enabled": true}'
+```
+
+To see why batches are failing, read the drain: `last_failure_at`, `last_failure_status`, and `last_error` describe the most recent failure. `last_error` is a structured error envelope — a stable `code` (`DEADLINE_EXCEEDED`, `UNAVAILABLE`, `RESOURCE_EXHAUSTED`, `UNAUTHORIZED`, and so on, the same vocabulary the rest of the API uses), a fixed `message`, and `retryable`, which tells you whether fixing the destination and re-enabling is likely to help. `FAILED_PRECONDITION` is the one that won't recover on its own: the URL resolves to a blocked address range — fix the URL. Your destination's URL, headers, credentials, and response body are never echoed back (and the URL is never written to Hedra's own logs), so treat your own logs as the record of what your endpoint returned.
+
+## Manage a drain
+
+`PATCH /v3/log-drains/{drain_id}` updates any subset of fields; omitted fields are unchanged.
+
+- **Rotate the secret** by sending a new `secret`. Switching `format` to `ndjson` on a drain with no stored secret requires supplying one in the same request.
+- **Replace headers** by sending `headers` — it replaces the full set, and `{}` clears it.
+- **Pause and resume** with `enabled`. Pausing keeps the configuration; deleting the drain (`DELETE /v3/log-drains/{drain_id}`) removes it.
+
+`GET /v3/log-drains` lists every drain with its health fields (`consecutive_failures`, `last_success_at`, `last_failure_at`, `disabled_reason`), which makes it a natural target for a periodic health check on your side.

@@ -1,19 +1,15 @@
 ---
 title: "Chain v3 generations with asset_id"
 description: "Reuse a completed v3 job's output as an asset_id in the next submit, and handle the EXPIRED status and 48-hour media retention window."
+sidebarTitle: "Chain generations"
 ---
 
-Every job that completes in the v3 API returns an `outputs[]` array. Each item
-carries an `asset_id` you can pass straight into a later submit's media inputs,
-so you can chain generations — for example, generate an image, then animate it
-into a video — without downloading and re-uploading the file in between.
+Every job that completes in the v3 API returns an `outputs[]` array. Each item carries an `asset_id` you can pass straight into a later submit's media inputs, so you can chain generations — for example, generate an image, then animate it into a video — without downloading and re-uploading the file in between.
 
 ## Reference an output in the next submit
 
-1. Submit the first job and poll `GET /v3/jobs/{job_id}` until every item in
-   `outputs[]` reports `status: "COMPLETED"`.
-2. Read `outputs[0].asset_id` (or whichever output you want to chain from) — it
-   looks like `asset_<uuid>`.
+1. Submit the first job and poll `GET /v3/jobs/{job_id}` until every item in `outputs[]` reports `status: "COMPLETED"`.
+2. Read `outputs[0].asset_id` (or whichever output you want to chain from) — it looks like `asset_<uuid>`.
 3. Pass it in the next submit as an asset reference:
 
 ```json
@@ -25,14 +21,10 @@ into a video — without downloading and re-uploading the file in between.
 }
 ```
 
-`asset_id` is the only supported way to name a previous job's output. If you
-pass a `job_<uuid>` in an asset field the API returns a `400` pointing you back
-at `outputs[].asset_id`.
+`asset_id` is the only supported way to name a previous job's output. If you pass a `job_<uuid>` in an asset field the API returns a `400` pointing you back at `outputs[].asset_id`.
 
 <Note>
-  Earlier drafts of the API described a workaround where you replaced the
-  `job_` prefix of a job id with `asset_` to obtain the asset id. That
-  derivation is no longer supported — read `outputs[].asset_id` instead.
+  Earlier drafts of the API described a workaround where you replaced the `job_` prefix of a job id with `asset_` to obtain the asset id. That derivation is no longer supported — read `outputs[].asset_id` instead.
 </Note>
 
 ## Example: image, then video
@@ -61,28 +53,19 @@ curl -X POST https://api.hedra.com/v3/models/veo-3 \
 Each item in `outputs[]` carries a `status`:
 
 | Status | Meaning |
-|--------|---------|
+| --- | --- |
 | `COMPLETED` | The output produced media. `url` and `asset_id` are populated. |
 | `FAILED` | The output failed. `error` describes the failure; `url` and `asset_id` are null. |
 | `EXPIRED` | The generated media has been garbage-collected. Metadata is retained, but `url` and `asset_id` are null. |
 
-Generated media is retained for **48 hours** after a job completes. After that
-window the underlying files are deleted and the output flips to `EXPIRED`. The
-job record itself remains — you can still read its metadata (dimensions,
-duration, timing, error envelope) — but you cannot download the bytes or
-reference the output as an asset in a new submit.
+Generated media is retained for **48 hours** after a job completes. After that window the underlying files are deleted and the output flips to `EXPIRED`. The job record itself remains — you can still read its metadata (dimensions, duration, timing, error envelope) — but you cannot download the bytes or reference the output as an asset in a new submit.
 
 This affects two kinds of callers in particular:
 
-- **Long-lived polling loops.** If a client polls a job more than 48 hours
-  after it completed, expect `outputs[].status = "EXPIRED"` with `url: null`
-  and `asset_id: null`.
-- **Webhook replays.** A webhook delivery that is replayed after the retention
-  window carries the same `EXPIRED` payload as a poll would — the retention
-  window is measured from the original completion time, not from delivery.
+- **Long-lived polling loops.** If a client polls a job more than 48 hours after it completed, expect `outputs[].status = "EXPIRED"` with `url: null` and `asset_id: null`.
+- **Webhook replays.** A webhook delivery that is replayed after the retention window carries the same `EXPIRED` payload as a poll would — the retention window is measured from the original completion time, not from delivery.
 
-If you need the output beyond 48 hours, download it to your own storage soon
-after the job completes.
+If you need the output beyond 48 hours, download it to your own storage soon after the job completes.
 
 ```python
 import time
@@ -108,13 +91,8 @@ for output in job["outputs"]:
 
 ## Per-output errors
 
-`error` is now published on every kind of output — image, video, and audio —
-as an error envelope. It is `null` on a `COMPLETED` output and populated on a
-`FAILED` output, so you can inspect the failure per-item when a job produces
-multiple outputs.
+`error` is now published on every kind of output — image, video, and audio — as an error envelope. It is `null` on a `COMPLETED` output and populated on a `FAILED` output, so you can inspect the failure per-item when a job produces multiple outputs.
 
 ## Measured frame rate on video outputs
 
-Video outputs now report the real measured frame rate in `fps`. Older jobs
-whose output was probed before this change may still return `fps: null` — treat
-`null` as "unmeasured" rather than "no frame rate".
+Video outputs now report the real measured frame rate in `fps`. Older jobs whose output was probed before this change may still return `fps: null` — treat `null` as "unmeasured" rather than "no frame rate".

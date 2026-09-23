@@ -118,8 +118,10 @@
           {
             "group": "Guides",
             "pages": [
-              "pages/developer/v3/chain-generations",
-              "pages/developer/v3/model-catalog"
+              "pages/developer/v3/model-catalog",
+              "pages/developer/v3/log-drains",
+              "pages/developer/v3/webhooks",
+              "pages/developer/v3/chain-generations"
             ]
           },
           {
@@ -284,7 +286,7 @@
           {
             "group": "Getting Started",
             "pages": [
-              "pages/developer/getting_started/quickstart"
+              "pages/developer/legacy/quickstart"
             ]
           },
           {
@@ -318,12 +320,20 @@
   },
   "redirects": [
     {
+      "source": "/pages/developer/getting_started",
+      "destination": "/pages/developer/v3/quickstart"
+    },
+    {
+      "source": "/pages/developer/getting_started/:slug*",
+      "destination": "/pages/developer/v3/quickstart"
+    },
+    {
       "source": "/pages/developer/realtime-avatar",
-      "destination": "/pages/developer/getting_started/quickstart"
+      "destination": "/pages/developer/v3/quickstart"
     },
     {
       "source": "/pages/developer/realtime-avatar/:slug*",
-      "destination": "/pages/developer/getting_started/quickstart"
+      "destination": "/pages/developer/v3/quickstart"
     },
     {
       "source": "/pages/app/content-creation/create-element",
@@ -385,5 +395,10 @@
   },
   "icons": {
     "library": "tabler"
+  },
+  "api": {
+    "examples": {
+      "autogenerate": false
+    }
   }
 }
