@@ -7,8 +7,8 @@
  */
 #content-area:has(.page-header) #page-title,
 #content-area:has(.page-header) #header .prose,
-#table-of-contents-content a[href="#legacy-hedra-api-quickstart-guide"],
-#table-of-contents-content a[href="#hedra-developer-platform"] {
+body:has(.page-header) #table-of-contents-content a[href="#legacy-hedra-api-quickstart-guide"],
+body:has(.page-header) #table-of-contents-content a[href="#hedra-developer-platform"] {
   display: none;
 }
 

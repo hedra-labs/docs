@@ -324,7 +324,7 @@
       "destination": "/pages/developer/v3/quickstart"
     },
     {
-      "source": "/pages/developer/getting_started/quickstart",
+      "source": "/pages/developer/getting_started/:slug*",
       "destination": "/pages/developer/v3/quickstart"
     },
     {
