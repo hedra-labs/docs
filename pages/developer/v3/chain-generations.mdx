@@ -8,15 +8,17 @@ Every job that completes in the v3 API returns an `outputs[]` array. Each item c
 
 ## Reference an output in the next submit
 
-1. Submit the first job and poll `GET /v3/jobs/{job_id}` until every item in `outputs[]` reports `status: "COMPLETED"`.
+1. Submit the first job and poll `GET /v3/jobs/{job_id}/status` until `status` is `COMPLETED`. `outputs[]` stays empty until the job completes.
 2. Read `outputs[0].asset_id` (or whichever output you want to chain from) — it looks like `asset_<uuid>`.
-3. Pass it in the next submit as an asset reference:
+3. Pass it in the next submit as an asset reference. This request to `POST /v3/models/veo-31` passes it as `start_image`:
 
 ```json
 {
   "input": {
-    "start_keyframe": { "source": "asset", "asset_id": "asset_..." },
-    "prompt": "the character waves at the camera"
+    "start_image": { "source": "asset", "asset_id": "asset_..." },
+    "prompt": "the character waves at the camera",
+    "aspect_ratio": "16:9",
+    "resolution": "720p"
   }
 }
 ```
@@ -37,15 +39,23 @@ JOB_ID=$(curl -sS -X POST https://api.hedra.com/v3/models/gpt-image-2 \
   -d '{"input": {"prompt": "a golden retriever in a sunflower field", "aspect_ratio": "16:9", "resolution": "1K"}}' \
   | jq -r .job_id)
 
-# 2. Poll until COMPLETED, then pull the output asset id.
+# 2. Poll until the job is COMPLETED or FAILED.
+while true; do
+  STATUS=$(curl -sS https://api.hedra.com/v3/jobs/$JOB_ID/status \
+    -H "Authorization: Key $HEDRA_KEY" | jq -r .status)
+  case "$STATUS" in COMPLETED|FAILED) break ;; esac
+  sleep 2
+done
+
+# 3. Read the output's asset id.
 ASSET_ID=$(curl -sS https://api.hedra.com/v3/jobs/$JOB_ID \
   -H "Authorization: Key $HEDRA_KEY" | jq -r '.outputs[0].asset_id')
 
-# 3. Use that asset id as a keyframe for a video generation.
-curl -X POST https://api.hedra.com/v3/models/veo-3 \
+# 4. Pass that asset id as the start frame of a video job.
+curl -X POST https://api.hedra.com/v3/models/veo-31 \
   -H "Authorization: Key $HEDRA_KEY" \
   -H "Content-Type: application/json" \
-  -d "{\"input\": {\"start_keyframe\": {\"source\": \"asset\", \"asset_id\": \"$ASSET_ID\"}, \"prompt\": \"the dog runs through the field\"}}"
+  -d "{\"input\": {\"start_image\": {\"source\": \"asset\", \"asset_id\": \"$ASSET_ID\"}, \"prompt\": \"the dog runs through the field\", \"aspect_ratio\": \"16:9\", \"resolution\": \"720p\"}}"
 ```
 
 ## Output status and the 48-hour retention window
@@ -73,11 +83,11 @@ import httpx
 
 def wait_for_result(job_id: str, key: str) -> dict:
     headers = {"Authorization": f"Key {key}"}
+    base = f"https://api.hedra.com/v3/jobs/{job_id}"
     while True:
-        job = httpx.get(f"https://api.hedra.com/v3/jobs/{job_id}", headers=headers).json()
-        outputs = job["outputs"]
-        if all(o["status"] in ("COMPLETED", "FAILED", "EXPIRED") for o in outputs):
-            return job
+        status = httpx.get(f"{base}/status", headers=headers).json()["status"]
+        if status in ("COMPLETED", "FAILED"):
+            return httpx.get(base, headers=headers).json()
         time.sleep(2)
 
 job = wait_for_result(job_id, api_key)
