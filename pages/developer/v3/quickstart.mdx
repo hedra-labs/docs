@@ -9,20 +9,19 @@ description: "Create an API key, fund the API wallet, and run your first generat
   <p>V3 API Quickstart</p>
 </div>
 
-Generate images, video, and audio through one API, with over 100 models
+Generate images, video, and audio with over 100 models through one API,
 including Veo 3.1, Seedance 2.0, Kling V3, GPT Image 2, Nano Banana Pro, and
-ElevenLabs V3. You call every model with one API key and the same three
-requests: submit a job, poll it, download the output. Hedra charges every job to
-one prepaid wallet. Input fields have the same names across models, such as
-`prompt`, `aspect_ratio`, `resolution`, `duration_ms`, and `start_image`, and
-each model's schema lists the values that model accepts. To switch models,
-change the model id and choose values from the new model's schema. Browse the
-[model catalog](https://www.hedra.com/develop/models) to pick one.
+ElevenLabs V3. Create an API key and fund your wallet, then every model runs
+through the same three requests: submit a job, poll it, download the output.
+Input fields have the same names across models, such as `prompt`,
+`aspect_ratio`, `resolution`, `duration_ms`, and `start_image`, so switching
+models means changing the model id and choosing values the new model's schema
+accepts. Browse the [model catalog](https://www.hedra.com/develop/models) to
+pick one.
 
 ### Step 1: Create an API key
 
 Generate a key in the [developer console](https://www.hedra.com/develop/api-keys).
-Every request authenticates with it:
 
 ```
 Authorization: Key <key_id>:<secret>
@@ -30,12 +29,12 @@ Authorization: Key <key_id>:<secret>
 
 ### Step 2: Fund the API wallet
 
-The API bills a **prepaid wallet** held in US dollars. It is separate from your
-Hedra Studio balance, and a workspace starts with **$0.00** in it. Until you
-add funds, `POST /models/{id}` returns `402 INSUFFICIENT_BALANCE`.
+The API bills a **prepaid wallet** held in US dollars. (This USD balance is
+separate from your Hedra Studio credit balance.) Add funds in the
+[developer console](https://www.hedra.com/develop/billing), and read the wallet
+any time with `GET /balance`.
 
-Add funds in the [developer console](https://www.hedra.com/develop/billing),
-and read the wallet any time with `GET /balance`.
+Until you add funds, `POST /models/{id}` will return `402 INSUFFICIENT_BALANCE`.
 
 <Note>
   Uploading inputs with `POST /files` is free and succeeds on an empty wallet,
@@ -45,7 +44,7 @@ and read the wallet any time with `GET /balance`.
 
 ### Step 3: Pick a model
 
-`GET /models` returns each model's `id` and display `name`, such as
+`GET /models` lists every model with its `id` and display `name`, such as
 `gpt-image-2` for "GPT Image 2". Submit jobs with `POST /models/{id}`, for
 example `POST /models/gpt-image-2`. `GET /models/{id}/openapi.json` returns a
 model's input schema.
@@ -54,8 +53,7 @@ model's input schema.
 curl https://api.hedra.com/v3/models -H "Authorization: Key $HEDRA_KEY"
 ```
 
-To see a job's price before you submit it, request an estimate with
-`POST /models/{id}/estimate`:
+Optionally, to see a job's price before you submit it, ask for an estimate:
 
 ```bash
 curl -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
