@@ -58,12 +58,12 @@ Each item in `outputs[]` carries a `status`:
 | `FAILED` | The output failed. `error` describes the failure; `url` and `asset_id` are null. |
 | `EXPIRED` | The generated media has been garbage-collected. Metadata is retained, but `url` and `asset_id` are null. |
 
-Generated media is retained for **48 hours** after a job completes. After that window the underlying files are deleted and the output flips to `EXPIRED`. The job record itself remains — you can still read its metadata (dimensions, duration, timing, error envelope) — but you cannot download the bytes or reference the output as an asset in a new submit.
+Hedra keeps generated media for at least **48 hours** after a job completes. When Hedra deletes the files, the output's `status` changes to `EXPIRED`. You can still read the job's metadata (dimensions, duration, timing, error envelope), but you cannot download the files or pass the output as an asset in a new job.
 
 This affects two kinds of callers in particular:
 
-- **Long-lived polling loops.** If a client polls a job more than 48 hours after it completed, expect `outputs[].status = "EXPIRED"` with `url: null` and `asset_id: null`.
-- **Webhook replays.** A webhook delivery that is replayed after the retention window carries the same `EXPIRED` payload as a poll would — the retention window is measured from the original completion time, not from delivery.
+- **Long-lived polling loops.** A poll more than 48 hours after the job completed can return `outputs[].status = "EXPIRED"` with `url: null` and `asset_id: null`.
+- **Webhook replays.** A webhook delivery replayed more than 48 hours after the job completed can carry the same `EXPIRED` output that a poll returns.
 
 If you need the output beyond 48 hours, download it to your own storage soon after the job completes.
 

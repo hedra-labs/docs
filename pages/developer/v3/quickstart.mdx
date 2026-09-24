@@ -9,12 +9,14 @@ description: "Create an API key, fund the API wallet, and run your first generat
   <p>V3 API Quickstart</p>
 </div>
 
-Generate images, video, and audio with over 100 models through one API,
-including Veo 3.1, Sora 2 Pro, Kling V3, GPT Image 2, Nano Banana Pro, and
-ElevenLabs V3. One API key calls every model, and one prepaid wallet pays for
-all of them. Every model runs through the same three requests: submit a job,
-poll it, download the output. Once your code runs one model, it can run any of
-them, because only the model id and its input fields change. Browse the
+Generate images, video, and audio through one API, with over 100 models
+including Veo 3.1, Seedance 2.0, Kling V3, GPT Image 2, Nano Banana Pro, and
+ElevenLabs V3. You call every model with one API key and the same three
+requests: submit a job, poll it, download the output. Hedra charges every job to
+one prepaid wallet. Input fields have the same names across models, such as
+`prompt`, `aspect_ratio`, `resolution`, `duration_ms`, and `start_image`, and
+each model's schema lists the values that model accepts. To switch models,
+change the model id and choose values from the new model's schema. Browse the
 [model catalog](https://www.hedra.com/develop/models) to pick one.
 
 ### Step 1: Create an API key
@@ -36,23 +38,24 @@ Add funds in the [developer console](https://www.hedra.com/develop/billing),
 and read the wallet any time with `GET /balance`.
 
 <Note>
-  Uploading inputs with `POST /files` is free and works on an empty wallet, so
-  you can upload inputs before you add funds. The balance check runs when you
-  submit a job.
+  Uploading inputs with `POST /files` is free and succeeds on an empty wallet,
+  so you can upload inputs before you add funds. `POST /models/{id}` checks the
+  balance when you submit a job.
 </Note>
 
 ### Step 3: Pick a model
 
-`GET /models` lists every model with its `id` and display `name`, so a model
-you know by name ("GPT Image 2") gives you the id for its submit path
-(`POST /models/gpt-image-2`). Each model publishes its typed input schema at
-`GET /models/{id}/openapi.json`.
+`GET /models` returns each model's `id` and display `name`, such as
+`gpt-image-2` for "GPT Image 2". Submit jobs with `POST /models/{id}`, for
+example `POST /models/gpt-image-2`. `GET /models/{id}/openapi.json` returns a
+model's input schema.
 
 ```bash
 curl https://api.hedra.com/v3/models -H "Authorization: Key $HEDRA_KEY"
 ```
 
-To see a job's price before you submit it, ask for an estimate:
+To see a job's price before you submit it, request an estimate with
+`POST /models/{id}/estimate`:
 
 ```bash
 curl -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
@@ -63,8 +66,7 @@ curl -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
 
 ### Step 4: Submit, poll, download
 
-Every generation follows the same lifecycle: submit a job, poll it, then read
-the output URL.
+Every job follows the same steps: submit it, poll it, then read the output URL.
 
 ```bash
 # 1. Submit: capture the job id from the 202 response
@@ -80,8 +82,9 @@ curl https://api.hedra.com/v3/jobs/$JOB_ID/status -H "Authorization: Key $HEDRA_
 curl https://api.hedra.com/v3/jobs/$JOB_ID -H "Authorization: Key $HEDRA_KEY"
 ```
 
-Hedra keeps outputs for **48 hours** after a job completes. Download them to
-your own storage, or pass an output's `asset_id` as input to the next job.
+Hedra keeps outputs for at least **48 hours** after a job completes. Download
+them to your own storage, or pass an output's `asset_id` as input to the next
+job.
 
 ### Next steps
 
