@@ -119,7 +119,6 @@
             "group": "Guides",
             "pages": [
               "pages/developer/v3/model-catalog",
-              "pages/developer/v3/chat-completions",
               "pages/developer/v3/log-drains",
               "pages/developer/v3/webhooks",
               "pages/developer/v3/chain-generations"
