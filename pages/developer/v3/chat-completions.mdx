@@ -78,7 +78,7 @@ curl https://api.hedra.com/v3/llms
 ```python Python
 response = client.chat.completions.create(
     model="glm-5.3",
-    messages=[{"role": "user", "content": "Write a haiku about latency."}],
+    messages=[{"role": "user", "content": "Write a two-sentence script for a product intro video."}],
 )
 print(response.choices[0].message.content)
 ```
@@ -86,7 +86,7 @@ print(response.choices[0].message.content)
 ```typescript TypeScript
 const response = await client.chat.completions.create({
   model: "glm-5.3",
-  messages: [{ role: "user", content: "Write a haiku about latency." }],
+  messages: [{ role: "user", content: "Write a two-sentence script for a product intro video." }],
 });
 console.log(response.choices[0].message.content);
 ```
