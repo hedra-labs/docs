@@ -32,12 +32,6 @@ any time with `GET /balance`.
 
 Until you add funds, `POST /models/{id}` will return `402 INSUFFICIENT_BALANCE`.
 
-<Note>
-  Uploading inputs with `POST /files` is free and works on an empty wallet, so
-  you can upload inputs before you add funds. The balance check runs when you
-  submit a job.
-</Note>
-
 ### Step 3: Pick a model
 
 `GET /models` lists every model with its `id` and display `name`, so a model
@@ -76,10 +70,6 @@ curl https://api.hedra.com/v3/jobs/$JOB_ID/status -H "Authorization: Key $HEDRA_
 # 3. Read the result: outputs[].url holds the generated file
 curl https://api.hedra.com/v3/jobs/$JOB_ID -H "Authorization: Key $HEDRA_KEY"
 ```
-
-Hedra keeps outputs for at least **48 hours** after a job completes. Download
-them to your own storage, or pass an output's `asset_id` as input to the next
-job.
 
 ### Next steps
 
