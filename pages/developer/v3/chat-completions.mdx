@@ -9,7 +9,7 @@ Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks 
 ## Before you start
 
 - **A key with the `chat:write` scope.** Create one in the [developer console](https://www.hedra.com/develop/api-keys). A key created with no scopes has every scope.
-- **A funded API wallet.** Before Hedra sends a request to the model, it debits the request's largest possible charge from the wallet: the prompt, plus `max_tokens` output tokens at the model's output price. When the response finishes, Hedra refunds the difference between that debit and the price of the tokens the model used. A request that sets no `max_tokens` holds the price of the model's whole `max_output_tokens`, which [`GET /v3/llms`](#choose-a-model) lists with the model's prices, however short the answer turns out, and each concurrent request holds its own amount. Set `max_tokens` to what the answer needs, and add funds in the [developer console](https://www.hedra.com/develop/billing). A wallet that cannot cover the hold gets a `402` whose message names the amount.
+- **A funded API wallet.** Add funds in the [developer console](https://www.hedra.com/develop/billing), and set `max_tokens` on each request. Without it, Hedra debits the price of the model's whole `max_output_tokens` up front, however short the answer. See [Billing](#billing).
 
 ## Authenticate
 
@@ -211,7 +211,7 @@ Any other field returns `400` naming the field. A field the model does not suppo
 
 ## Billing
 
-Hedra charges each request the model's price per million input and output tokens, from your API wallet. It debits the request's largest possible charge before it sends the request to the model, and refunds the unused part when the response finishes. Reasoning tokens count as output tokens. The response's `id` is the request's job id: `GET /v3/jobs/{job_id}` returns the request's model, token counts, whether the counts were estimated, and its charge, and `GET /v3/usage` includes chat spend in its totals.
+Hedra charges each request the model's price per million input and output tokens, from your API wallet. Before it sends a request to the model, it debits the largest possible charge: the prompt plus `max_tokens` output tokens, or the model's whole `max_output_tokens` from [`GET /v3/llms`](#choose-a-model) when the request sets no `max_tokens`. When the response finishes, it refunds the unused part. Hedra debits concurrent requests separately, and answers a request the wallet cannot cover with a `402` that names the amount. Reasoning tokens count as output tokens. The response's `id` is the request's job id: `GET /v3/jobs/{job_id}` returns the request's model, token counts, whether the counts were estimated, and its charge, and `GET /v3/usage` includes chat spend in its totals.
 
 ## Where Hedra differs from OpenAI
 
