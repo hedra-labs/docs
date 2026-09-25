@@ -41,13 +41,13 @@ const client = new OpenAI({
 
 ## Choose a model
 
-`GET /v3/llms` lists every model in the OpenAI model-object format, with each model's `context_length`, `max_output_tokens`, `capabilities` and price per million input and output tokens. `GET /v3/llms/{model}` returns one. Neither needs a key.
+`GET /v3/models?modality=text` lists the chat models. Each model's `context_length` and `max_output_tokens` give its token limits, and `price_description` gives its price per million input and output tokens. `GET /v3/models/{model}` returns one model, and its `input_schema` is the JSON Schema of the request body. Neither needs a key.
 
 ```bash
-curl https://api.hedra.com/v3/llms
+curl "https://api.hedra.com/v3/models?modality=text"
 ```
 
-`client.models.list()` does not return these models: the SDK calls `GET /v3/models`, which lists Hedra's image, video and audio models. Call `GET /v3/llms` directly.
+`client.models.list()` also calls `GET /v3/models`, so it returns the chat models, together with Hedra's image, video and audio models.
 
 ## Send a request
 
@@ -111,14 +111,14 @@ for await (const chunk of stream) {
 If the request fails after the stream has started, the stream carries one error event and ends without `data: [DONE]`:
 
 ```
-data: {"error": {"message": "The model backend failed mid-stream.", "type": "server_error", "param": null, "code": "upstream_error"}}
+data: {"error": {"code": "UNAVAILABLE", "message": "The model backend failed mid-stream.", "retryable": true, "retry_after": 5, "param": null, "details": null, "replaced_by": null, "billing": null, "type": "server_error"}, "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736"}
 ```
 
-`code` is `upstream_error` when the model backend fails or cuts the stream short, `deadline_exceeded` when the request reaches its time limit, and `server_error` when Hedra fails while relaying. The OpenAI SDK yields the chunks that arrived before the event, then raises it as an `APIError` carrying the event's `message`, `type` and `code`. Hedra charges the prompt and the tokens generated before the failure, and charges the same way when your client disconnects mid-stream.
+The event's body has the same form as every other v3 error response. `code` is `UNAVAILABLE` when the model backend fails or cuts the stream short, `DEADLINE_EXCEEDED` when the request reaches its time limit, and `INTERNAL` when Hedra fails while relaying. The OpenAI SDK yields the chunks that arrived before the event, then raises it as an `APIError` carrying the event's `message`, `type` and `code`. Hedra charges the prompt and the tokens generated before the failure, and charges the same way when your client disconnects mid-stream.
 
 ### Call tools and request JSON
 
-Models whose `capabilities.tools` is `true` in `GET /v3/llms` accept `tools` and `tool_choice`. Models that list `json_object` in `capabilities.response_format_types` accept `response_format: {"type": "json_object"}`.
+Every chat model accepts `tools`, `tool_choice` and `response_format: {"type": "json_object"}`.
 
 <CodeGroup>
 
@@ -189,12 +189,12 @@ Any other field returns `400` naming the field. A field the model does not suppo
 
 ## Billing
 
-Hedra charges each request the model's price per million input and output tokens, from your API wallet. Before it sends a request to the model, it debits the largest possible charge: the prompt plus `max_tokens` output tokens, or the model's whole `max_output_tokens` from [`GET /v3/llms`](#choose-a-model) when the request sets no `max_tokens`. When the response finishes, it refunds the unused part. Hedra debits concurrent requests separately, and answers a request the wallet cannot cover with a `402` that names the amount. Reasoning tokens count as output tokens. The response's `id` is the request's job id: `GET /v3/jobs/{job_id}` returns the request's model, token counts, whether the counts were estimated, and its charge, and `GET /v3/usage` includes chat spend in its totals.
+Hedra charges each request the model's price per million input and output tokens, from your API wallet. Before it sends a request to the model, it debits the largest possible charge: the prompt plus `max_tokens` output tokens, or the model's whole `max_output_tokens` from [`GET /v3/models/{model}`](#choose-a-model) when the request sets no `max_tokens`. When the response finishes, it refunds the unused part. Hedra debits concurrent requests separately, and answers a request the wallet cannot cover with a `402` that names the amount. Reasoning tokens count as output tokens. The response's `id` is the request's job id: `GET /v3/jobs/{job_id}` returns the request's model, token counts, whether the counts were estimated, and its charge, and `GET /v3/usage` includes chat spend in its totals.
 
 ## Where Hedra differs from OpenAI
 
 | Situation | OpenAI | Hedra |
 | --- | --- | --- |
-| Empty or underfunded wallet | `429 insufficient_quota` | `402` with `code: insufficient_balance`. The SDK does not retry it; add funds or lower `max_tokens`. |
-| Listing models | `client.models.list()` | `GET /v3/llms` |
+| Empty or underfunded wallet | `429 insufficient_quota` | `402` with `code: INSUFFICIENT_BALANCE`. The SDK does not retry it; add funds or lower `max_tokens`. |
+| Listing models | `client.models.list()` | `client.models.list()` also returns image, video and audio models; `GET /v3/models?modality=text` returns only the chat models |
 | Too many requests in flight on one key, too many requests per minute, or the model at capacity | `429` | `429` with a `Retry-After` header. The SDK retries twice by default and waits for `Retry-After`. |
