@@ -8,7 +8,7 @@ Every job that completes in the v3 API returns an `outputs[]` array. Each item c
 
 ## Reference an output in the next submit
 
-1. Submit the first job and poll `GET /v3/jobs/{job_id}` until every item in `outputs[]` reports `status: "COMPLETED"`.
+1. Submit the first job and poll `GET /v3/jobs/{job_id}` until its `status` is `COMPLETED`. `outputs[]` is empty until then.
 2. Read `outputs[0].asset_id` (or whichever output you want to chain from) — it looks like `asset_<uuid>`.
 3. Pass it in the next submit as an asset reference:
 
@@ -75,8 +75,7 @@ def wait_for_result(job_id: str, key: str) -> dict:
     headers = {"Authorization": f"Key {key}"}
     while True:
         job = httpx.get(f"https://api.hedra.com/v3/jobs/{job_id}", headers=headers).json()
-        outputs = job["outputs"]
-        if all(o["status"] in ("COMPLETED", "FAILED", "EXPIRED") for o in outputs):
+        if job["status"] in ("COMPLETED", "FAILED"):
             return job
         time.sleep(2)
 

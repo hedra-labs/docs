@@ -70,6 +70,10 @@ curl https://api.hedra.com/v3/jobs/$JOB_ID/status -H "Authorization: Key $HEDRA_
 curl https://api.hedra.com/v3/jobs/$JOB_ID -H "Authorization: Key $HEDRA_KEY"
 ```
 
+While the job runs, the status response carries `progress` and
+`estimated_completion_at`, so you can tell your users how long it will take.
+See [Job progress](/pages/developer/v3/job-progress).
+
 ### Next steps
 
 <CardGroup cols={2}>
