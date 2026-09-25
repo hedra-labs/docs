@@ -1,0 +1,200 @@
+---
+title: "Call LLMs with the OpenAI SDK"
+description: "Send chat completions to open-weight LLMs through POST /v3/chat/completions with the stock OpenAI SDK, billed per token from your API wallet."
+sidebarTitle: "Chat completions"
+---
+
+Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks the OpenAI chat-completions format. Point the stock OpenAI SDK at `https://api.hedra.com/v3`, use your Hedra API key, and every request is billed per token from the same prepaid API wallet as your media jobs.
+
+## Before you start
+
+- **A key with the `chat:write` scope.** Create one in the [developer console](https://www.hedra.com/develop/api-keys). A key created with no scopes has every scope.
+- **A funded API wallet.** Add funds in the [developer console](https://www.hedra.com/develop/billing), and set `max_tokens` on each request. Without it, Hedra debits the price of the model's whole `max_output_tokens` up front, however short the answer. See [Billing](#billing).
+
+## Authenticate
+
+Pass your Hedra API key as `api_key`, either in its `<key_id>:<secret>` form or as a legacy `sk_hedra_…` key:
+
+<CodeGroup>
+
+```python Python
+import os
+
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.hedra.com/v3",
+    api_key=os.environ["HEDRA_KEY"],  # "<key_id>:<secret>" or "sk_hedra_…"
+)
+```
+
+```typescript TypeScript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://api.hedra.com/v3",
+  apiKey: process.env.HEDRA_KEY, // "<key_id>:<secret>" or "sk_hedra_…"
+});
+```
+
+</CodeGroup>
+
+## Choose a model
+
+`GET /v3/llms` lists every model in the OpenAI model-object format, with each model's `context_length`, `max_output_tokens`, `capabilities` and price per million input and output tokens. `GET /v3/llms/{model}` returns one. Neither needs a key.
+
+```bash
+curl https://api.hedra.com/v3/llms
+```
+
+`client.models.list()` does not return these models: the SDK calls `GET /v3/models`, which lists Hedra's image, video and audio models. Call `GET /v3/llms` directly.
+
+## Send a request
+
+<CodeGroup>
+
+```python Python
+response = client.chat.completions.create(
+    model="glm-5.3",
+    messages=[{"role": "user", "content": "Write a two-sentence script for a product intro video."}],
+)
+print(response.choices[0].message.content)
+```
+
+```typescript TypeScript
+const response = await client.chat.completions.create({
+  model: "glm-5.3",
+  messages: [{ role: "user", content: "Write a two-sentence script for a product intro video." }],
+});
+console.log(response.choices[0].message.content);
+```
+
+</CodeGroup>
+
+### Stream the response
+
+Pass `stream: true`. To receive token counts in the last chunk, also pass `stream_options: {"include_usage": true}`.
+
+<CodeGroup>
+
+```python Python
+stream = client.chat.completions.create(
+    model="glm-5.3",
+    messages=[{"role": "user", "content": "Explain SSE in two sentences."}],
+    stream=True,
+    stream_options={"include_usage": True},
+)
+for chunk in stream:
+    if chunk.choices:
+        print(chunk.choices[0].delta.content or "", end="")
+    if chunk.usage:
+        print(f"\n{chunk.usage.prompt_tokens} in, {chunk.usage.completion_tokens} out")
+```
+
+```typescript TypeScript
+const stream = await client.chat.completions.create({
+  model: "glm-5.3",
+  messages: [{ role: "user", content: "Explain SSE in two sentences." }],
+  stream: true,
+  stream_options: { include_usage: true },
+});
+for await (const chunk of stream) {
+  process.stdout.write(chunk.choices[0]?.delta?.content ?? "");
+  if (chunk.usage) {
+    console.log(`\n${chunk.usage.prompt_tokens} in, ${chunk.usage.completion_tokens} out`);
+  }
+}
+```
+
+</CodeGroup>
+
+If the request fails after the stream has started, the stream carries one error event and ends without `data: [DONE]`:
+
+```
+data: {"error": {"message": "The model backend failed mid-stream.", "type": "server_error", "param": null, "code": "upstream_error"}}
+```
+
+`code` is `upstream_error` when the model backend fails or cuts the stream short, `deadline_exceeded` when the request reaches its time limit, and `server_error` when Hedra fails while relaying. The OpenAI SDK yields the chunks that arrived before the event, then raises it as an `APIError` carrying the event's `message`, `type` and `code`. Hedra charges the prompt and the tokens generated before the failure, and charges the same way when your client disconnects mid-stream.
+
+### Call tools and request JSON
+
+Models whose `capabilities.tools` is `true` in `GET /v3/llms` accept `tools` and `tool_choice`. Models that list `json_object` in `capabilities.response_format_types` accept `response_format: {"type": "json_object"}`.
+
+<CodeGroup>
+
+```python Python
+response = client.chat.completions.create(
+    model="glm-5.3",
+    messages=[{"role": "user", "content": "What's the weather in Paris?"}],
+    tools=[
+        {
+            "type": "function",
+            "function": {
+                "name": "get_weather",
+                "description": "Current weather for a city",
+                "parameters": {
+                    "type": "object",
+                    "properties": {"city": {"type": "string"}},
+                    "required": ["city"],
+                },
+            },
+        }
+    ],
+)
+call = response.choices[0].message.tool_calls[0]
+print(call.function.name, call.function.arguments)
+
+json_response = client.chat.completions.create(
+    model="glm-5.3",
+    messages=[{"role": "user", "content": "List three primes as {\"primes\": [...]}"}],
+    response_format={"type": "json_object"},
+)
+```
+
+```typescript TypeScript
+const response = await client.chat.completions.create({
+  model: "glm-5.3",
+  messages: [{ role: "user", content: "What's the weather in Paris?" }],
+  tools: [
+    {
+      type: "function",
+      function: {
+        name: "get_weather",
+        description: "Current weather for a city",
+        parameters: {
+          type: "object",
+          properties: { city: { type: "string" } },
+          required: ["city"],
+        },
+      },
+    },
+  ],
+});
+const call = response.choices[0].message.tool_calls?.[0];
+
+const jsonResponse = await client.chat.completions.create({
+  model: "glm-5.3",
+  messages: [{ role: "user", content: 'List three primes as {"primes": [...]}' }],
+  response_format: { type: "json_object" },
+});
+```
+
+</CodeGroup>
+
+## Accepted request fields
+
+`model`, `messages`, `frequency_penalty`, `logit_bias`, `logprobs`, `top_logprobs`, `max_tokens`, `max_completion_tokens`, `n` (only `1`), `presence_penalty`, `reasoning_effort`, `response_format`, `seed`, `stop`, `stream`, `stream_options`, `temperature`, `tool_choice`, `tools`, `parallel_tool_calls`, `top_p` and `user`.
+
+Any other field returns `400` naming the field. A field the model does not support, such as `tools` on a model without tool calling, also returns `400`. `n` must be `1`. `max_tokens` and `max_completion_tokens` are capped at the model's `max_output_tokens`. `stream_options` requires `stream: true`. `user` is accepted and not sent to the model.
+
+## Billing
+
+Hedra charges each request the model's price per million input and output tokens, from your API wallet. Before it sends a request to the model, it debits the largest possible charge: the prompt plus `max_tokens` output tokens, or the model's whole `max_output_tokens` from [`GET /v3/llms`](#choose-a-model) when the request sets no `max_tokens`. When the response finishes, it refunds the unused part. Hedra debits concurrent requests separately, and answers a request the wallet cannot cover with a `402` that names the amount. Reasoning tokens count as output tokens. The response's `id` is the request's job id: `GET /v3/jobs/{job_id}` returns the request's model, token counts, whether the counts were estimated, and its charge, and `GET /v3/usage` includes chat spend in its totals.
+
+## Where Hedra differs from OpenAI
+
+| Situation | OpenAI | Hedra |
+| --- | --- | --- |
+| Empty or underfunded wallet | `429 insufficient_quota` | `402` with `code: insufficient_balance`. The SDK does not retry it; add funds or lower `max_tokens`. |
+| Listing models | `client.models.list()` | `GET /v3/llms` |
+| Too many requests in flight on one key, too many requests per minute, or the model at capacity | `429` | `429` with a `Retry-After` header. The SDK retries twice by default and waits for `Retry-After`. |
