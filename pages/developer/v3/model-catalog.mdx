@@ -102,10 +102,12 @@ reproducibility.
 2. **Read the model's typed schema.** `GET /v3/models/{id}/openapi.json` returns
    the exact input fields — resolution menus, duration bounds, whether the
    model accepts reference frames, and so on.
-3. **Estimate the cost.** `POST /v3/models/{id}/estimate` returns the credit
-   cost for a specific request body before you run it.
+3. **Estimate the cost.** `POST /v3/models/{id}/estimate` returns the price in
+   US dollars for a specific request body before you run it.
 4. **Submit the job.** `POST /v3/models/{id}` returns a `job_id`; poll it with
    `GET /v3/jobs/{job_id}/status` and read the output at `GET /v3/jobs/{job_id}`.
+   The status response also carries the job's estimated completion time; see
+   [Job progress](/pages/developer/v3/job-progress).
 
 <Note>
   New model families are added continuously. Prefer `GET /v3/models` at runtime

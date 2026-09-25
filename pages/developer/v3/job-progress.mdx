@@ -1,0 +1,99 @@
+---
+title: "Show a v3 job's progress and estimated completion time"
+sidebarTitle: "Job progress"
+description: "Read estimated_completion_at and progress while a v3 job runs: which responses include them, when they are null, and how far to trust them."
+---
+
+While a job runs, Hedra publishes `estimated_completion_at`, the instant the
+job is estimated to finish, and `progress`, the estimated fraction of the job
+completed. Use them to tell your users how long a generation will take.
+
+## Where the estimate appears
+
+| Response | `estimated_completion_at` |
+| --- | --- |
+| `POST /v3/models/{id}`, the `202` submit response | The estimate when Hedra sent the response |
+| `GET /v3/jobs/{job_id}/status` | The current estimate, with `progress` |
+| `status` frames from `GET /v3/jobs/{job_id}/stream` | The estimate when Hedra sent the frame; null on the final frame |
+| `GET /v3/jobs/{job_id}`, `GET /v3/jobs`, `GET /v3/models/{id}/jobs` | Not included |
+| `POST /v3/models/{id}/estimate` | Not included |
+
+`POST /v3/models/{id}/estimate` returns a price: the `cost` in US dollars that
+submitting the same `input` would charge. It creates no job, so it has no
+completion time. Submit the job to get one.
+
+## Poll the status endpoint
+
+```bash
+curl https://api.hedra.com/v3/jobs/$JOB_ID/status -H "Authorization: Key $HEDRA_KEY"
+```
+
+```json
+{
+  "job_id": "job_5e873d0f-...",
+  "status": "IN_PROGRESS",
+  "progress": 0.42,
+  "estimated_completion_at": "2026-09-24T23:55:04.121Z"
+}
+```
+
+The estimate can change while the job runs, so read it from every poll rather
+than keeping the value from the submit response:
+
+```python
+import time
+from datetime import datetime, timezone
+
+import httpx
+
+
+def parse_instant(value: str) -> datetime:
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def wait_with_progress(job_id: str, key: str) -> dict:
+    headers = {"Authorization": f"Key {key}"}
+    first_estimate = None
+    while True:
+        response = httpx.get(
+            f"https://api.hedra.com/v3/jobs/{job_id}/status", headers=headers
+        )
+        response.raise_for_status()
+        status = response.json()
+        if status["status"] in ("COMPLETED", "FAILED"):
+            return status
+        eta = status["estimated_completion_at"]
+        now = datetime.now(timezone.utc)
+        if eta is None:
+            print("Working…")
+        else:
+            finish = parse_instant(eta)
+            first_estimate = first_estimate or finish
+            if now > first_estimate:
+                print("Taking longer than expected…")
+            else:
+                remaining = max(0, round((finish - now).total_seconds()))
+                print(f"About {remaining} s left")
+        time.sleep(5)
+```
+
+## When it is null
+
+- **The job has finished.** Once `status` is `COMPLETED` or `FAILED`,
+  `estimated_completion_at` is null. A completed job reports `progress` of 1.
+- **No estimate is available for the job.** Some models publish no estimate,
+  such as the text-to-speech models. Their jobs report a null
+  `estimated_completion_at` from submission to completion, and the status
+  endpoint reports `progress` of 0 until the job completes.
+
+## Treat it as a rough guide
+
+- The estimate is a guide rather than a deadline. A job can finish well before
+  it, so show an approximate time, such as "about 3 minutes", instead of a
+  countdown to the second.
+- A job can run longer than its first estimate. Once the current time passes
+  the first estimate you showed, tell your users that the job is taking longer
+  than expected.
+- Hedra computes `progress` from the time since submission and the job's
+  completion estimate. It is only as accurate as the estimate, and it stays
+  below 1 until the job completes.
