@@ -70,10 +70,10 @@ The body is the same envelope `GET /v3/jobs/{job_id}` returns, minus its poll-on
 On `job.failed`, `status` is `FAILED` and `error` carries the same error envelope the poll endpoint returns.
 
 <Note>
-  Hedra keeps generated media for at least **48 hours** after a job completes.
-  Download `outputs[].url`, or pass `outputs[].asset_id` to the next job, soon
-  after delivery. A delivery replayed after that window can carry `EXPIRED`
-  outputs with `url: null`.
+  Generated media is retained for **48 hours** after a job completes, measured
+  from the original completion time. Download `outputs[].url` (or chain
+  `outputs[].asset_id`) promptly — a delivery replayed after the window carries
+  `EXPIRED` outputs with `url: null`.
 </Note>
 
 ## Verify the signature

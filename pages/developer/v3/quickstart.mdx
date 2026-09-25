@@ -13,11 +13,7 @@ Generate images, video, and audio with over 100 models through one API,
 including Veo 3.1, Seedance 2.0, Kling V3, GPT Image 2, Nano Banana Pro, and
 ElevenLabs V3. Create an API key and fund your wallet, then every model runs
 through the same three requests: submit a job, poll it, download the output.
-Input fields have the same names across models, such as `prompt`,
-`aspect_ratio`, `resolution`, `duration_ms`, and `start_image`, so switching
-models means changing the model id and choosing values the new model's schema
-accepts. Browse the [model catalog](https://www.hedra.com/develop/models) to
-pick one.
+Browse the [model catalog](https://www.hedra.com/develop/models) to pick one.
 
 ### Step 1: Create an API key
 
@@ -37,17 +33,17 @@ any time with `GET /balance`.
 Until you add funds, `POST /models/{id}` will return `402 INSUFFICIENT_BALANCE`.
 
 <Note>
-  Uploading inputs with `POST /files` is free and succeeds on an empty wallet,
-  so you can upload inputs before you add funds. `POST /models/{id}` checks the
-  balance when you submit a job.
+  Uploading inputs with `POST /files` is free and works on an empty wallet, so
+  you can upload inputs before you add funds. The balance check runs when you
+  submit a job.
 </Note>
 
 ### Step 3: Pick a model
 
-`GET /models` lists every model with its `id` and display `name`, such as
-`gpt-image-2` for "GPT Image 2". Submit jobs with `POST /models/{id}`, for
-example `POST /models/gpt-image-2`. `GET /models/{id}/openapi.json` returns a
-model's input schema.
+`GET /models` lists every model with its `id` and display `name`, so a model
+you know by name ("GPT Image 2") gives you the id for its submit path
+(`POST /models/gpt-image-2`). Each model publishes its typed input schema at
+`GET /models/{id}/openapi.json`.
 
 ```bash
 curl https://api.hedra.com/v3/models -H "Authorization: Key $HEDRA_KEY"
@@ -64,7 +60,8 @@ curl -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
 
 ### Step 4: Submit, poll, download
 
-Every job follows the same steps: submit it, poll it, then read the output URL.
+Every generation follows the same lifecycle: submit a job, poll it, then read
+the output URL.
 
 ```bash
 # 1. Submit: capture the job id from the 202 response
