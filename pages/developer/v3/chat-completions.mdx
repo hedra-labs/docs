@@ -13,7 +13,7 @@ Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks 
 
 ## Authenticate
 
-The OpenAI SDK sends `api_key` as `Authorization: Bearer <api_key>`. Hedra reads a Bearer value with a colon as an API key, so pass your key in its `<key_id>:<secret>` form:
+Pass your Hedra API key as `api_key`, either in its `<key_id>:<secret>` form or as a legacy `sk_hedra_…` key:
 
 <CodeGroup>
 
@@ -24,7 +24,7 @@ from openai import OpenAI
 
 client = OpenAI(
     base_url="https://api.hedra.com/v3",
-    api_key=os.environ["HEDRA_KEY"],  # "<key_id>:<secret>"
+    api_key=os.environ["HEDRA_KEY"],  # "<key_id>:<secret>" or "sk_hedra_…"
 )
 ```
 
@@ -33,29 +33,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   baseURL: "https://api.hedra.com/v3",
-  apiKey: process.env.HEDRA_KEY, // "<key_id>:<secret>"
-});
-```
-
-</CodeGroup>
-
-A legacy `sk_hedra_…` key has no colon, so Hedra rejects it as a Bearer value. Send it with the `Key` scheme instead, which replaces the header the SDK would send:
-
-<CodeGroup>
-
-```python Python
-client = OpenAI(
-    base_url="https://api.hedra.com/v3",
-    api_key="unused",
-    default_headers={"Authorization": f"Key {os.environ['HEDRA_LEGACY_KEY']}"},
-)
-```
-
-```typescript TypeScript
-const client = new OpenAI({
-  baseURL: "https://api.hedra.com/v3",
-  apiKey: "unused",
-  defaultHeaders: { Authorization: `Key ${process.env.HEDRA_LEGACY_KEY}` },
+  apiKey: process.env.HEDRA_KEY, // "<key_id>:<secret>" or "sk_hedra_…"
 });
 ```
 
@@ -220,4 +198,3 @@ Hedra charges each request the model's price per million input and output tokens
 | Empty or underfunded wallet | `429 insufficient_quota` | `402` with `code: insufficient_balance`. The SDK does not retry it; add funds or lower `max_tokens`. |
 | Listing models | `client.models.list()` | `GET /v3/llms` |
 | Too many requests in flight on one key, too many requests per minute, or the model at capacity | `429` | `429` with a `Retry-After` header. The SDK retries twice by default and waits for `Retry-After`. |
-| API key in `Authorization: Bearer` | any key | `<key_id>:<secret>` keys only |
