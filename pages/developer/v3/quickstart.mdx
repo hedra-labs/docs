@@ -9,15 +9,14 @@ description: "Create an API key, fund the API wallet, and run your first generat
   <p>V3 API Quickstart</p>
 </div>
 
-Every leading image, video, and audio model behind one endpoint, one key, and
-one bill. Browse the [model catalog](https://www.hedra.com/develop/models),
-pick a model, and ship — the same key and the same job lifecycle work for all
-of them.
+Generate images, video, and audio with over 100 models through one API. Fund
+your wallet, then every model runs through the same three requests: submit a
+job, poll it, download the output. Browse the
+[model catalog](https://www.hedra.com/develop/models) to pick one.
 
 ### Step 1: Create an API key
 
 Generate a key in the [developer console](https://www.hedra.com/develop/api-keys).
-Every request authenticates with it:
 
 ```
 Authorization: Key <key_id>:<secret>
@@ -25,31 +24,25 @@ Authorization: Key <key_id>:<secret>
 
 ### Step 2: Fund the API wallet
 
-The API bills a **prepaid wallet** held in US dollars. It is separate from your
-Hedra Studio balance, and a workspace starts with **$0.00** in it — nothing you
-buy or hold in Studio moves money into it. Until it is funded, every generation
-is refused with `402 INSUFFICIENT_BALANCE`.
+The API bills a **prepaid wallet** held in US dollars. (This USD balance is
+separate from your Hedra Studio credit balance.) Add funds in the
+[developer console](https://www.hedra.com/develop/billing), and read the wallet
+any time with `GET /balance`.
 
-Add funds in the [developer console](https://www.hedra.com/develop/billing),
-and read the wallet any time with `GET /balance`.
-
-<Note>
-  Uploading inputs with `POST /files` is free and works on an empty wallet, so
-  you can stage a request end-to-end and only meet the billing gate at submit.
-</Note>
+Until you add funds, `POST /models/{id}` will return `402 INSUFFICIENT_BALANCE`.
 
 ### Step 3: Pick a model
 
-`GET /models` lists every model with its `id` and human `name`, so a model you
-know by name ("GPT Image 2") maps straight to the id you submit to
-(`gpt-image-2`). Each model publishes its typed input schema at
+`GET /models` lists every model with its `id` and display `name`, so a model
+you know by name ("GPT Image 2") gives you the id for its submit path
+(`POST /models/gpt-image-2`). Each model publishes its typed input schema at
 `GET /models/{id}/openapi.json`.
 
 ```bash
 curl https://api.hedra.com/v3/models -H "Authorization: Key $HEDRA_KEY"
 ```
 
-To know the price before you run, ask for an estimate:
+Optionally, to see a job's price before you submit it, ask for an estimate:
 
 ```bash
 curl -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
@@ -64,7 +57,7 @@ Every generation follows the same lifecycle: submit a job, poll it, then read
 the output URL.
 
 ```bash
-# 1. Submit — capture the job id from the 202 ack
+# 1. Submit: capture the job id from the 202 response
 JOB_ID=$(curl -sS -X POST https://api.hedra.com/v3/models/gpt-image-2 \
   -H "Authorization: Key $HEDRA_KEY" \
   -H "Content-Type: application/json" \
@@ -73,24 +66,21 @@ JOB_ID=$(curl -sS -X POST https://api.hedra.com/v3/models/gpt-image-2 \
 # 2. Poll until status is COMPLETED (or FAILED)
 curl https://api.hedra.com/v3/jobs/$JOB_ID/status -H "Authorization: Key $HEDRA_KEY"
 
-# 3. Read the result — outputs[].url holds the generated file
+# 3. Read the result: outputs[].url holds the generated file
 curl https://api.hedra.com/v3/jobs/$JOB_ID -H "Authorization: Key $HEDRA_KEY"
 ```
-
-Generated media is retained for **48 hours** after a job completes — download
-outputs to your own storage, or chain them into the next job by `asset_id`.
 
 ### Next steps
 
 <CardGroup cols={2}>
   <Card title="Model catalog" href="/pages/developer/v3/model-catalog">
-    Every model behind the endpoint, with ids, names, and what each one is for.
+    Every model, with its id, name, and purpose.
   </Card>
   <Card title="Chain generations" href="/pages/developer/v3/chain-generations">
-    Reuse a completed job's output as an asset in the next submit.
+    Pass a completed job's output as input to the next job.
   </Card>
   <Card title="Quality levels" href="/pages/developer/v3/quality-levels">
-    How the quality tiers map to cost and latency across models.
+    How each quality level changes price and latency across models.
   </Card>
 </CardGroup>
 
