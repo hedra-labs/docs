@@ -136,7 +136,7 @@ The route accepts these top-level fields and answers any other with `400` naming
 
 - `n` must be `1`.
 - `max_tokens` and `max_completion_tokens` both bound the output, and the smaller one applies.
-- `response_format` takes `{"type": "text"}` or `{"type": "json_object"}`. `json_schema` returns `400`.
+- `response_format` takes `{"type": "text"}`, `{"type": "json_object"}` or `{"type": "json_schema", "json_schema": {...}}`.
 - `stream_options` requires `stream: true`, and `top_logprobs` requires `logprobs: true`.
 - `user` is accepted and not sent to the model.
 - A message's `content` is a string or a list of `text` and `image_url` parts. An image URL must be `https://` or a `data:` URL. A model that does not take images, or a request with more images than the model accepts, returns `400`.
@@ -224,7 +224,7 @@ try {
 | Error `code` | A lowercase string | An uppercase v3 code; `type` follows the HTTP status |
 | Neither `max_tokens` nor `max_completion_tokens` | Up to the model's output limit | Up to 32,768 tokens, or the model's `max_output_tokens` if lower |
 | `max_tokens` above the model's limit | `400` | Lowered to `max_output_tokens` |
-| `response_format: json_schema`, or `n` above 1 | Accepted | `400` |
+| `n` above 1 | Accepted | `400` |
 | A field outside [Request fields](#request-fields), such as `store` or `metadata` | Accepted | `400` naming the field |
 | Reasoning text | Not returned | `reasoning_content` on the message and on each delta |
 | A non-streaming request that runs long | Runs until the SDK's timeout, 10 minutes by default | `504` after 120 seconds |
