@@ -1,0 +1,230 @@
+---
+title: "Call LLMs with the OpenAI SDK"
+description: "Send chat completions to open-weight LLMs through POST /v3/chat/completions with the stock OpenAI SDK, paid from your API wallet."
+sidebarTitle: "Chat completions"
+---
+
+Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks OpenAI's chat completions format. Point the stock OpenAI SDK at `https://api.hedra.com/v3`, pass your Hedra API key, and pay for each request from the same prepaid API wallet as your media jobs.
+
+## Before you start
+
+- **A key with the `chat:write` scope.** Create one in the [developer console](https://www.hedra.com/develop/api-keys). A key created without a list of scopes has every scope.
+- **A funded API wallet.** Add funds in the [developer console](https://www.hedra.com/develop/billing).
+
+<Warning>
+**Placeholder, ENG-11468.** Chat requests become jobs, and the route will require `jobs:write` in place of `chat:write`. Rewrite this section when ENG-11468 ships.
+</Warning>
+
+## Authenticate
+
+Pass your Hedra API key as `api_key`, in either its `<key_id>:<secret>` form or as a legacy `sk_hedra_…` key. The SDK sends it as `Authorization: Bearer <api_key>`.
+
+<CodeGroup>
+
+```python Python
+import os
+
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://api.hedra.com/v3",
+    api_key=os.environ["HEDRA_KEY"],  # "<key_id>:<secret>" or "sk_hedra_…"
+)
+```
+
+```typescript TypeScript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://api.hedra.com/v3",
+  apiKey: process.env.HEDRA_KEY, // "<key_id>:<secret>" or "sk_hedra_…"
+});
+```
+
+</CodeGroup>
+
+## Choose a model
+
+<Warning>
+**Placeholder, ENG-11466.** `GET /v3/models` will list the chat models, with each model's `context_length`, `max_output_tokens` and per-token prices. Write this section when ENG-11466 ships.
+</Warning>
+
+The examples below use `glm-5.3`.
+
+## Send a request
+
+<CodeGroup>
+
+```python Python
+response = client.chat.completions.create(
+    model="glm-5.3",
+    messages=[{"role": "user", "content": "Write a two-sentence script for a product intro video."}],
+)
+print(response.choices[0].message.content)
+```
+
+```typescript TypeScript
+const response = await client.chat.completions.create({
+  model: "glm-5.3",
+  messages: [{ role: "user", content: "Write a two-sentence script for a product intro video." }],
+});
+console.log(response.choices[0].message.content);
+```
+
+</CodeGroup>
+
+A model's reasoning text arrives in `reasoning_content`, a field OpenAI's format does not have, on the message or on stream deltas. Reasoning tokens count toward `max_tokens`. When a request sets neither `max_tokens` nor `max_completion_tokens`, its output is limited to 32,768 tokens, or to the model's `max_output_tokens` if that is lower. A `max_tokens` above `max_output_tokens` is lowered to it. A response with `finish_reason` `length` and `content` `null` spent every output token reasoning: raise `max_tokens`.
+
+A non-streaming request must finish within 120 seconds. After that the API answers `504` `DEADLINE_EXCEEDED`, and if the model had already started answering, the SDK does not retry it. The API also answers `504` when the model sends nothing for 90 seconds. Stream long completions.
+
+## Stream the response
+
+Pass `stream: true`. To get token counts, also pass `stream_options: {"include_usage": true}`: a chunk with empty `choices` then carries `usage`. Read the stream to its end, because on some models that chunk arrives before the last content chunk.
+
+<CodeGroup>
+
+```python Python
+stream = client.chat.completions.create(
+    model="glm-5.3",
+    messages=[{"role": "user", "content": "Explain SSE in two sentences."}],
+    stream=True,
+    stream_options={"include_usage": True},
+)
+for chunk in stream:
+    if chunk.choices:
+        print(chunk.choices[0].delta.content or "", end="")
+    if chunk.usage:
+        print(f"\n{chunk.usage.prompt_tokens} in, {chunk.usage.completion_tokens} out")
+```
+
+```typescript TypeScript
+const stream = await client.chat.completions.create({
+  model: "glm-5.3",
+  messages: [{ role: "user", content: "Explain SSE in two sentences." }],
+  stream: true,
+  stream_options: { include_usage: true },
+});
+for await (const chunk of stream) {
+  process.stdout.write(chunk.choices[0]?.delta?.content ?? "");
+  if (chunk.usage) {
+    console.log(`\n${chunk.usage.prompt_tokens} in, ${chunk.usage.completion_tokens} out`);
+  }
+}
+```
+
+</CodeGroup>
+
+A stream ends early, with one error event and no `data: [DONE]`, when:
+
+- the model fails or cuts the stream short (`code` `UNAVAILABLE`);
+- the stream reaches its 600-second limit, or the model sends nothing for 90 seconds (`DEADLINE_EXCEEDED`);
+- Hedra fails while relaying it (`INTERNAL`).
+
+```
+data: {"error": {"code": "UNAVAILABLE", "message": "The model backend failed mid-stream.", "retryable": true, "retry_after": 5, "param": null, "details": null, "replaced_by": null, "billing": null, "type": "server_error"}, "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736"}
+```
+
+The event carries the same body as an error response ([Errors](#errors)). The SDK yields the chunks that arrived before it, then raises `openai.APIError` with the event's `message`, `code` and `type`.
+
+If your code stops reading while the model is still generating, Hedra closes the stream after 30 seconds.
+
+## Request fields
+
+The route accepts these top-level fields and answers any other with `400` naming it:
+
+`model`, `messages`, `max_tokens`, `max_completion_tokens`, `n`, `stream`, `stream_options`, `tools`, `tool_choice`, `parallel_tool_calls`, `response_format`, `reasoning_effort`, `temperature`, `top_p`, `stop`, `seed`, `frequency_penalty`, `presence_penalty`, `logit_bias`, `logprobs`, `top_logprobs` and `user`.
+
+- `n` must be `1`.
+- `max_tokens` and `max_completion_tokens` both bound the output, and the smaller one applies.
+- `response_format` takes `{"type": "text"}`, `{"type": "json_object"}` or `{"type": "json_schema", "json_schema": {...}}`.
+- `stream_options` requires `stream: true`, and `top_logprobs` requires `logprobs: true`.
+- `user` is accepted and not sent to the model.
+- A message's `content` is a string or a list of `text` and `image_url` parts. An image URL must be `https://` or a `data:` URL. A model that does not take images, or a request with more images than the model accepts, returns `400`.
+- A request body over 5 MiB, `data:` images included, returns `400` with `param` `body`.
+
+## Errors
+
+Every error response, and every mid-stream error event, has the body every v3 route returns:
+
+```json
+{
+  "error": {
+    "code": "INVALID_ARGUMENT",
+    "message": "Unknown request field: store",
+    "retryable": false,
+    "retry_after": null,
+    "param": "store",
+    "details": [{"field": "store", "message": "unknown request field", "reason": null, "allowed": null}],
+    "replaced_by": null,
+    "billing": null,
+    "type": "invalid_request_error"
+  },
+  "trace_id": "4bf92f3577b34da6a3ce929d0e0e4736"
+}
+```
+
+Match on `code`. `type` is OpenAI's error type for the HTTP status, so that the SDK's `e.type` is set. Every error response sets `x-should-retry: true` or `false` from `retryable`, and the SDK follows it. A retryable error also sets `Retry-After`, the number of seconds to wait before retrying.
+
+| Status | `code` | When | SDK exception | SDK retries |
+| --- | --- | --- | --- | --- |
+| `400` | `INVALID_ARGUMENT` | A field is unknown, invalid or not supported by the model, the prompt is longer than the model's context length, or an image URL could not be fetched. `param` and `details` name the field when one is at fault. | `BadRequestError` | No |
+| `401` | `UNAUTHORIZED` | The key is missing or invalid. | `AuthenticationError` | No |
+| `402` | `INSUFFICIENT_BALANCE` | The API wallet cannot pay for the request. `billing` holds the balance and a link to add funds. | `APIStatusError` | No |
+| `403` | `PERMISSION_DENIED` | The key lacks the scope, or no longer has access to its workspace. | `PermissionDeniedError` | No |
+| `404` | `NOT_FOUND` | The model does not exist. | `NotFoundError` | No |
+| `429` | `RESOURCE_EXHAUSTED` | Too many requests per minute, too many requests in flight on the key or workspace, or the model is at capacity. | `RateLimitError` | Yes |
+| `500` | `INTERNAL` | Hedra failed. | `InternalServerError` | No |
+| `503` | `UNAVAILABLE` | The model is temporarily unavailable. | `InternalServerError` | Yes |
+| `504` | `DEADLINE_EXCEEDED` | The model did not answer in time. | `InternalServerError` | Yes, unless the model had started answering |
+
+The exception names are the Python SDK's. The TypeScript SDK uses the same names, except that it raises a `402` as the base `APIError`. The exception holds the `error` object (`e.body` in Python, `e.error` in TypeScript) and the response's `X-Request-Id` (`e.request_id`, `e.requestID`).
+
+<CodeGroup>
+
+```python Python
+import openai
+
+try:
+    client.chat.completions.create(model="glm-5.3", messages=[{"role": "user", "content": "Hi"}])
+except openai.APIStatusError as e:
+    print(e.status_code, e.code, e.message, e.request_id)
+```
+
+```typescript TypeScript
+import OpenAI from "openai";
+
+try {
+  await client.chat.completions.create({ model: "glm-5.3", messages: [{ role: "user", content: "Hi" }] });
+} catch (e) {
+  if (e instanceof OpenAI.APIError) {
+    console.log(e.status, e.code, e.message, e.requestID);
+  }
+}
+```
+
+</CodeGroup>
+
+## Billing
+
+<Warning>
+**Placeholder, ENG-11467.** This section will state the price of a request, the worst-case amount the wallet holds before the request is sent and the refund after it, who pays when a request ends early, and the wording of the `402`. Write it when ENG-11467 ships.
+</Warning>
+
+## Look up a request
+
+<Warning>
+**Placeholder, ENG-11468.** This section will state that each chat request is a job whose id is the completion `id` (`job_<uuid>`), what `GET /v3/jobs/{job_id}` returns for it, and how `GET /v3/usage` counts chat requests. Write it when ENG-11468 ships.
+</Warning>
+
+## Where Hedra differs from OpenAI
+
+| Situation | OpenAI | Hedra |
+| --- | --- | --- |
+| The balance cannot pay for the request | `429` `insufficient_quota` | `402` `INSUFFICIENT_BALANCE`, which the SDK does not retry |
+| Error `code` | A lowercase string | An uppercase v3 code; `type` follows the HTTP status |
+| Neither `max_tokens` nor `max_completion_tokens` | Up to the model's output limit | Up to 32,768 tokens, or the model's `max_output_tokens` if lower |
+| `max_tokens` above the model's limit | `400` | Lowered to `max_output_tokens` |
+| `n` above 1 | Accepted | `400` |
+| A field outside [Request fields](#request-fields), such as `store` or `metadata` | Accepted | `400` naming the field |
+| Reasoning text | Not returned | `reasoning_content` on the message and on each delta |
+| A non-streaming request that runs long | Runs until the SDK's timeout, 10 minutes by default | `504` after 120 seconds |
