@@ -216,6 +216,7 @@
                   "POST /models/omnihuman-15",
                   "POST /models/pixverse-v6",
                   "POST /models/qwen-image-2",
+                  "POST /models/qwen-image-2-1",
                   "POST /models/recraft-v3",
                   "POST /models/reve-21",
                   "POST /models/reve-21-edit",
