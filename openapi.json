@@ -8252,6 +8252,7 @@
           "audio_from_video",
           "text_to_sound",
           "music",
+          "chat_completion",
           "assets_to_image_text_prompt",
           "assets_to_audio_text_prompt"
         ],

@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Hedra API v3",
-    "description": "Generate images, video, and audio with over 100 models through one API, including Veo 3.1, Seedance 2.0, Kling V3, GPT Image 2, Nano Banana Pro, and ElevenLabs V3. Create an API key and fund your wallet, then every model runs through the same three requests: submit a job, poll it, download the output. Input fields have the same names across models, such as `prompt`, `aspect_ratio`, `resolution`, `duration_ms`, and `start_image`, so switching models means changing the model id and choosing values the new model's schema accepts. Browse the [model catalog](https://www.hedra.com/develop/models) to pick one.\n\n**Authenticate** every request with your API key \u2014 create one in the [developer console](https://www.hedra.com/develop/api-keys): `Authorization: Key <key_id>:<secret>`.\n\n**Fund the API wallet** before your first call. It is prepaid and held in US dollars, it is separate from your Hedra Studio balance, and a workspace starts with **$0.00** in it; nothing you buy or hold in Studio moves money into it. Until it is funded, every generation is refused with `402 INSUFFICIENT_BALANCE`; uploading inputs with `POST /files` is free and works on an empty wallet, so you can stage a request and only meet the gate at submit. Add funds in the [developer console](https://www.hedra.com/develop/billing), and read the wallet any time with `GET /balance`.\n\n**Quickstart** \u2014 submit a job, poll it, then read the output URL:\n\n```bash\n# 1. Submit \u2014 capture the job id from the 202 ack\nJOB_ID=$(curl -sS -X POST https://api.hedra.com/v3/models/gpt-image-2 \\\n  -H \"Authorization: Key $HEDRA_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"input\": {\"prompt\": \"a space cat\", \"quality\": \"medium\", \"aspect_ratio\": \"1:1\", \"resolution\": \"1K\"}}' | jq -r .job_id)\n\n# 2. Poll until status is COMPLETED (or FAILED)\ncurl https://api.hedra.com/v3/jobs/$JOB_ID/status -H \"Authorization: Key $HEDRA_KEY\"\n\n# 3. Read the result \u2014 outputs[].url holds the generated file\ncurl https://api.hedra.com/v3/jobs/$JOB_ID -H \"Authorization: Key $HEDRA_KEY\"\n```\n\n**Follow a job without polling** \u2014 a video model can run for minutes, so the loop above suits fast image jobs and little else. Submit with a `webhook` URL and Hedra delivers the finished result there, ed25519-signed and retried; set `PUT /webhooks/default` once to cover every job that names no URL of its own, and see *Webhooks* for the signature scheme and the retry ladder. To watch one job live instead, open `GET /jobs/{job_id}/stream` \u2014 Server-Sent Events carrying every status transition and lifecycle event until the job reaches a terminal state.\n\n**Find a model** \u2014 `GET /models` lists every model with its `id` and human `name`; each operation in the *Run a model* section is titled with both, so a model you know by name (\"GPT Image 2\") maps straight to the id you submit to (`gpt-image-2`). One model's typed input schema: `GET /models/{id}/openapi.json`.\n\nEstimate cost before you run with `POST /models/{model}/estimate`. For volume pricing and custom limits, [talk to us](https://www.hedra.com/enterprise).\n\nThe full machine-readable spec is at `https://api.hedra.com/v3/openapi.json`.",
-    "version": "3.17.8"
+    "description": "Generate images, video, and audio with over 100 models through one API. Fund your wallet, then every model runs through the same three requests: submit a job, poll it, download the output. Browse the [model catalog](https://www.hedra.com/develop/models) to pick one.\n\n**Authenticate** every request with your API key \u2014 create one in the [developer console](https://www.hedra.com/develop/api-keys): `Authorization: Key <key_id>:<secret>`.\n\n**Fund the API wallet** before your first call. It is prepaid and held in US dollars, it is separate from your Hedra Studio balance, and a workspace starts with **$0.00** in it; nothing you buy or hold in Studio moves money into it. Until it is funded, every generation is refused with `402 INSUFFICIENT_BALANCE`; uploading inputs with `POST /files` is free and works on an empty wallet, so you can stage a request and only meet the gate at submit. Add funds in the [developer console](https://www.hedra.com/develop/billing), and read the wallet any time with `GET /balance`.\n\n**Quickstart** \u2014 submit a job, poll it, then read the output URL:\n\n```bash\n# 1. Submit \u2014 capture the job id from the 202 ack\nJOB_ID=$(curl -sS -X POST https://api.hedra.com/v3/models/gpt-image-2 \\\n  -H \"Authorization: Key $HEDRA_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"input\": {\"prompt\": \"a space cat\", \"quality\": \"medium\", \"aspect_ratio\": \"1:1\", \"resolution\": \"1K\"}}' | jq -r .job_id)\n\n# 2. Poll until status is COMPLETED (or FAILED)\ncurl https://api.hedra.com/v3/jobs/$JOB_ID/status -H \"Authorization: Key $HEDRA_KEY\"\n\n# 3. Read the result \u2014 outputs[].url holds the generated file\ncurl https://api.hedra.com/v3/jobs/$JOB_ID -H \"Authorization: Key $HEDRA_KEY\"\n```\n\n**Follow a job without polling** \u2014 a video model can run for minutes, so the loop above suits fast image jobs and little else. Submit with a `webhook` URL and Hedra delivers the finished result there, ed25519-signed and retried; set `PUT /webhooks/default` once to cover every job that names no URL of its own, and see *Webhooks* for the signature scheme and the retry ladder. To watch one job live instead, open `GET /jobs/{job_id}/stream` \u2014 Server-Sent Events carrying every status transition and lifecycle event until the job reaches a terminal state.\n\n**Find a model** \u2014 `GET /models` lists every model with its `id` and human `name`; each operation in the *Run a model* section is titled with both, so a model you know by name (\"GPT Image 2\") maps straight to the id you submit to (`gpt-image-2`). One model's typed input schema: `GET /models/{id}/openapi.json`.\n\nEstimate cost before you run with `POST /models/{model}/estimate`. For volume pricing and custom limits, [talk to us](https://www.hedra.com/enterprise).\n\nThe full machine-readable spec is at `https://api.hedra.com/v3/openapi.json`.",
+    "version": "3.17.10"
   },
   "servers": [
     {
@@ -28811,6 +28811,356 @@
         ]
       }
     },
+    "/models/qwen-image-2-1": {
+      "post": {
+        "tags": [
+          "Run a model"
+        ],
+        "operationId": "submit_qwen_image_2_1",
+        "summary": "Run Qwen Image 2.1 (qwen-image-2-1)",
+        "description": "Alibaba's Qwen-Image-2.1: text-rich posters and layouts, identity-preserving edits, and composition from up to ten reference images.\n\nSubmits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` \u2014 each item in its `outputs[]` follows the `OutputItem` schema \u2014 or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitBody_qwen_image_2_1"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted. The job runs asynchronously; poll `status_url` / `result_url` from the ack.",
+            "headers": {
+              "Location": {
+                "description": "Path of the job resource this submit created \u2014 the same value as the ack's `result_url`.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or failed-validation request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "field_validation": {
+                    "summary": "A submit `input` field failed schema validation",
+                    "value": {
+                      "error": {
+                        "code": "INVALID_ARGUMENT",
+                        "message": "2 input fields are invalid; see details.",
+                        "retryable": false,
+                        "param": "input.aspect_ratio",
+                        "details": [
+                          {
+                            "field": "input.aspect_ratio",
+                            "message": "input.aspect_ratio: Input should be '16:9', '9:16' or '1:1'",
+                            "reason": "enum"
+                          },
+                          {
+                            "field": "input.duration_ms",
+                            "message": "input.duration_ms: Input should be greater than or equal to 1000",
+                            "reason": "minimum"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "expired_file_handle": {
+                    "summary": "A `POST /v3/files` handle was submitted past its `expires_at`",
+                    "value": {
+                      "error": {
+                        "code": "INVALID_ARGUMENT",
+                        "message": "input.images[0]: the POST /v3/files url expired at 2026-07-28T23:31:12+00:00. Upload the file again and submit with the fresh url.",
+                        "retryable": false,
+                        "param": "input.images[0]",
+                        "details": [
+                          {
+                            "field": "input.images[0]",
+                            "message": "input.images[0]: the POST /v3/files url expired at 2026-07-28T23:31:12+00:00. Upload the file again and submit with the fresh url.",
+                            "reason": "expired"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "unsupported_model": {
+                    "summary": "The model exists but isn't wired to v3 yet",
+                    "value": {
+                      "error": {
+                        "code": "FAILED_PRECONDITION",
+                        "message": "Model 'some-model' (VIDEO_STITCHING) is not supported on v3 yet.",
+                        "retryable": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed: missing, malformed, or invalid credentials.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "missing_credentials": {
+                    "summary": "No credential on the request",
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED",
+                        "message": "Missing credentials. Send 'Authorization: Key <key_id>:<secret>' or 'Authorization: Bearer <token>'.",
+                        "retryable": false
+                      }
+                    }
+                  },
+                  "invalid_key": {
+                    "summary": "Credential present but not valid",
+                    "value": {
+                      "error": {
+                        "code": "UNAUTHORIZED",
+                        "message": "Invalid API key.",
+                        "retryable": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "The API wallet cannot cover this request. `error.billing` carries the balance, the price, and where to add funds.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unfunded_submit": {
+                    "summary": "The API wallet cannot pay for this job",
+                    "value": {
+                      "error": {
+                        "code": "INSUFFICIENT_BALANCE",
+                        "message": "Your API wallet balance is $0.00 and this request costs $0.05. The API wallet is funded separately from Studio and pays only for API requests \u2014 add funds at https://www.hedra.com/develop/billing, then retry.",
+                        "retryable": false,
+                        "billing": {
+                          "balance": 0.0,
+                          "required": 0.05,
+                          "currency": "USD",
+                          "funding_url": "https://www.hedra.com/develop/billing?add_funds=true"
+                        }
+                      }
+                    }
+                  },
+                  "unquotable_submit": {
+                    "summary": "The model cannot be priced before its inputs are measured, so `required` is null",
+                    "value": {
+                      "error": {
+                        "code": "INSUFFICIENT_BALANCE",
+                        "message": "Your API wallet balance is $0.00. The API wallet is funded separately from Studio and pays only for API requests \u2014 add funds at https://www.hedra.com/develop/billing, then retry.",
+                        "retryable": false,
+                        "billing": {
+                          "balance": 0.0,
+                          "currency": "USD",
+                          "funding_url": "https://www.hedra.com/develop/billing?add_funds=true"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient scope or plan.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "no_workspace_access": {
+                    "summary": "Key no longer reaches its workspace",
+                    "value": {
+                      "error": {
+                        "code": "PERMISSION_DENIED",
+                        "message": "The key's owner is no longer a member of its workspace.",
+                        "retryable": false
+                      }
+                    }
+                  },
+                  "missing_scope": {
+                    "summary": "Key lacks a scope the operation requires",
+                    "value": {
+                      "error": {
+                        "code": "PERMISSION_DENIED",
+                        "message": "Key is missing required scope(s): jobs:write.",
+                        "retryable": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "job_not_found": {
+                    "summary": "Unknown job id, or not visible to the caller",
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Job not found.",
+                        "retryable": false
+                      }
+                    }
+                  },
+                  "model_not_found": {
+                    "summary": "No such model in the catalog",
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Model 'some-model' not found.",
+                        "retryable": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "rate_limited": {
+                    "summary": "Per-key request rate limit exceeded",
+                    "value": {
+                      "error": {
+                        "code": "RESOURCE_EXHAUSTED",
+                        "message": "Request rate limit exceeded: this API key is limited to 60 requests per 60s. Retry after 30s. To follow job progress without polling, stream job status (https://www.hedra.com/docs/api-reference/v3/jobs/stream-job) or subscribe to webhooks (https://www.hedra.com/docs/api-reference/v3/webhooks).",
+                        "retryable": true,
+                        "retry_after": 30
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-RateLimit-Limit": {
+                "description": "Request budget for the current window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests left in the current window.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-RateLimit-Reset": {
+                "description": "Unix epoch second the window resets at.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal": {
+                    "summary": "Unexpected server error; internals are never leaked",
+                    "value": {
+                      "error": {
+                        "code": "INTERNAL",
+                        "message": "An unexpected error occurred",
+                        "retryable": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Moderation refused the request's content.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "moderation_failed": {
+                    "summary": "A reference image was refused by moderation",
+                    "value": {
+                      "error": {
+                        "code": "MODERATION_FAILED",
+                        "message": "Image failed moderation.",
+                        "retryable": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "KeyAuth": []
+          },
+          {
+            "BearerToken": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "bash",
+            "label": "cURL",
+            "source": "curl -X POST \"https://api.hedra.com/v3/models/qwen-image-2-1\" \\\n  -H \"Authorization: Bearer $HEDRA_API_KEY\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n  \"input\": {\n    \"aspect_ratio\": \"16:9\",\n    \"prompt\": \"prompt\",\n    \"resolution\": \"540p\"\n  }\n}'\n"
+          }
+        ]
+      }
+    },
     "/models/recraft-v3": {
       "post": {
         "tags": [
@@ -41815,6 +42165,7 @@
           "Models"
         ],
         "summary": "Estimate",
+        "description": "Return what `POST /v3/models/{model}` would charge for this `input`.\n\nValidates `input` against the model's input schema and returns the price in\nUS dollars. Creates no job, charges nothing, and does not check the wallet\nbalance. The response includes no completion time: a job's\n`estimated_completion_at` appears on the submit response, on\n`GET /v3/jobs/{job_id}/status`, and on `GET /v3/jobs/{job_id}/stream`.",
         "operationId": "models_estimate",
         "parameters": [
           {
@@ -44504,7 +44855,7 @@
           "Billing"
         ],
         "summary": "List Transactions",
-        "description": "Every movement of the API wallet's balance, newest first: funds added,\njobs charged, charges refunded, and corrections. Scoped to the workspace\nthe credential bills, the same one `GET /v3/balance` reports.",
+        "description": "Every movement of the API wallet's balance, newest first: funds added,\njobs charged, charges refunded, and corrections. Chat requests are summed\ninto one `llm_usage` row per model per UTC day. Scoped to the workspace the\ncredential bills, the same one `GET /v3/balance` reports, so an\n`llm_usage` row sums every member's requests; `GET /v3/usage/llm` lists\nonly your own.",
         "operationId": "billing_list_transactions",
         "parameters": [
           {
@@ -48732,7 +49083,7 @@
           "cost": {
             "type": "number",
             "title": "Cost",
-            "description": "Price of a would-be submit."
+            "description": "The price of submitting the request's `input` to the model, in `currency`."
           },
           "currency": {
             "type": "string",
@@ -48747,7 +49098,7 @@
           "currency"
         ],
         "title": "EstimateResponse",
-        "description": "Price of a would-be submit, in US dollars."
+        "description": "The price, in US dollars, of submitting the request's `input` to the model."
       },
       "FieldError": {
         "properties": {
@@ -50322,7 +50673,7 @@
             "maximum": 1.0,
             "minimum": 0.0,
             "title": "Progress",
-            "description": "Fraction of the job completed, from 0 to 1 (not a percentage). Null when the job has not reported progress yet."
+            "description": "Estimated fraction of the job completed, from 0 to 1 (not a percentage). While `estimated_completion_at` is non-null, this value is computed from the time since submission and that estimate, so it is only as accurate as the estimate, and it stays below 1. While an `IN_QUEUE` or `IN_PROGRESS` job's `estimated_completion_at` is null, `GET /v3/jobs/{job_id}/status` reports 0. A `COMPLETED` job reports 1. A `FAILED` job's value can be anything from 0 to 1 and does not show how far the job got."
           },
           "estimated_completion_at": {
             "anyOf": [
@@ -50335,7 +50686,7 @@
               }
             ],
             "title": "Estimated Completion At",
-            "description": "ISO-8601 instant this job is estimated to finish; null when no estimate exists for the model yet. Refreshed on every poll."
+            "description": "ISO-8601 instant this job is estimated to finish. A job can finish well before or after it. The estimate can change while the job runs, so read it from each poll. Null once the job is `COMPLETED` or `FAILED`, and while no estimate is available. The submit response also includes it; `GET /v3/jobs/{job_id}` and `GET /v3/jobs` do not."
           },
           "logs": {
             "anyOf": [
@@ -50350,7 +50701,7 @@
               }
             ],
             "title": "Logs",
-            "description": "Lifecycle events newer than the `logs_after` cursor, oldest first. Present only when `logs_after` is supplied; absent from SSE status frames and MCP progress notifications."
+            "description": "Lifecycle events newer than the `logs_after` cursor, oldest first. Present only when `logs_after` is supplied; absent from the stream's `status` frames."
           },
           "logs_next_cursor": {
             "anyOf": [
@@ -50371,7 +50722,7 @@
           "status"
         ],
         "title": "StatusResponse",
-        "description": "The lightweight poll envelope, also the SSE ``status`` frame and the MCP\nprogress notification payload.\n\nThe two log fields are poll-only by construction, like ``cost`` on\nthe result envelope: they are populated when \u2014 and only when \u2014 a\n``GET /v3/jobs/{job_id}/status`` caller supplies a ``logs_after`` cursor, and\nthey exclude when ``None``, so the frame the stream transports build from a\nRedis payload with no DB session is byte-identical to a log-free envelope.\nThat was ENG-9693's reason for having no ``logs`` field at all; the stream\nnow carries lifecycle rows as their own ``event: log`` frames instead of\ninside this one (ENG-9694)."
+        "description": "A job's status, progress, and estimated completion time.\n\nReturned by `GET /v3/jobs/{job_id}/status`, and sent as each `status` frame\nof `GET /v3/jobs/{job_id}/stream`."
       },
       "TokenCreateRequest": {
         "properties": {
@@ -50463,17 +50814,52 @@
         ],
         "title": "TransactionListResponse"
       },
+      "TransactionLlmUsage": {
+        "properties": {
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "The model the requests used."
+          },
+          "request_count": {
+            "type": "integer",
+            "title": "Request Count",
+            "description": "How many requests the row sums."
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period Start",
+            "description": "Start of the UTC day the row covers. A request counts toward the day it was created, even when it was charged after midnight. `GET /v3/usage/llm` lists your own requests in the row when given this as `start`, `period_end` as `end`, and `model`."
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Period End",
+            "description": "End of the UTC day the row covers, exclusive: one day after `period_start`."
+          }
+        },
+        "type": "object",
+        "required": [
+          "model",
+          "request_count",
+          "period_start",
+          "period_end"
+        ],
+        "title": "TransactionLlmUsage",
+        "description": "The chat requests an `llm_usage` transaction sums."
+      },
       "TransactionRecord": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id",
-            "description": "The transaction's id. Stable, and the same id the V2 billing history reports for this row."
+            "description": "The transaction's id. Stable, and the same id the V2 billing history reports for this row. An `llm_usage` row's id starts with `llm_usage:` and names its daily sum."
           },
           "kind": {
             "type": "string",
             "title": "Kind",
-            "description": "What moved the balance: `purchase` when funds were bought, `grant` when they were granted by a plan entitlement, `usage` when a job was charged, `refund` when a charge was returned, `adjustment` when Hedra corrected the balance, and `other` for a movement this API version does not yet name. The list is open and may gain values, so switch on it with a default branch; `amount` is authoritative for a kind you do not recognize."
+            "description": "What moved the balance: `purchase` when funds were bought, `grant` when they were granted by a plan entitlement, `usage` when a job was charged, `llm_usage` for a day's chat requests to one model, summed into one row, `refund` when a charge was returned, `adjustment` when Hedra corrected the balance, and `other` for a movement this API version does not yet name. The list is open and may gain values, so switch on it with a default branch; `amount` is authoritative for a kind you do not recognize."
           },
           "amount": {
             "anyOf": [
@@ -50485,7 +50871,7 @@
               }
             ],
             "title": "Amount",
-            "description": "The change to the balance, signed: negative for a charge, positive for funds arriving. Null for a row written before the wallet recorded amounts, whose movement is unknown rather than zero; no such row exists in production."
+            "description": "The change to the balance, signed: negative for a charge, positive for funds arriving. Null for a row written before the wallet recorded amounts, whose movement is unknown rather than zero; no such row exists in production. For `llm_usage`, the sum of the day's charges so far."
           },
           "currency": {
             "anyOf": [
@@ -50503,7 +50889,18 @@
             "type": "string",
             "format": "date-time",
             "title": "Created At",
-            "description": "ISO-8601 instant the balance moved."
+            "description": "ISO-8601 instant the balance moved. For `llm_usage`, the start of the day it covers."
+          },
+          "llm_usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TransactionLlmUsage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Set exactly when `kind` is `llm_usage`; null on every other row."
           }
         },
         "type": "object",
@@ -51085,7 +51482,7 @@
             "$ref": "#/components/schemas/JobStatus"
           },
           "status_url": {
-            "description": "Path of this job's status monitor: poll GET /v3/jobs/{job_id}/status for status, progress, and an estimate.",
+            "description": "Path of this job's status monitor: poll GET /v3/jobs/{job_id}/status for status, progress, and the estimated completion time.",
             "title": "Status Url",
             "type": "string"
           },
@@ -51105,7 +51502,7 @@
               }
             ],
             "default": null,
-            "description": "ISO-8601 instant this job is estimated to finish. Null when no estimate exists for the model yet; poll GET /v3/jobs/{job_id}/status for a refreshed one.",
+            "description": "ISO-8601 instant this job is estimated to finish, as of this response. Null when no estimate is available yet, and when the job has already finished. The estimate can change while the job runs: poll `GET /v3/jobs/{job_id}/status` for the current one.",
             "title": "Estimated Completion At"
           }
         },
@@ -64288,6 +64685,190 @@
         "properties": {
           "input": {
             "$ref": "#/components/schemas/Input_qwen_image_2"
+          },
+          "webhook": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "URL to receive a signed completion webhook.",
+            "default": null
+          },
+          "idempotency_key": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Replays the original ack for a retried submit instead of enqueueing a duplicate job.",
+            "default": null
+          }
+        },
+        "required": [
+          "input"
+        ]
+      },
+      "Input_qwen_image_2_1": {
+        "description": "Model-specific inputs for `qwen-image-2-1`.",
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "description": "Generation prompt. At least 1 character.",
+            "minLength": 1,
+            "pattern": "[^\\s\\x1C-\\x1F]",
+            "type": "string"
+          },
+          "num_outputs": {
+            "default": 1,
+            "description": "Number of outputs generated per job. Only 1 is supported.",
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "enhance_prompt": {
+            "default": false,
+            "description": "Rewrite the prompt before generation. An LLM expands it into a fuller description and the model receives that text instead of the submitted one; the result's `prompt` reports what ran.",
+            "type": "boolean"
+          },
+          "aspect_ratio": {
+            "description": "Output aspect ratio.",
+            "enum": [
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "1:1"
+            ],
+            "type": "string"
+          },
+          "resolution": {
+            "description": "Output resolution.",
+            "enum": [
+              "540p",
+              "720p",
+              "1080p",
+              "1440p (2K QHD)"
+            ],
+            "type": "string"
+          },
+          "output_format": {
+            "enum": [
+              "jpeg",
+              "png",
+              "webp"
+            ],
+            "type": "string",
+            "description": "Output image format."
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "What to avoid in the generated image."
+          },
+          "images": {
+            "description": "Images to edit or blend. 1 to 10 images, each at most 30 MB.",
+            "items": {
+              "discriminator": {
+                "propertyName": "source"
+              },
+              "oneOf": [
+                {
+                  "additionalProperties": false,
+                  "description": "A file uploaded via POST /v3/files, referenced by the returned url.",
+                  "properties": {
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "url"
+                      ]
+                    },
+                    "url": {
+                      "description": "A URL returned by POST /v3/files.",
+                      "format": "uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "url"
+                  ],
+                  "type": "object"
+                },
+                {
+                  "additionalProperties": false,
+                  "description": "An existing asset you own, referenced by its id.",
+                  "properties": {
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "asset"
+                      ]
+                    },
+                    "asset_id": {
+                      "description": "The asset's id (`asset_<uuid>`), as issued by the server \u2014 a completed generation publishes one per output as `outputs[].asset_id`. Do not construct one or derive it from any other id.",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "source",
+                    "asset_id"
+                  ],
+                  "type": "object"
+                }
+              ]
+            },
+            "maxItems": 10,
+            "media_type": "image",
+            "minItems": 1,
+            "role": "reference",
+            "type": "array",
+            "max_file_size_bytes": 30000000
+          },
+          "seed": {
+            "maximum": 2147483646,
+            "minimum": 0,
+            "type": "integer",
+            "description": "Seed for reproducible output; omit for a random seed. From 0 to 2147483646."
+          },
+          "guidance_scale": {
+            "maximum": 10.0,
+            "minimum": 1.0,
+            "type": "number",
+            "description": "How closely the model follows the prompt. From 1 to 10."
+          }
+        },
+        "required": [
+          "aspect_ratio",
+          "prompt",
+          "resolution"
+        ],
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "aspect_ratio",
+              "images",
+              "prompt",
+              "resolution"
+            ]
+          },
+          {
+            "required": [
+              "aspect_ratio",
+              "prompt",
+              "resolution"
+            ],
+            "properties": {
+              "images": false
+            }
+          }
+        ]
+      },
+      "SubmitBody_qwen_image_2_1": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "$ref": "#/components/schemas/Input_qwen_image_2_1"
           },
           "webhook": {
             "type": [
