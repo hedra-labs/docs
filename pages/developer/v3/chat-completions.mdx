@@ -150,7 +150,7 @@ The route accepts these top-level fields and answers any other with `400` naming
 - Messages take the roles `system`, `developer`, `user`, `assistant` and `tool`.
 - `stop` works on every model.
 - `logprobs: true` and `top_logprobs` return `400`: no model returns log probabilities.
-- `frequency_penalty` is accepted only at `0` on `zai-org/glm-5.3`, `zai-org/glm-5.3-flash`, `deepseek-ai/deepseek-v4-pro-0813` and `deepseek-ai/deepseek-v4.1-flash`. `presence_penalty` is accepted on all five. `moonshotai/kimi-k3` accepts both penalties only at `0`.
+- `frequency_penalty` and `presence_penalty` discourage the model from repeating words. `frequency_penalty` is accepted only at `0` on `zai-org/glm-5.3`, `zai-org/glm-5.3-flash`, `deepseek-ai/deepseek-v4-pro-0813` and `deepseek-ai/deepseek-v4.1-flash`, which accept any `presence_penalty`. `moonshotai/kimi-k3` accepts `frequency_penalty` and `presence_penalty` only at `0`.
 - `moonshotai/kimi-k3` always calls tools in parallel, and returns `400` for `parallel_tool_calls: false`: leave it out.
 - A message's `content` is a string or a list of `text` and `image_url` parts. An image URL must be `https://` or a `data:` URL. A model that does not take images, or a request with more images than the model accepts, returns `400`.
 - A request body over 5 MiB, `data:` images included, returns `400` with `param` `body`.
