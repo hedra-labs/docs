@@ -11,10 +11,6 @@ Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks 
 - **A key with the `chat:write` scope.** Create one in the [developer console](https://www.hedra.com/develop/api-keys). A key created without a list of scopes has every scope.
 - **A funded API wallet.** Add funds in the [developer console](https://www.hedra.com/develop/billing).
 
-<Warning>
-**Placeholder, ENG-11468.** Chat requests become jobs, and the route will require `jobs:write` in place of `chat:write`. Rewrite this section when ENG-11468 ships.
-</Warning>
-
 ## Authenticate
 
 Pass your Hedra API key as `api_key`, in either its `<key_id>:<secret>` form or as a legacy `sk_hedra_…` key. The SDK sends it as `Authorization: Bearer <api_key>`.
@@ -45,11 +41,19 @@ const client = new OpenAI({
 
 ## Choose a model
 
-<Warning>
-**Placeholder, ENG-11466.** `GET /v3/models` will list the chat models, with each model's `context_length`, `max_output_tokens` and per-token prices. Write this section when ENG-11466 ships.
-</Warning>
+A chat model's id is its full `org/model` id, matched without regard to case:
 
-The examples below use `glm-5.3`.
+| Model | Images per request |
+| --- | --- |
+| `zai-org/glm-5.3` | up to 8 |
+| `zai-org/glm-5.3-flash` | up to 64 |
+| `moonshotai/kimi-k3` | up to 96 |
+| `deepseek-ai/deepseek-v4-pro-0813` | none |
+| `deepseek-ai/deepseek-v4.1-flash` | up to 64 |
+
+`GET /v3/models` lists them with each model's `context_length`, `max_output_tokens` and per-token prices. `GET /v3/models/{model}` also returns the model's `input_schema`, the JSON Schema of the requests it accepts: for example, `moonshotai/kimi-k3` accepts `top_p` only as `0.95` and `temperature` only from 0 to 1. A bare id such as `kimi-k3` returns `404`, and the message names the full id.
+
+The examples below use `zai-org/glm-5.3`.
 
 ## Send a request
 
@@ -57,7 +61,7 @@ The examples below use `glm-5.3`.
 
 ```python Python
 response = client.chat.completions.create(
-    model="glm-5.3",
+    model="zai-org/glm-5.3",
     messages=[{"role": "user", "content": "Write a two-sentence script for a product intro video."}],
 )
 print(response.choices[0].message.content)
@@ -65,7 +69,7 @@ print(response.choices[0].message.content)
 
 ```typescript TypeScript
 const response = await client.chat.completions.create({
-  model: "glm-5.3",
+  model: "zai-org/glm-5.3",
   messages: [{ role: "user", content: "Write a two-sentence script for a product intro video." }],
 });
 console.log(response.choices[0].message.content);
@@ -73,19 +77,25 @@ console.log(response.choices[0].message.content);
 
 </CodeGroup>
 
-A model's reasoning text arrives in `reasoning_content`, a field OpenAI's format does not have, on the message or on stream deltas. Reasoning tokens count toward `max_tokens`. When a request sets neither `max_tokens` nor `max_completion_tokens`, its output is limited to 32,768 tokens, or to the model's `max_output_tokens` if that is lower. A `max_tokens` above `max_output_tokens` is lowered to it. A response with `finish_reason` `length` and `content` `null` spent every output token reasoning: raise `max_tokens`.
+When a request sets neither `max_tokens` nor `max_completion_tokens`, its output is limited to 32,768 tokens, or to the model's `max_output_tokens` if that is lower. A `max_tokens` above `max_output_tokens` returns `400`.
 
-A non-streaming request must finish within 120 seconds. After that the API answers `504` `DEADLINE_EXCEEDED`, and if the model had already started answering, the SDK does not retry it. The API also answers `504` when the model sends nothing for 90 seconds. Stream long completions.
+A non-streaming request must finish within 120 seconds. After that the API answers `504` `DEADLINE_EXCEEDED`, and if the model had already started answering, the SDK does not retry it. The API also answers `504` when the model sends nothing for 90 seconds. On a `504`, stream the response, or lower `max_tokens`.
+
+## Reasoning
+
+Every chat model reasons by default. The reasoning text arrives in `reasoning_content`, a field OpenAI's format does not have, on the message or on stream deltas. Reasoning tokens count toward `max_tokens` and are billed as output. A response with `finish_reason` `length` and `content` `null` spent every output token reasoning: raise `max_tokens`.
+
+`reasoning_effort` takes `none`, `low`, `high` or `max`. Leaving it out uses the model's default, which is `max` on `moonshotai/kimi-k3`. `minimal`, `medium` and `xhigh` return `400`: send `low`, `high` or `max`. A model that cannot turn reasoning off leaves `none` out of the `reasoning_effort` values in its `input_schema`, and returns `400` for it.
 
 ## Stream the response
 
-Pass `stream: true`. To get token counts, also pass `stream_options: {"include_usage": true}`: a chunk with empty `choices` then carries `usage`. Read the stream to its end, because on some models that chunk arrives before the last content chunk.
+Pass `stream: true`. To get token counts, also pass `stream_options: {"include_usage": true}`: a chunk with empty `choices` then carries `usage`. Every content chunk arrives before it.
 
 <CodeGroup>
 
 ```python Python
 stream = client.chat.completions.create(
-    model="glm-5.3",
+    model="zai-org/glm-5.3",
     messages=[{"role": "user", "content": "Explain SSE in two sentences."}],
     stream=True,
     stream_options={"include_usage": True},
@@ -99,7 +109,7 @@ for chunk in stream:
 
 ```typescript TypeScript
 const stream = await client.chat.completions.create({
-  model: "glm-5.3",
+  model: "zai-org/glm-5.3",
   messages: [{ role: "user", content: "Explain SSE in two sentences." }],
   stream: true,
   stream_options: { include_usage: true },
@@ -126,19 +136,23 @@ data: {"error": {"code": "UNAVAILABLE", "message": "The model backend failed mid
 
 The event carries the same body as an error response ([Errors](#errors)). The SDK yields the chunks that arrived before it, then raises `openai.APIError` with the event's `message`, `code` and `type`.
 
-If your code stops reading while the model is still generating, Hedra closes the stream after 30 seconds.
-
 ## Request fields
 
 The route accepts these top-level fields and answers any other with `400` naming it:
 
-`model`, `messages`, `max_tokens`, `max_completion_tokens`, `n`, `stream`, `stream_options`, `tools`, `tool_choice`, `parallel_tool_calls`, `response_format`, `reasoning_effort`, `temperature`, `top_p`, `stop`, `seed`, `frequency_penalty`, `presence_penalty`, `logit_bias`, `logprobs`, `top_logprobs` and `user`.
+`model`, `messages`, `max_tokens`, `max_completion_tokens`, `n`, `stream`, `stream_options`, `tools`, `tool_choice`, `parallel_tool_calls`, `response_format`, `reasoning_effort`, `temperature`, `top_p`, `stop`, `seed`, `frequency_penalty`, `presence_penalty`, `logit_bias`, `logprobs`, `top_logprobs`, `user`, `safety_identifier` and `prompt_cache_key`.
 
 - `n` must be `1`.
 - `max_tokens` and `max_completion_tokens` both bound the output, and the smaller one applies.
 - `response_format` takes `{"type": "text"}`, `{"type": "json_object"}` or `{"type": "json_schema", "json_schema": {...}}`.
-- `stream_options` requires `stream: true`, and `top_logprobs` requires `logprobs: true`.
-- `user` is accepted and not sent to the model.
+- `stream_options` requires `stream: true`.
+- `user`, `safety_identifier` and `prompt_cache_key` are accepted and ignored.
+- Messages take the roles `system`, `developer`, `user`, `assistant` and `tool`.
+- `stop` works on every model.
+- `logprobs: true` and `top_logprobs` return `400`: no model returns log probabilities.
+- `seed` returns `400`: no model gives repeatable output for a seed.
+- `frequency_penalty` and `presence_penalty` are accepted only as `0`.
+- `moonshotai/kimi-k3` always calls tools in parallel, and returns `400` for `parallel_tool_calls: false`: leave it out.
 - A message's `content` is a string or a list of `text` and `image_url` parts. An image URL must be `https://` or a `data:` URL. A model that does not take images, or a request with more images than the model accepts, returns `400`.
 - A request body over 5 MiB, `data:` images included, returns `400` with `param` `body`.
 
@@ -185,7 +199,7 @@ The exception names are the Python SDK's. The TypeScript SDK uses the same names
 import openai
 
 try:
-    client.chat.completions.create(model="glm-5.3", messages=[{"role": "user", "content": "Hi"}])
+    client.chat.completions.create(model="zai-org/glm-5.3", messages=[{"role": "user", "content": "Hi"}])
 except openai.APIStatusError as e:
     print(e.status_code, e.code, e.message, e.request_id)
 ```
@@ -194,7 +208,7 @@ except openai.APIStatusError as e:
 import OpenAI from "openai";
 
 try {
-  await client.chat.completions.create({ model: "glm-5.3", messages: [{ role: "user", content: "Hi" }] });
+  await client.chat.completions.create({ model: "zai-org/glm-5.3", messages: [{ role: "user", content: "Hi" }] });
 } catch (e) {
   if (e instanceof OpenAI.APIError) {
     console.log(e.status, e.code, e.message, e.requestID);
@@ -204,17 +218,15 @@ try {
 
 </CodeGroup>
 
-## Billing
+## Billing and concurrency
 
-<Warning>
-**Placeholder, ENG-11467.** This section will state the price of a request, the worst-case amount the wallet holds before the request is sent and the refund after it, who pays when a request ends early, and the wording of the `402`. Write it when ENG-11467 ships.
-</Warning>
+Before sending a request, Hedra holds its largest possible price on your API wallet: an upper bound on the prompt's tokens at the input price, plus `max_tokens` at the output price. After the response it keeps the price of the tokens the model used and returns the rest. A `moonshotai/kimi-k3` request with no `max_tokens` holds $0.49 for its 32,768 output tokens, so 15 such requests at once need $7.37. Setting `max_tokens` shrinks the hold: `max_tokens: 1024` holds about $0.015 for output. A request the wallet cannot hold returns `402`.
+
+A key can have 15 chat requests in flight, and so can a workspace. A request over either cap returns `429` with `X-RateLimit-Concurrency-Limit`, the cap, and `X-RateLimit-Concurrency-Remaining: 0`.
 
 ## Look up a request
 
-<Warning>
-**Placeholder, ENG-11468.** This section will state that each chat request is a job whose id is the completion `id` (`job_<uuid>`), what `GET /v3/jobs/{job_id}` returns for it, and how `GET /v3/usage` counts chat requests. Write it when ENG-11468 ships.
-</Warning>
+Each chat request is a job, and the completion's `id` is its job id (`job_<uuid>`). `GET /v3/jobs/{job_id}` returns its status, error, net cost, token usage and timing, with an empty `outputs`.
 
 ## Where Hedra differs from OpenAI
 
@@ -223,8 +235,21 @@ try {
 | The balance cannot pay for the request | `429` `insufficient_quota` | `402` `INSUFFICIENT_BALANCE`, which the SDK does not retry |
 | Error `code` | A lowercase string | An uppercase v3 code; `type` follows the HTTP status |
 | Neither `max_tokens` nor `max_completion_tokens` | Up to the model's output limit | Up to 32,768 tokens, or the model's `max_output_tokens` if lower |
-| `max_tokens` above the model's limit | `400` | Lowered to `max_output_tokens` |
 | `n` above 1 | Accepted | `400` |
 | A field outside [Request fields](#request-fields), such as `store` or `metadata` | Accepted | `400` naming the field |
 | Reasoning text | Not returned | `reasoning_content` on the message and on each delta |
 | A non-streaming request that runs long | Runs until the SDK's timeout, 10 minutes by default | `504` after 120 seconds |
+
+## Fields other hosts accept
+
+Other OpenAI-compatible hosts accept fields that return `400` here. Remove them from your request:
+
+| Field | Here |
+| --- | --- |
+| `reasoning` (the object), `include_reasoning` | Use `reasoning_effort` |
+| `provider`, `models`, `plugins`, `session_id`, `transforms`, `usage` | `400` |
+| `top_k`, `min_p`, `top_a`, `repetition_penalty`, `min_tokens` | `400` |
+| `chat_template`, `chat_template_args` | `400` |
+| `continuous_usage_stats` in `stream_options` | Use `stream_options: {"include_usage": true}` |
+| `logprobs: true` | `400` |
+| `parallel_tool_calls: false` on `moonshotai/kimi-k3` | `400` |
