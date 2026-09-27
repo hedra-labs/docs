@@ -77,13 +77,13 @@ console.log(response.choices[0].message.content);
 
 </CodeGroup>
 
-When a request sets neither `max_tokens` nor `max_completion_tokens`, its output is limited to 32,768 tokens, or to the model's `max_output_tokens` if that is lower. A `max_tokens` above `max_output_tokens` returns `400`.
+When a request sets neither `max_tokens` nor `max_completion_tokens`, its output is limited to 4,096 tokens, or to the model's `max_output_tokens` if that is lower. A `max_tokens` above `max_output_tokens` returns `400`.
 
 A non-streaming request must finish within 120 seconds. After that the API answers `504` `DEADLINE_EXCEEDED`, and if the model had already started answering, the SDK does not retry it. The API also answers `504` when the model sends nothing for 90 seconds. On a `504`, stream the response, or lower `max_tokens`.
 
 ## Reasoning
 
-Every chat model reasons by default. The reasoning text arrives in `reasoning_content`, a field OpenAI's format does not have, on the message or on stream deltas. Reasoning tokens count toward `max_tokens` and are billed as output. A response with `finish_reason` `length` and `content` `null` spent every output token reasoning: raise `max_tokens`.
+Every chat model reasons by default. The reasoning text arrives in `reasoning_content`, a field OpenAI's format does not have, on the message or on stream deltas. Reasoning tokens count toward `max_tokens` and are billed as output. A reasoning model can spend all 4,096 tokens of the default bound reasoning and return `finish_reason: length` with no answer, so set `max_tokens` higher for long reasoning.
 
 `reasoning_effort` takes `none`, `low`, `high` or `max`. Leaving it out uses the model's default, which is `max` on `moonshotai/kimi-k3`. `minimal`, `medium` and `xhigh` return `400`: send `low`, `high` or `max`. A model that cannot turn reasoning off leaves `none` out of the `reasoning_effort` values in its `input_schema`, and returns `400` for it.
 
@@ -183,7 +183,8 @@ Match on `code`. `type` is OpenAI's error type for the HTTP status, so that the 
 | --- | --- | --- | --- | --- |
 | `400` | `INVALID_ARGUMENT` | A field is unknown, invalid or not supported by the model, the prompt is longer than the model's context length, or an image URL could not be fetched. `param` and `details` name the field when one is at fault. | `BadRequestError` | No |
 | `401` | `UNAUTHORIZED` | The key is missing or invalid. | `AuthenticationError` | No |
-| `402` | `INSUFFICIENT_BALANCE` | The API wallet cannot pay for the request. `billing` holds the balance and a link to add funds. | `APIStatusError` | No |
+| `402` | `INSUFFICIENT_BALANCE` | The balance is too small for this request's hold. `billing` holds the balance and a link to add funds. | `APIStatusError` | No |
+| `402` | `INSUFFICIENT_BALANCE` | Your own in-flight requests are holding the balance. | `APIStatusError` | Yes, after `Retry-After` |
 | `403` | `PERMISSION_DENIED` | The key lacks the scope, or no longer has access to its workspace. | `PermissionDeniedError` | No |
 | `404` | `NOT_FOUND` | The model does not exist. | `NotFoundError` | No |
 | `429` | `RESOURCE_EXHAUSTED` | Too many requests per minute, too many requests in flight on the key or workspace, or the model is at capacity. | `RateLimitError` | Yes |
@@ -220,7 +221,12 @@ try {
 
 ## Billing and concurrency
 
-Before sending a request, Hedra holds its largest possible price on your API wallet: an upper bound on the prompt's tokens at the input price, plus `max_tokens` at the output price. After the response it keeps the price of the tokens the model used and returns the rest. A `moonshotai/kimi-k3` request with no `max_tokens` holds $0.49 for its 32,768 output tokens, so 15 such requests at once need $7.37. Setting `max_tokens` shrinks the hold: `max_tokens: 1024` holds about $0.015 for output. A request the wallet cannot hold returns `402`.
+Before sending a request, Hedra holds its largest possible price on your API wallet: an upper bound on the prompt's tokens at the input price, plus `max_tokens` at the output price. After the response it keeps the price of the tokens the model used and returns the rest. A `moonshotai/kimi-k3` request with no `max_tokens` holds $0.06 for its 4,096 output tokens, so 15 such requests at once need $0.92. `max_tokens` sets the output part of the hold: `max_tokens: 1024` holds about $0.015, and `max_tokens: 32768` about $0.49.
+
+A `402` has two causes:
+
+- The balance is too small for this request's hold. The `402` is not retryable: add funds, or lower `max_tokens`.
+- Your own in-flight requests are holding the balance. The `402` is retryable after `Retry-After`, once those requests finish and return their unused holds.
 
 A key can have 15 chat requests in flight, and so can a workspace. A request over either cap returns `429` with `X-RateLimit-Concurrency-Limit`, the cap, and `X-RateLimit-Concurrency-Remaining: 0`.
 
@@ -232,9 +238,9 @@ Each chat request is a job, and the completion's `id` is its job id (`job_<uuid>
 
 | Situation | OpenAI | Hedra |
 | --- | --- | --- |
-| The balance cannot pay for the request | `429` `insufficient_quota` | `402` `INSUFFICIENT_BALANCE`, which the SDK does not retry |
+| The balance cannot pay for the request | `429` `insufficient_quota` | `402` `INSUFFICIENT_BALANCE`, which the SDK retries only when your own in-flight requests hold the balance |
 | Error `code` | A lowercase string | An uppercase v3 code; `type` follows the HTTP status |
-| Neither `max_tokens` nor `max_completion_tokens` | Up to the model's output limit | Up to 32,768 tokens, or the model's `max_output_tokens` if lower |
+| Neither `max_tokens` nor `max_completion_tokens` | Up to the model's output limit | Up to 4,096 tokens, or the model's `max_output_tokens` if lower |
 | `n` above 1 | Accepted | `400` |
 | A field outside [Request fields](#request-fields), such as `store` or `metadata` | Accepted | `400` naming the field |
 | Reasoning text | Not returned | `reasoning_content` on the message and on each delta |
