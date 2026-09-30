@@ -258,7 +258,7 @@ console.log(response.output_text);
 
 </CodeGroup>
 
-Hedra does not store responses, so send the whole conversation in `input` with each request. To continue a conversation, send the earlier input, the previous response's `output` items and the new message:
+To continue a conversation, send the earlier input, the previous response's `output` items and the new message in `input`:
 
 ```python
 followup = client.responses.create(
