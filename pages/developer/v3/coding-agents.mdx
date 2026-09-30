@@ -1,10 +1,10 @@
 ---
-title: "Run coding agents on Hedra's LLM APIs"
-description: "Connect Codex CLI, OpenCode and Pi to POST /v3/responses and POST /v3/chat/completions, and estimate what an agent session costs."
+title: "Run coding agents on open-weight models"
+description: "Run Codex CLI, OpenCode and Pi on GLM-5.3, Kimi K3 and DeepSeek V4 through Hedra, paid per token from your API wallet."
 sidebarTitle: "Coding agents"
 ---
 
-Codex CLI, OpenCode and Pi can run on the open-weight LLMs Hedra serves, and Hedra charges each request they send to your API wallet. Codex sends OpenAI Responses API requests to `POST /v3/responses`, and OpenCode and Pi send Chat Completions requests to `POST /v3/chat/completions`. Hedra charges and limits a request to either route in the same way.
+Run Codex CLI, OpenCode or Pi on GLM-5.3, Kimi K3 and DeepSeek V4 with one Hedra API key. Every model has a context length of 1,048,576 tokens, and you pay per token from the same API wallet as your media jobs. Codex connects to `POST /v3/responses`, and OpenCode and Pi connect to `POST /v3/chat/completions`, each with a few lines of configuration.
 
 ## Before you start
 
@@ -25,14 +25,14 @@ export HEDRA_KEY="<key_id>:<secret>"
 | `deepseek-ai/deepseek-v4-pro-0813` | \$1.32 | \$3.96 | \$0.36, 141 s |
 | `deepseek-ai/deepseek-v4.1-flash` | \$0.30 | \$1.20 | \$0.05, 27 s |
 
-On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of a large Python repository and run them until they passed. Every model's run finished, in 8 to 14 requests with prompts of up to 25,000 tokens. Every model's context length is 1,048,576 tokens. `deepseek-ai/deepseek-v4-pro-0813` takes text only: a request to it that carries an image returns `400`.
+On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of a large Python repository and run them until they passed. Every model finished, in 8 to 14 requests, and `zai-org/glm-5.3-flash` finished for 2 cents in 35 seconds. `deepseek-ai/deepseek-v4-pro-0813` reads text, and the other four models also read images.
 
 ## Connect an agent
 
 <Tabs>
 <Tab title="Codex CLI">
 
-The steps below use Codex CLI 0.159.2. Codex 0.134 and later read each profile from a file of its own, `~/.codex/<name>.config.toml`.
+The steps below use Codex CLI 0.159.2.
 
 <Steps>
 <Step title="Install Codex">
@@ -63,14 +63,10 @@ env_key = "HEDRA_KEY"
 codex --profile hedra
 ```
 
-Codex prints `Model metadata for zai-org/glm-5.3 not found. Defaulting to fallback metadata; this can degrade performance and cause issues.` The session runs with the fallback metadata. `codex --profile hedra --model moonshotai/kimi-k3` switches models.
-
 </Step>
 </Steps>
 
-Hedra maps Codex's `model_reasoning_effort` onto the values the chat models accept: `minimal` to `low`, `medium` to the model's default effort, and `xhigh` to `max`.
-
-Codex sets no output limit, so each of its requests gets Hedra's default of 4,096 output tokens, reasoning included. A response that reaches the limit ends as `incomplete`. Codex then sends the request again up to 5 times before it stops the turn, and Hedra charges each attempt. Reasoning tokens count toward the limit, so a lower `model_reasoning_effort`, such as `low`, leaves more of it for the answer.
+`codex --profile hedra --model moonshotai/kimi-k3` switches models. Hedra maps Codex's `model_reasoning_effort` values onto the models' own: `minimal` to `low`, `medium` to the model's default effort, and `xhigh` to `max`.
 
 </Tab>
 <Tab title="OpenCode">
@@ -122,17 +118,13 @@ opencode --model hedra/zai-org/glm-5.3
 </Step>
 </Steps>
 
-With this configuration, OpenCode sets `max_tokens` to 32,000 on every request.
-
 </Tab>
 <Tab title="Pi">
 
-The steps below use Pi 0.99.2.
+The steps below use Pi 0.99.2, which needs Node.js 22.19 or later.
 
 <Steps>
 <Step title="Install Pi">
-
-Pi needs Node.js 22.19 or later.
 
 ```bash
 npm install -g --ignore-scripts @earendil-works/pi-coding-agent
@@ -141,7 +133,7 @@ npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 </Step>
 <Step title="Add Hedra as a provider">
 
-Save this as `~/.pi/agent/models.json`:
+Save this as `~/.pi/agent/models.json`. With `"$HEDRA_KEY"`, Pi reads the key from the `HEDRA_KEY` environment variable.
 
 ```json
 {
@@ -173,47 +165,27 @@ pi --provider hedra --model zai-org/glm-5.3
 </Step>
 </Steps>
 
-| Setting | Effect |
-| --- | --- |
-| `"apiKey": "$HEDRA_KEY"` | Pi reads the key from `HEDRA_KEY`. Without the `$`, Pi sends the text `HEDRA_KEY` as the key. |
-| `"supportsStore": false` | Pi leaves out the `store` field, and Hedra returns `400` for that field. |
-
-Leave `reasoning` out of the model entries. With `"reasoning": true`, Pi sends its default thinking level, `medium`, as `reasoning_effort`, and Hedra returns `400` for `medium`. Every chat model reasons by default.
-
 </Tab>
 </Tabs>
 
-## What a session costs
+## Keep sessions inexpensive
 
-An agent sends the whole conversation with every request: its instructions, its tool definitions, and every earlier message, model response and tool output. The prompt grows with each request, and Hedra charges every prompt token at the model's input price. A session's price is the sum, over its requests, of the prompt tokens times the input price and the output tokens times the output price.
+An agent sends its instructions, its tool definitions and the conversation so far with every request, and Hedra bills each request's tokens at the model's prices. A shorter prompt lowers the price of every request in the session:
 
-On 2026-09-30, Codex answered one question about a repository in 7 requests to `zai-org/glm-5.3`, with 15 MCP servers enabled. Codex sends every tool of every enabled MCP server with every request, and each request carried about 187,000 prompt tokens. Without MCP servers, Codex's first request is about 40 KB, which is at most 40,000 tokens because every token is at least one byte.
-
-| | Tokens | Price per 1M tokens | Price |
-| --- | --- | --- | --- |
-| Prompt, 7 requests | 1,306,128 | \$1.40 | \$1.83 |
-| Output, 7 requests | 795 | \$4.40 | \$0.004 |
-
-To shorten every request's prompt:
-
-- **Turn off the MCP servers you do not need.** In Codex, add an entry to `~/.codex/hedra.config.toml` for each server in `~/.codex/config.toml`:
+- **Turn off the MCP servers a session does not need.** In Codex, add an entry to `~/.codex/hedra.config.toml` for each server in `~/.codex/config.toml`:
 
   ```toml
   [mcp_servers.linear]
   enabled = false
   ```
 
-  In OpenCode, set `"mcp": { "linear": { "enabled": false } }` in `opencode.json`. With its default MCP `exposure`, `codemode`, Pi declares no MCP tools to the model.
-- **Keep `AGENTS.md` short.** Codex, OpenCode and Pi add the repository's `AGENTS.md` to the instructions they send with each request of the conversation.
-- **Leave Claude Code's files out of OpenCode.** OpenCode adds `~/.claude/CLAUDE.md` to its prompt when `~/.config/opencode/AGENTS.md` does not exist, and lists the name and description of each skill in `~/.claude/skills`. Set `OPENCODE_DISABLE_CLAUDE_CODE=1` to leave both out.
+  In OpenCode, set `"mcp": { "linear": { "enabled": false } }` in `opencode.json`. By default, Pi adds no MCP tool definitions to the prompt.
+- **Keep `AGENTS.md` focused.** Codex, OpenCode and Pi send the repository's `AGENTS.md` with every request.
+- **Leave Claude Code's files out of OpenCode.** OpenCode also reads Claude Code's instructions and skills from `~/.claude` into its prompt. Set `OPENCODE_DISABLE_CLAUDE_CODE=1` to leave them out.
 
-`GET /v3/usage` returns what the key's user spent on each model since `start`: `jobs` counts the chat requests, and `spent` is their net price. The key needs the `usage:read` scope.
+`GET /v3/usage` reports your spend on each model since `start`, with a key that has the `usage:read` scope:
 
 ```bash
 curl "https://api.hedra.com/v3/usage?start=2026-09-30T21:00:00Z&group_by=model" \
   -H "Authorization: Key $HEDRA_KEY"
 ```
-
-## Holds and 402s
-
-Before each request, Hedra holds the request's largest possible price on your API wallet. It counts each byte of the prompt, tool definitions included, as one token, up to the model's context length, and prices those tokens at the input price and `max_tokens` at the output price. When the response ends, Hedra keeps the price of the tokens the model used and returns the rest ([Billing and concurrency](/pages/developer/v3/chat-completions#billing-and-concurrency)). A request to `moonshotai/kimi-k3` with a 400,000-byte prompt and `max_tokens: 32000` holds \$1.68: \$1.20 for the prompt and \$0.48 for the output. When your balance cannot cover a request's hold, the request returns `402`. Keep more in the wallet than the holds of the requests your agent runs at once.
