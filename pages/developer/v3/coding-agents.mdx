@@ -189,3 +189,9 @@ An agent sends its instructions, its tool definitions and the conversation so fa
 curl "https://api.hedra.com/v3/usage?start=2026-09-30T21:00:00Z&group_by=model" \
   -H "Authorization: Key $HEDRA_KEY"
 ```
+
+## Troubleshooting
+
+- **Codex prints `Model metadata for zai-org/glm-5.3 not found`.** Codex has no metadata for Hedra's models, and the session runs normally without it.
+- **A `401` response.** Set `HEDRA_KEY` in the terminal that starts the agent, and restart the agent.
+- **A `402` response.** Your API wallet's balance cannot cover the request. [Add funds](https://www.hedra.com/develop/billing) and send the message again.
