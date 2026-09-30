@@ -1,10 +1,10 @@
 ---
 title: "Call LLMs with the OpenAI SDK"
-description: "Send chat completions to open-weight LLMs through POST /v3/chat/completions with the stock OpenAI SDK, paid from your API wallet."
+description: "Call open-weight LLMs through POST /v3/chat/completions and POST /v3/responses with the stock OpenAI SDK, paid from your API wallet."
 sidebarTitle: "Chat completions"
 ---
 
-Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks OpenAI's chat completions format. Point the stock OpenAI SDK at `https://api.hedra.com/v3`, pass your Hedra API key, and pay for each request from the same prepaid API wallet as your media jobs. To run Codex CLI, OpenCode or Pi on these models, see [Coding agents](/pages/developer/v3/coding-agents).
+Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks OpenAI's chat completions format. Point the stock OpenAI SDK at `https://api.hedra.com/v3`, pass your Hedra API key, and pay for each request from the same prepaid API wallet as your media jobs. `POST /v3/responses` serves the same models in OpenAI's Responses format ([Responses API](#responses-api)). To run Codex CLI, OpenCode or Pi on these models, see [Coding agents](/pages/developer/v3/coding-agents).
 
 ## Before you start
 
@@ -233,6 +233,53 @@ A key can have 15 chat requests in flight, and so can a workspace. A request ove
 ## Look up a request
 
 Each chat request is a job, and the completion's `id` is its job id (`job_<uuid>`). `GET /v3/jobs/{job_id}` returns its status, error, net cost, token usage and timing, with an empty `outputs`.
+
+## Responses API
+
+`POST /v3/responses` serves OpenAI's Responses API on the same models, with the same keys, limits and billing. Hedra runs each Responses request as a chat completion, and the response's `id` is that request's job id.
+
+<CodeGroup>
+
+```python Python
+response = client.responses.create(
+    model="zai-org/glm-5.3",
+    input="Write a two-sentence script for a product intro video.",
+)
+print(response.output_text)
+```
+
+```typescript TypeScript
+const response = await client.responses.create({
+  model: "zai-org/glm-5.3",
+  input: "Write a two-sentence script for a product intro video.",
+});
+console.log(response.output_text);
+```
+
+</CodeGroup>
+
+Hedra stores no response. `store` must be `false` or left out, and a request with `previous_response_id` returns `400`. To continue a conversation, send the earlier input, the earlier response's `output` items and the new message together in `input`:
+
+```python
+followup = client.responses.create(
+    model="zai-org/glm-5.3",
+    input=[
+        {"role": "user", "content": "Write a two-sentence script for a product intro video."},
+        *response.output,
+        {"role": "user", "content": "Make it shorter."},
+    ],
+)
+```
+
+The route accepts these top-level fields and answers any other, such as `text` or `metadata`, with `400` naming it: `model`, `input`, `instructions`, `tools`, `tool_choice`, `parallel_tool_calls`, `reasoning`, `max_output_tokens`, `temperature`, `top_p`, `stream`, `store`, `include`, `prompt_cache_key`, `safety_identifier`, `user` and `client_metadata`.
+
+- `input` takes `message`, `reasoning`, `function_call` and `function_call_output` items, with `input_text`, `output_text` and `input_image` content parts. Only a user message can hold an image part.
+- `tools` takes `function` tools and `namespace` tools. Hedra offers a namespace's functions to the model as `<namespace>__<name>`, and returns a call to one with its `namespace` and `name`.
+- `reasoning.effort` takes OpenAI's values: `minimal` becomes `low`, `medium` becomes the model's default effort, and `xhigh` becomes `max`. Hedra ignores `reasoning.summary`, and `include` takes only `reasoning.encrypted_content`.
+- `max_output_tokens` bounds the output as `max_tokens` does, 4,096 tokens by default. A response that reaches it has `status: "incomplete"`.
+- The model's reasoning arrives as a `reasoning` item whose `content` holds `reasoning_text`. Sending that item back in `input` returns the reasoning to the model.
+- With `stream: true`, the response is a stream of Responses events that ends with `response.completed` or `response.incomplete`, or with `response.failed`, with the error's `code` and `message`, when the model fails after the stream starts.
+- Errors use the chat route's body and codes ([Errors](#errors)). A `400` for a value the chat route rejects names the chat field, such as `max_tokens`.
 
 ## Where Hedra differs from OpenAI
 

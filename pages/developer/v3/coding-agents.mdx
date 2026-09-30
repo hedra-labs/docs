@@ -1,15 +1,15 @@
 ---
-title: "Run coding agents on Hedra's chat completions API"
-description: "Connect Codex CLI, OpenCode and Pi to POST /v3/chat/completions, and estimate what an agent session costs."
+title: "Run coding agents on Hedra's LLM APIs"
+description: "Connect Codex CLI, OpenCode and Pi to POST /v3/responses and POST /v3/chat/completions, and estimate what an agent session costs."
 sidebarTitle: "Coding agents"
 ---
 
-Codex CLI, OpenCode and Pi can run on the open-weight LLMs that `POST /v3/chat/completions` serves, and Hedra charges each request they send to your API wallet. OpenCode and Pi send Chat Completions requests, so they call Hedra directly. Codex sends requests only in the format of OpenAI's Responses API, which Hedra does not serve, so it calls Hedra through LiteLLM: an open-source proxy that runs on your machine and converts each Responses request into a Chat Completions request.
+Codex CLI, OpenCode and Pi can run on the open-weight LLMs Hedra serves, and Hedra charges each request they send to your API wallet. Codex sends OpenAI Responses API requests to `POST /v3/responses`, and OpenCode and Pi send Chat Completions requests to `POST /v3/chat/completions`. Hedra charges and limits a request to either route in the same way.
 
 ## Before you start
 
 - **A key with the `chat:write` scope and a funded API wallet.** See [Before you start](/pages/developer/v3/chat-completions#before-you-start) in the chat completions guide.
-- **The key in the `HEDRA_KEY` environment variable** of the terminal that starts the agent or LiteLLM:
+- **The key in the `HEDRA_KEY` environment variable** of the terminal that starts the agent:
 
 ```bash
 export HEDRA_KEY="<key_id>:<secret>"
@@ -32,39 +32,14 @@ On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of
 <Tabs>
 <Tab title="Codex CLI">
 
-The steps below use Codex CLI 0.159.2 and LiteLLM 1.103.1. Codex 0.134 and later read each profile from a file of its own, `~/.codex/<name>.config.toml`, as in step 4.
+The steps below use Codex CLI 0.159.2. Codex 0.134 and later read each profile from a file of its own, `~/.codex/<name>.config.toml`.
 
 <Steps>
-<Step title="Install LiteLLM">
+<Step title="Install Codex">
 
 ```bash
-uv tool install 'litellm[proxy]'
+npm install -g @openai/codex
 ```
-
-</Step>
-<Step title="Configure LiteLLM">
-
-Save this as `litellm.yaml`:
-
-```yaml
-model_list:
-  - model_name: "*"
-    litellm_params:
-      model: openai/*
-      api_base: https://api.hedra.com/v3
-      api_key: os.environ/HEDRA_KEY
-      use_chat_completions_api: true
-      max_tokens: 32768
-```
-
-</Step>
-<Step title="Start LiteLLM">
-
-```bash
-litellm --config litellm.yaml --host 127.0.0.1 --port 4000
-```
-
-Leave it running while you use Codex.
 
 </Step>
 <Step title="Add a Codex profile">
@@ -74,37 +49,28 @@ Save this as `~/.codex/hedra.config.toml`:
 ```toml
 model = "zai-org/glm-5.3"
 model_provider = "hedra"
-model_reasoning_effort = "high"
-web_search = "disabled"
 
 [model_providers.hedra]
 name = "Hedra"
-base_url = "http://127.0.0.1:4000/v1"
+base_url = "https://api.hedra.com/v3"
+env_key = "HEDRA_KEY"
 ```
 
 </Step>
 <Step title="Start Codex">
 
-In a second terminal:
-
 ```bash
 codex --profile hedra
 ```
 
-Codex prints `Model metadata for zai-org/glm-5.3 not found. Defaulting to fallback metadata; this can degrade performance and cause issues.` The session runs with the fallback metadata.
+Codex prints `Model metadata for zai-org/glm-5.3 not found. Defaulting to fallback metadata; this can degrade performance and cause issues.` The session runs with the fallback metadata. `codex --profile hedra --model moonshotai/kimi-k3` switches models.
 
 </Step>
 </Steps>
 
-| Setting | Effect |
-| --- | --- |
-| `model_name: "*"` with `model: openai/*` | LiteLLM forwards any model id, so `codex --profile hedra --model moonshotai/kimi-k3` switches models. |
-| `use_chat_completions_api: true` | LiteLLM sends Chat Completions requests. Without it, LiteLLM forwards each Responses request to `https://api.hedra.com/v3/responses`, which returns `404`. |
-| `max_tokens: 32768` | Codex sets no output limit, so without this each request gets Hedra's default of 4,096 output tokens, which a reasoning model can spend before it calls a tool. 32,768 is the largest limit every chat model accepts. |
-| `model_reasoning_effort = "high"` | Codex applies each setting of `~/.codex/config.toml` that the profile does not set, and Hedra returns `400` for Codex's `minimal`, `medium` and `xhigh`. `low` and `max` also work. |
-| `--host 127.0.0.1` | LiteLLM accepts connections from this machine only. By default it listens on every network interface and sends any request it receives to Hedra with your key. |
-| `web_search = "disabled"` | Codex leaves out its web search tool. LiteLLM converts that tool into the `web_search_options` field, and Hedra returns `400` for that field. |
+Hedra maps Codex's `model_reasoning_effort` onto the values the chat models accept: `minimal` to `low`, `medium` to the model's default effort, and `xhigh` to `max`.
 
+Codex sets no output limit, so each of its requests gets Hedra's default of 4,096 output tokens, reasoning included. A response that reaches the limit ends as `incomplete`. Codex then sends the request again up to 5 times before it stops the turn, and Hedra charges each attempt. Reasoning tokens count toward the limit, so a lower `model_reasoning_effort`, such as `low`, leaves more of it for the answer.
 
 </Tab>
 <Tab title="OpenCode">
