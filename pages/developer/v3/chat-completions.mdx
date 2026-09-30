@@ -221,7 +221,7 @@ try {
 
 ## Billing and concurrency
 
-Before sending a request, Hedra holds its largest possible price on your API wallet: an upper bound on the prompt's tokens at the input price, plus `max_tokens` at the output price. After the response it keeps the price of the tokens the model used and returns the rest. A `moonshotai/kimi-k3` request with no `max_tokens` holds $0.06 for its 4,096 output tokens, so 15 such requests at once need $0.92. `max_tokens` sets the output part of the hold: `max_tokens: 1024` holds about $0.015, and `max_tokens: 32768` about $0.49.
+Before sending a request, Hedra holds its largest possible price on your API wallet: an upper bound on the prompt's tokens at the input price, plus `max_tokens` at the output price. After the response it keeps the price of the tokens the model used and returns the rest. A `moonshotai/kimi-k3` request with no `max_tokens` holds \$0.06 for its 4,096 output tokens, so 15 such requests at once need \$0.92. `max_tokens` sets the output part of the hold: `max_tokens: 1024` holds about \$0.015, and `max_tokens: 32768` about \$0.49.
 
 A `402` has two causes:
 
