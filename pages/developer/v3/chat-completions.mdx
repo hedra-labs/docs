@@ -140,13 +140,14 @@ The event carries the same body as an error response ([Errors](#errors)). The SD
 
 The route accepts these top-level fields and answers any other with `400` naming it:
 
-`model`, `messages`, `max_tokens`, `max_completion_tokens`, `n`, `stream`, `stream_options`, `tools`, `tool_choice`, `parallel_tool_calls`, `response_format`, `reasoning_effort`, `temperature`, `top_p`, `stop`, `seed`, `frequency_penalty`, `presence_penalty`, `logit_bias`, `logprobs`, `top_logprobs`, `user`, `safety_identifier` and `prompt_cache_key`.
+`model`, `messages`, `max_tokens`, `max_completion_tokens`, `n`, `stream`, `stream_options`, `tools`, `tool_choice`, `parallel_tool_calls`, `response_format`, `reasoning_effort`, `temperature`, `top_p`, `stop`, `seed`, `frequency_penalty`, `presence_penalty`, `logit_bias`, `logprobs`, `top_logprobs`, `user`, `safety_identifier`, `prompt_cache_key` and `web_search_options`.
 
 - `n` must be `1`.
 - `max_tokens` and `max_completion_tokens` both bound the output, and the smaller one applies.
 - `response_format` takes `{"type": "text"}`, `{"type": "json_object"}` or `{"type": "json_schema", "json_schema": {...}}`.
 - `stream_options` requires `stream: true`.
 - `user`, `safety_identifier` and `prompt_cache_key` are accepted and ignored.
+- `web_search_options` is accepted and ignored, and the model answers without searching the web.
 - Messages take the roles `system`, `developer`, `user`, `assistant` and `tool`.
 - `stop` works on every model.
 - `logprobs: true` and `top_logprobs` return `400`: no model returns log probabilities.
