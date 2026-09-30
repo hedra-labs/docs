@@ -273,10 +273,12 @@ followup = client.responses.create(
 
 The route accepts `model`, `input`, `instructions`, `tools`, `tool_choice`, `parallel_tool_calls`, `reasoning`, `max_output_tokens`, `temperature`, `top_p`, `stream`, `store`, `include`, `prompt_cache_key`, `safety_identifier`, `user` and `client_metadata`.
 
+- Hedra doesn't store responses. `store` must be `false` or left out, and a request that sets `previous_response_id` or `conversation`, or sends an `item_reference` item, returns `400`. Send the whole conversation in `input`.
 - `tools` takes `function` tools and `namespace` tools. Hedra offers a namespace's functions to the model as `<namespace>__<name>`, and returns a call to one with its `namespace` and `name`.
 - `reasoning.effort` takes OpenAI's values: `minimal` becomes `low`, `medium` becomes the model's default effort, and `xhigh` becomes `max`.
 - The model's reasoning arrives as a `reasoning` item. Sending that item back in `input` returns the reasoning to the model.
 - `max_output_tokens` bounds the output as `max_tokens` does.
+- Without `max_output_tokens`, output is limited to 4,096 tokens, and a response that reaches the limit ends with `status: "incomplete"`.
 - `stream: true` streams the response as Responses events, which the SDK's `client.responses.stream` reads.
 - Errors use the chat route's body and codes ([Errors](#errors)).
 
