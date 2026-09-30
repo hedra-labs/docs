@@ -237,7 +237,7 @@ To shorten every request's prompt:
   ```
 
   In OpenCode, set `"mcp": { "linear": { "enabled": false } }` in `opencode.json`. With its default MCP `exposure`, `codemode`, Pi declares no MCP tools to the model.
-- **Keep `AGENTS.md` short.** Codex, OpenCode and Pi send the repository's `AGENTS.md` with every request.
+- **Keep `AGENTS.md` short.** Codex, OpenCode and Pi add the repository's `AGENTS.md` to the instructions they send with each request of the conversation.
 - **Leave Claude Code's files out of OpenCode.** OpenCode adds `~/.claude/CLAUDE.md` and the skills in `~/.claude/skills` to its prompt. Set `OPENCODE_DISABLE_CLAUDE_CODE=1` to leave them out.
 
 `GET /v3/usage` returns what your workspace spent on each model since `start`: `requests` counts the chat requests and `spent` is their total price. The key needs the `usage:read` scope.
