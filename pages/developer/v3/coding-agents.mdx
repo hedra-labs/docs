@@ -50,11 +50,16 @@ Save this as `~/.codex/hedra.config.toml`:
 model = "zai-org/glm-5.3"
 model_provider = "hedra"
 
+[features]
+apps = false
+
 [model_providers.hedra]
 name = "Hedra"
 base_url = "https://api.hedra.com/v3"
 env_key = "HEDRA_KEY"
 ```
+
+Codex sends the tool definitions of your ChatGPT apps, such as GitHub and Slack, with every request, which can add tens of thousands of tokens. `apps = false` leaves them out of Hedra sessions.
 
 </Step>
 <Step title="Start Codex">
