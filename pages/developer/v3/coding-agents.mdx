@@ -17,15 +17,15 @@ export HEDRA_KEY="<key_id>:<secret>"
 
 ## Choose a model
 
-| Model | Input, per 1M tokens | Output, per 1M tokens | Price and time of one OpenCode run |
-| --- | --- | --- | --- |
-| `zai-org/glm-5.3` | \$1.40 | \$4.40 | \$0.41, 79 s |
-| `zai-org/glm-5.3-flash` | \$0.15 | \$0.50 | \$0.02, 35 s |
-| `moonshotai/kimi-k3` | \$3.00 | \$15.00 | \$0.77, 83 s |
-| `deepseek-ai/deepseek-v4-pro-0813` | \$1.32 | \$3.96 | \$0.36, 141 s |
-| `deepseek-ai/deepseek-v4.1-flash` | \$0.30 | \$1.20 | \$0.05, 27 s |
+| Model | Input | Time of one OpenCode run |
+| --- | --- | --- |
+| `zai-org/glm-5.3` | text and images | 79 s |
+| `zai-org/glm-5.3-flash` | text and images | 35 s |
+| `moonshotai/kimi-k3` | text and images | 83 s |
+| `deepseek-ai/deepseek-v4-pro-0813` | text | 141 s |
+| `deepseek-ai/deepseek-v4.1-flash` | text and images | 27 s |
 
-On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of a large Python repository and run them until they passed. Every model finished, in 8 to 14 requests, and `zai-org/glm-5.3-flash` finished for 2 cents in 35 seconds. `deepseek-ai/deepseek-v4-pro-0813` reads text, and the other four models also read images.
+On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of a large Python repository and run them until they passed. Every model finished in 8 to 14 requests. `GET /v3/models` returns each model's current per-token prices.
 
 ## Connect an agent
 
