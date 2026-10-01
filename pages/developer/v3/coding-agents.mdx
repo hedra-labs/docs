@@ -172,11 +172,10 @@ pi --provider hedra --model zai-org/glm-5.3
 
 An agent sends its instructions, its tool definitions and the conversation so far with every request, and Hedra bills each request's tokens at the model's prices. A shorter prompt lowers the price of every request in the session:
 
-- **Turn off the MCP servers a session does not need.** In Codex, add an entry to `~/.codex/hedra.config.toml` for each server in `~/.codex/config.toml`:
+- **Turn off the MCP servers a session does not need.** Each MCP server adds its tool definitions to every request. In Codex, `codex mcp list` prints your servers' names, and `-c mcp_servers.<name>.enabled=false` turns one off for the session:
 
-  ```toml
-  [mcp_servers.linear]
-  enabled = false
+  ```bash
+  codex --profile hedra -c mcp_servers.linear.enabled=false
   ```
 
   In OpenCode, set `"mcp": { "linear": { "enabled": false } }` in `opencode.json`. By default, Pi adds no MCP tool definitions to the prompt.
