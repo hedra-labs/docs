@@ -1,10 +1,10 @@
 ---
 title: "Call LLMs with the OpenAI SDK"
-description: "Send chat completions to open-weight LLMs through POST /v3/chat/completions with the stock OpenAI SDK, paid from your API wallet."
+description: "Call open-weight LLMs through POST /v3/chat/completions and POST /v3/responses with the stock OpenAI SDK, paid from your API wallet."
 sidebarTitle: "Chat completions"
 ---
 
-Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks OpenAI's chat completions format. Point the stock OpenAI SDK at `https://api.hedra.com/v3`, pass your Hedra API key, and pay for each request from the same prepaid API wallet as your media jobs.
+Hedra serves open-weight LLMs through `POST /v3/chat/completions`, which speaks OpenAI's chat completions format. Point the stock OpenAI SDK at `https://api.hedra.com/v3`, pass your Hedra API key, and pay for each request from the same prepaid API wallet as your media jobs. `POST /v3/responses` serves the same models in OpenAI's Responses format ([Responses API](#responses-api)). To run Codex CLI, OpenCode or Pi on these models, see [Coding agents](/pages/developer/v3/coding-agents).
 
 ## Before you start
 
@@ -221,7 +221,7 @@ try {
 
 ## Billing and concurrency
 
-Before sending a request, Hedra holds its largest possible price on your API wallet: an upper bound on the prompt's tokens at the input price, plus `max_tokens` at the output price. After the response it keeps the price of the tokens the model used and returns the rest. A `moonshotai/kimi-k3` request with no `max_tokens` holds $0.06 for its 4,096 output tokens, so 15 such requests at once need $0.92. `max_tokens` sets the output part of the hold: `max_tokens: 1024` holds about $0.015, and `max_tokens: 32768` about $0.49.
+Before sending a request, Hedra holds its largest possible price on your API wallet: an upper bound on the prompt's tokens at the input price, plus `max_tokens` at the output price. After the response it keeps the price of the tokens the model used and returns the rest. For a request with no `max_tokens`, Hedra holds the price of 4,096 output tokens, and a lower `max_tokens` lowers the hold. Hedra holds an amount for each request in flight, so 15 requests at once need 15 holds.
 
 A `402` has two causes:
 
@@ -233,6 +233,54 @@ A key can have 15 chat requests in flight, and so can a workspace. A request ove
 ## Look up a request
 
 Each chat request is a job, and the completion's `id` is its job id (`job_<uuid>`). `GET /v3/jobs/{job_id}` returns its status, error, net cost, token usage and timing, with an empty `outputs`.
+
+## Responses API
+
+`POST /v3/responses` serves the same models in OpenAI's Responses API format, with the same keys and billing. The response's `id` is the request's job id.
+
+<CodeGroup>
+
+```python Python
+response = client.responses.create(
+    model="zai-org/glm-5.3",
+    input="Write a two-sentence script for a product intro video.",
+)
+print(response.output_text)
+```
+
+```typescript TypeScript
+const response = await client.responses.create({
+  model: "zai-org/glm-5.3",
+  input: "Write a two-sentence script for a product intro video.",
+});
+console.log(response.output_text);
+```
+
+</CodeGroup>
+
+To continue a conversation, send the earlier input, the previous response's `output` items and the new message in `input`:
+
+```python
+followup = client.responses.create(
+    model="zai-org/glm-5.3",
+    input=[
+        {"role": "user", "content": "Write a two-sentence script for a product intro video."},
+        *response.output,
+        {"role": "user", "content": "Make it shorter."},
+    ],
+)
+```
+
+The route accepts `model`, `input`, `instructions`, `tools`, `tool_choice`, `parallel_tool_calls`, `reasoning`, `max_output_tokens`, `temperature`, `top_p`, `stream`, `store`, `include`, `prompt_cache_key`, `safety_identifier`, `user` and `client_metadata`.
+
+- Hedra doesn't store responses. `store` must be `false` or left out, and a request that sets `previous_response_id` or `conversation`, or sends an `item_reference` item, returns `400`. Send the whole conversation in `input`.
+- `tools` takes `function` tools and `namespace` tools. Hedra offers a namespace's functions to the model as `<namespace>__<name>`, and returns a call to one with its `namespace` and `name`.
+- `reasoning.effort` takes OpenAI's values: `minimal` becomes `low`, `medium` becomes the model's default effort, and `xhigh` becomes `max`.
+- The model's reasoning arrives as a `reasoning` item. Sending that item back in `input` returns the reasoning to the model.
+- `max_output_tokens` bounds the output as `max_tokens` does.
+- Without `max_output_tokens`, output is limited to 4,096 tokens, and a response that reaches the limit ends with `status: "incomplete"`.
+- `stream: true` streams the response as Responses events, which the SDK's `client.responses.stream` reads.
+- Errors use the chat route's body and codes ([Errors](#errors)).
 
 ## Where Hedra differs from OpenAI
 

@@ -1,0 +1,197 @@
+---
+title: "Run coding agents on open-weight models"
+description: "Run Codex CLI, OpenCode and Pi on GLM-5.3, Kimi K3 and DeepSeek V4 through Hedra, paid per token from your API wallet."
+sidebarTitle: "Coding agents"
+---
+
+Run Codex CLI, OpenCode or Pi on GLM-5.3, Kimi K3 and DeepSeek V4 with one Hedra API key. Every model has a context length of 1,048,576 tokens, and you pay per token from the same API wallet as your media jobs. Codex connects to `POST /v3/responses`, and OpenCode and Pi connect to `POST /v3/chat/completions`, each with a few lines of configuration.
+
+## Before you start
+
+- **A key with the `chat:write` scope and a funded API wallet.** See [Before you start](/pages/developer/v3/chat-completions#before-you-start) in the chat completions guide.
+- **The key in the `HEDRA_KEY` environment variable** of the terminal that starts the agent:
+
+```bash
+export HEDRA_KEY="<key_id>:<secret>"
+```
+
+## Choose a model
+
+| Model | Input | Time of one OpenCode run |
+| --- | --- | --- |
+| `zai-org/glm-5.3` | text and images | 79 s |
+| `zai-org/glm-5.3-flash` | text and images | 35 s |
+| `moonshotai/kimi-k3` | text and images | 83 s |
+| `deepseek-ai/deepseek-v4-pro-0813` | text | 141 s |
+| `deepseek-ai/deepseek-v4.1-flash` | text and images | 27 s |
+
+On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of a large Python repository and run them until they passed. Every model finished in 8 to 14 requests. `GET /v3/models` returns each model's current per-token prices.
+
+## Connect an agent
+
+<Tabs>
+<Tab title="Codex CLI">
+
+The steps below use Codex CLI 0.159.2.
+
+<Steps>
+<Step title="Install Codex">
+
+```bash
+npm install -g @openai/codex
+```
+
+</Step>
+<Step title="Add a Codex profile">
+
+Save this as `~/.codex/hedra.config.toml`:
+
+```toml
+model = "zai-org/glm-5.3"
+model_provider = "hedra"
+
+[model_providers.hedra]
+name = "Hedra"
+base_url = "https://api.hedra.com/v3"
+env_key = "HEDRA_KEY"
+```
+
+</Step>
+<Step title="Start Codex">
+
+```bash
+codex --profile hedra
+```
+
+</Step>
+</Steps>
+
+`codex --profile hedra --model moonshotai/kimi-k3` switches models. Hedra maps Codex's `model_reasoning_effort` values onto the models' own: `minimal` to `low`, `medium` to the model's default effort, and `xhigh` to `max`.
+
+</Tab>
+<Tab title="OpenCode">
+
+The steps below use OpenCode 1.18.33.
+
+<Steps>
+<Step title="Install OpenCode">
+
+```bash
+curl -fsSL https://opencode.ai/install | bash
+```
+
+</Step>
+<Step title="Add Hedra as a provider">
+
+Save this as `~/.config/opencode/opencode.json`, or add the `hedra` entry to the `provider` object in your existing file:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "hedra": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Hedra",
+      "options": {
+        "baseURL": "https://api.hedra.com/v3",
+        "apiKey": "{env:HEDRA_KEY}"
+      },
+      "models": {
+        "zai-org/glm-5.3": { "name": "GLM-5.3" },
+        "zai-org/glm-5.3-flash": { "name": "GLM-5.3 Flash" },
+        "moonshotai/kimi-k3": { "name": "Kimi K3" },
+        "deepseek-ai/deepseek-v4-pro-0813": { "name": "DeepSeek V4 Pro 0813" },
+        "deepseek-ai/deepseek-v4.1-flash": { "name": "DeepSeek V4.1 Flash" }
+      }
+    }
+  }
+}
+```
+
+</Step>
+<Step title="Start OpenCode">
+
+```bash
+opencode --model hedra/zai-org/glm-5.3
+```
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab title="Pi">
+
+The steps below use Pi 0.99.2, which needs Node.js 22.19 or later.
+
+<Steps>
+<Step title="Install Pi">
+
+```bash
+npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+```
+
+</Step>
+<Step title="Add Hedra as a provider">
+
+Save this as `~/.pi/agent/models.json`. With `"$HEDRA_KEY"`, Pi reads the key from the `HEDRA_KEY` environment variable.
+
+```json
+{
+  "providers": {
+    "hedra": {
+      "baseUrl": "https://api.hedra.com/v3",
+      "api": "openai-completions",
+      "apiKey": "$HEDRA_KEY",
+      "compat": { "supportsStore": false },
+      "models": [
+        { "id": "zai-org/glm-5.3" },
+        { "id": "zai-org/glm-5.3-flash" },
+        { "id": "moonshotai/kimi-k3" },
+        { "id": "deepseek-ai/deepseek-v4-pro-0813" },
+        { "id": "deepseek-ai/deepseek-v4.1-flash" }
+      ]
+    }
+  }
+}
+```
+
+</Step>
+<Step title="Start Pi">
+
+```bash
+pi --provider hedra --model zai-org/glm-5.3
+```
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+## Keep sessions inexpensive
+
+An agent sends its instructions, its tool definitions and the conversation so far with every request, and Hedra bills each request's tokens at the model's prices. A shorter prompt lowers the price of every request in the session:
+
+- **Turn off the MCP servers a session does not need.** In Codex, add an entry to `~/.codex/hedra.config.toml` for each server in `~/.codex/config.toml`:
+
+  ```toml
+  [mcp_servers.linear]
+  enabled = false
+  ```
+
+  In OpenCode, set `"mcp": { "linear": { "enabled": false } }` in `opencode.json`. By default, Pi adds no MCP tool definitions to the prompt.
+- **Keep `AGENTS.md` focused.** Codex, OpenCode and Pi send the repository's `AGENTS.md` with every request.
+- **Leave Claude Code's files out of OpenCode.** OpenCode also reads Claude Code's instructions and skills from `~/.claude` into its prompt. Set `OPENCODE_DISABLE_CLAUDE_CODE=1` to leave them out.
+
+`GET /v3/usage` reports your spend on each model since `start`, with a key that has the `usage:read` scope:
+
+```bash
+curl "https://api.hedra.com/v3/usage?start=2026-09-30T21:00:00Z&group_by=model" \
+  -H "Authorization: Key $HEDRA_KEY"
+```
+
+## Troubleshooting
+
+- **Codex prints `Model metadata for zai-org/glm-5.3 not found`.** Codex has no metadata for Hedra's models, and the session runs normally without it.
+- **A `401` response.** Set `HEDRA_KEY` in the terminal that starts the agent, and restart the agent.
+- **A `402` response.** Your API wallet's balance cannot cover the request. [Add funds](https://www.hedra.com/develop/billing) and send the message again.
