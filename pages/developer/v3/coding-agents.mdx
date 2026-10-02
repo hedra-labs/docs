@@ -193,18 +193,19 @@ Save this as `~/.pi/agent/models.json`. With `"$HEDRA_KEY"`, Pi reads the key fr
       "baseUrl": "https://api.hedra.com/v3",
       "api": "openai-completions",
       "apiKey": "$HEDRA_KEY",
-      "compat": { "supportsStore": false },
       "models": [
-        { "id": "zai-org/glm-5.3" },
-        { "id": "zai-org/glm-5.3-flash" },
-        { "id": "moonshotai/kimi-k3" },
-        { "id": "deepseek-ai/deepseek-v4-pro-0813" },
-        { "id": "deepseek-ai/deepseek-v4.1-flash" }
+        { "id": "zai-org/glm-5.3", "contextWindow": 1048576 },
+        { "id": "zai-org/glm-5.3-flash", "contextWindow": 1048576 },
+        { "id": "moonshotai/kimi-k3", "contextWindow": 1048576 },
+        { "id": "deepseek-ai/deepseek-v4-pro-0813", "contextWindow": 1048576 },
+        { "id": "deepseek-ai/deepseek-v4.1-flash", "contextWindow": 1048576 }
       ]
     }
   }
 }
 ```
+
+`contextWindow` sets each model's context length in Pi. Without it, Pi sets the context length to 128,000 tokens and compacts the conversation as it approaches that length.
 
 </Step>
 <Step title="Start Pi">
@@ -244,5 +245,5 @@ curl "https://api.hedra.com/v3/usage?start=2026-09-30T21:00:00Z&group_by=model" 
 
 - **Codex prints `Model metadata for zai-org/glm-5.3 not found`.** Codex has no metadata for Hedra's models, and the session runs normally without it.
 - **Claude Code's WebSearch tool fails.** WebSearch runs on Anthropic's web search server tool, which Hedra answers with `400`. WebFetch reads pages itself and works.
-- **A `401` response.** Set `HEDRA_KEY` in the terminal that starts the agent, and restart the agent.
+- **A missing key, or a `401` response.** When `HEDRA_KEY` is unset, Codex prints `Missing environment variable: HEDRA_KEY`, OpenCode prints `Missing credentials` and Pi prints `No API key found for hedra`. Set `HEDRA_KEY` in the terminal that starts the agent, and restart the agent.
 - **A `402` response.** Your API wallet's balance cannot cover the request. [Add funds](https://www.hedra.com/develop/billing) and send the message again.
