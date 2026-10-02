@@ -1,10 +1,10 @@
 ---
 title: "Run coding agents on open-weight models"
-description: "Run Codex CLI, OpenCode and Pi on GLM-5.3, Kimi K3 and DeepSeek V4 through Hedra, paid per token from your API wallet."
+description: "Run Claude Code, Codex CLI, OpenCode and Pi on GLM-5.3, Kimi K3 and DeepSeek V4 through Hedra, paid per token from your API wallet."
 sidebarTitle: "Coding agents"
 ---
 
-Run Codex CLI, OpenCode or Pi on GLM-5.3, Kimi K3 and DeepSeek V4 with one Hedra API key. Every model has a context length of 1,048,576 tokens, and you pay per token from the same API wallet as your media jobs. Codex connects to `POST /v3/responses`, and OpenCode and Pi connect to `POST /v3/chat/completions`, each with a few lines of configuration.
+Run Claude Code, Codex CLI, OpenCode or Pi on GLM-5.3, Kimi K3 and DeepSeek V4 with one Hedra API key. Every model has a context length of 1,048,576 tokens, and you pay per token from the same API wallet as your media jobs. Claude Code connects to `POST /v3/anthropic/v1/messages`, Codex connects to `POST /v3/responses`, and OpenCode and Pi connect to `POST /v3/chat/completions`, each with a few lines of configuration.
 
 ## Before you start
 
@@ -30,6 +30,52 @@ On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of
 ## Connect an agent
 
 <Tabs>
+<Tab title="Claude Code">
+
+The steps below use Claude Code 2.1.287.
+
+<Steps>
+<Step title="Install Claude Code">
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+</Step>
+<Step title="Point Claude Code at Hedra">
+
+Add these variables to the `env` block of `~/.claude/settings.json`, which applies to every session, or export them in the terminal that starts Claude Code:
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.hedra.com/v3/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "<key_id>:<secret>",
+    "ANTHROPIC_MODEL": "zai-org/glm-5.3[1m]",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "zai-org/glm-5.3-flash"
+  }
+}
+```
+
+- `ANTHROPIC_AUTH_TOKEN` sends your key as `Authorization: Bearer`. `ANTHROPIC_API_KEY` sends it as `x-api-key` and works too, after Claude Code asks you once to approve the key.
+- `ANTHROPIC_MODEL` names the model. The `[1m]` suffix tells Claude Code that the model's context length is 1,000,000 tokens; without it, Claude Code assumes 200,000 for a model it does not know and compacts the conversation as it nears that. Claude Code sends the id without the suffix.
+- `ANTHROPIC_DEFAULT_HAIKU_MODEL` names the model Claude Code runs background tasks such as session titles on.
+
+</Step>
+<Step title="Start Claude Code">
+
+```bash
+claude
+```
+
+`/status` shows the base URL and the credential in use.
+
+</Step>
+</Steps>
+
+`claude --model moonshotai/kimi-k3[1m]` switches models for one session. Claude Code's `/effort` levels become the model's `reasoning_effort`, and the model's reasoning appears as thinking. In print mode (`claude -p`), Claude Code writes `[claude-code:unrecognized_model]` to stderr for a Hedra model id, and the session runs normally.
+
+</Tab>
 <Tab title="Codex CLI">
 
 The steps below use Codex CLI 0.159.2.
@@ -184,7 +230,7 @@ An agent sends its instructions, its tool definitions and the conversation so fa
   ```
 
   In OpenCode, set `"mcp": { "linear": { "enabled": false } }` in `opencode.json`. By default, Pi adds no MCP tool definitions to the prompt.
-- **Keep `AGENTS.md` focused.** Codex, OpenCode and Pi send the repository's `AGENTS.md` with every request.
+- **Keep `CLAUDE.md` and `AGENTS.md` focused.** Claude Code sends the repository's `CLAUDE.md` with every request, and Codex, OpenCode and Pi send its `AGENTS.md`. Claude Code also sends the name and description of every skill it has loaded.
 - **Leave Claude Code's files out of OpenCode.** OpenCode also reads Claude Code's instructions and skills from `~/.claude` into its prompt. Set `OPENCODE_DISABLE_CLAUDE_CODE=1` to leave them out.
 
 `GET /v3/usage` reports your spend on each model since `start`, with a key that has the `usage:read` scope:
@@ -197,5 +243,6 @@ curl "https://api.hedra.com/v3/usage?start=2026-09-30T21:00:00Z&group_by=model" 
 ## Troubleshooting
 
 - **Codex prints `Model metadata for zai-org/glm-5.3 not found`.** Codex has no metadata for Hedra's models, and the session runs normally without it.
+- **Claude Code's WebSearch tool fails.** WebSearch runs on Anthropic's web search server tool, which Hedra answers with `400`. WebFetch reads pages itself and works.
 - **A `401` response.** Set `HEDRA_KEY` in the terminal that starts the agent, and restart the agent.
 - **A `402` response.** Your API wallet's balance cannot cover the request. [Add funds](https://www.hedra.com/develop/billing) and send the message again.
