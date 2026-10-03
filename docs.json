@@ -205,6 +205,7 @@
                   "POST /models/luma-ray-32",
                   "POST /models/mai-image-2-5",
                   "POST /models/minimax-h3",
+                  "POST /models/minimax-h3-max",
                   "POST /models/minimax-h3-max-camera-controls",
                   "POST /models/minimax-h3-max-turbo",
                   "POST /models/minimax-hailuo-02",
@@ -218,6 +219,7 @@
                   "POST /models/omnihuman-15",
                   "POST /models/pixverse-v6",
                   "POST /models/qwen-image-2",
+                  "POST /models/qwen-image-2-1",
                   "POST /models/recraft-v3",
                   "POST /models/reve-21",
                   "POST /models/reve-21-edit",
@@ -231,7 +233,6 @@
                   "POST /models/seedream-45",
                   "POST /models/seedream-50-lite",
                   "POST /models/seedream-50-pro",
-                  "POST /models/sora-2-pro",
                   "POST /models/topaz-image-upscaler",
                   "POST /models/topaz-image-upscaler-transparency",
                   "POST /models/topaz-image-upscaler-wonder",
@@ -249,7 +250,10 @@
                   "POST /models/vidu-q3-reference",
                   "POST /models/wan-2-7",
                   "POST /models/wan-3-0",
-                  "POST /models/{model}"
+                  "POST /models/{model}",
+                  "POST /chat/completions",
+                  "POST /responses",
+                  "POST /anthropic/v1/messages"
                 ]
               },
               {
