@@ -32,7 +32,7 @@ On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of
 <Tabs>
 <Tab title="Claude Code">
 
-The steps below use Claude Code 2.1.287.
+The steps below use Claude Code 2.1.288.
 
 <Steps>
 <Step title="Install Claude Code">
@@ -42,38 +42,44 @@ curl -fsSL https://claude.ai/install.sh | bash
 ```
 
 </Step>
-<Step title="Point Claude Code at Hedra">
+<Step title="Add a configuration directory for Hedra">
 
-Add these variables to the `env` block of `~/.claude/settings.json`, which applies to every session, or export them in the terminal that starts Claude Code:
+Save this as `~/.claude-hedra/settings.json`:
 
 ```json
 {
+  "apiKeyHelper": "echo $HEDRA_KEY",
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.hedra.com/v3/anthropic",
-    "ANTHROPIC_AUTH_TOKEN": "<key_id>:<secret>",
     "ANTHROPIC_MODEL": "zai-org/glm-5.3[1m]",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "zai-org/glm-5.3-flash"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "zai-org/glm-5.3[1m]",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "zai-org/glm-5.3[1m]",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "zai-org/glm-5.3-flash",
+    "CLAUDE_CODE_AUTO_MODE_SERVER": "0"
   }
 }
 ```
 
-- `ANTHROPIC_AUTH_TOKEN` sends your key as `Authorization: Bearer`. `ANTHROPIC_API_KEY` sends it as `x-api-key` and works too, after Claude Code asks you once to approve the key.
+- Claude Code runs the `apiKeyHelper` command and sends its output as your key, so the file contains no secret.
 - `ANTHROPIC_MODEL` names the model. The `[1m]` suffix tells Claude Code that the model's context length is 1,000,000 tokens; without it, Claude Code assumes 200,000 for a model it does not know and compacts the conversation as it nears that. Claude Code sends the id without the suffix.
-- `ANTHROPIC_DEFAULT_HAIKU_MODEL` names the model Claude Code runs background tasks such as session titles on.
+- `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_HAIKU_MODEL` name the model Claude Code picks for each tier. In auto mode, Claude Code checks tool calls with the Sonnet tier's model, and it runs background tasks such as session titles on the Haiku tier's model.
+- `CLAUDE_CODE_AUTO_MODE_SERVER` set to `0` tells Claude Code that Hedra doesn't run Anthropic's auto mode checks, so Claude Code runs its own.
 
 </Step>
 <Step title="Start Claude Code">
 
 ```bash
-claude
+CLAUDE_CONFIG_DIR=~/.claude-hedra claude
 ```
 
-`/status` shows the base URL and the credential in use.
+Claude Code reads its settings from the directory in `CLAUDE_CONFIG_DIR`, so only the sessions you start this way use Hedra. In those sessions, Claude Code loads none of your MCP servers or plugins, which keeps their tool definitions out of every request. `/status` shows the base URL and the credential in use.
 
 </Step>
 </Steps>
 
-`claude --model moonshotai/kimi-k3[1m]` switches models for one session. Claude Code's `/effort` levels become the model's `reasoning_effort`, and the model's reasoning appears as thinking. In print mode (`claude -p`), Claude Code writes `[claude-code:unrecognized_model]` to stderr for a Hedra model id, and the session runs normally.
+`CLAUDE_CONFIG_DIR=~/.claude-hedra claude --model 'moonshotai/kimi-k3[1m]'` switches models for one session. Claude Code's `/effort` levels become the model's `reasoning_effort`, and the model's reasoning appears as thinking. In print mode (`claude -p`), Claude Code writes `[claude-code:unrecognized_model]` to stderr for a Hedra model id, and the session runs normally.
+
+Claude Code's cost figures, in `/cost` and in the `total_cost_usd` of `claude -p --output-format json`, don't match Hedra's charges. Hedra's charge for each request is in the response's `usage.cost`, on the [Jobs tab](https://www.hedra.com/develop/jobs) of the developer console, and in `GET /v3/jobs/{job_id}`.
 
 </Tab>
 <Tab title="Codex CLI">
