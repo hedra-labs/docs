@@ -85,7 +85,7 @@ A non-streaming request must finish within 120 seconds. After that the API answe
 
 Every chat model reasons by default. The reasoning text arrives in `reasoning_content`, a field OpenAI's format does not have, on the message or on stream deltas. Reasoning tokens count toward `max_tokens` and are billed as output. A reasoning model can spend all 4,096 tokens of the default bound reasoning and return `finish_reason: length` with no answer, so set `max_tokens` higher for long reasoning.
 
-`reasoning_effort` takes `none`, `low`, `high` or `max`. Leaving it out uses the model's default, which is `max` on `moonshotai/kimi-k3`. `minimal`, `medium` and `xhigh` return `400`: send `low`, `high` or `max`. A model that cannot turn reasoning off leaves `none` out of the `reasoning_effort` values in its `input_schema`, and returns `400` for it.
+`reasoning_effort` takes the values in the model's `input_schema`: `minimal`, `low`, `medium`, `high`, `xhigh` and `max` on every model, and `none`, which turns reasoning off, on every model except `zai-org/glm-5.3` and `zai-org/glm-5.3-flash`. Hedra sends `minimal` to the model as `low`, `medium` as `high` and `xhigh` as `max`. Leaving it out uses the model's default, which is `max` on `moonshotai/kimi-k3`.
 
 ## Stream the response
 
@@ -140,12 +140,13 @@ The event carries the same body as an error response ([Errors](#errors)). The SD
 
 The route accepts these top-level fields and answers any other with `400` naming it:
 
-`model`, `messages`, `max_tokens`, `max_completion_tokens`, `n`, `stream`, `stream_options`, `tools`, `tool_choice`, `parallel_tool_calls`, `response_format`, `reasoning_effort`, `temperature`, `top_p`, `stop`, `seed`, `frequency_penalty`, `presence_penalty`, `logit_bias`, `logprobs`, `top_logprobs`, `user`, `safety_identifier` and `prompt_cache_key`.
+`model`, `messages`, `max_tokens`, `max_completion_tokens`, `n`, `stream`, `stream_options`, `store`, `tools`, `tool_choice`, `parallel_tool_calls`, `response_format`, `reasoning_effort`, `temperature`, `top_p`, `stop`, `seed`, `frequency_penalty`, `presence_penalty`, `logit_bias`, `logprobs`, `top_logprobs`, `user`, `safety_identifier` and `prompt_cache_key`.
 
 - `n` must be `1`.
 - `max_tokens` and `max_completion_tokens` both bound the output, and the smaller one applies.
 - `response_format` takes `{"type": "text"}`, `{"type": "json_object"}` or `{"type": "json_schema", "json_schema": {...}}`.
 - `stream_options` requires `stream: true`.
+- Hedra doesn't store completions, so `store` must be `false` or left out.
 - `user`, `safety_identifier` and `prompt_cache_key` are accepted and ignored.
 - Messages take the roles `system`, `developer`, `user`, `assistant` and `tool`.
 - `stop` works on every model.
@@ -164,11 +165,11 @@ Every error response, and every mid-stream error event, has the body every v3 ro
 {
   "error": {
     "code": "INVALID_ARGUMENT",
-    "message": "Unknown request field: store",
+    "message": "Unknown request field: functions",
     "retryable": false,
     "retry_after": null,
-    "param": "store",
-    "details": [{"field": "store", "message": "unknown request field", "reason": null, "allowed": null}],
+    "param": "functions",
+    "details": [{"field": "functions", "message": "unknown request field", "reason": null, "allowed": null}],
     "replaced_by": null,
     "billing": null,
     "type": "invalid_request_error"
@@ -206,8 +207,6 @@ except openai.APIStatusError as e:
 ```
 
 ```typescript TypeScript
-import OpenAI from "openai";
-
 try {
   await client.chat.completions.create({ model: "zai-org/glm-5.3", messages: [{ role: "user", content: "Hi" }] });
 } catch (e) {
@@ -271,20 +270,21 @@ followup = client.responses.create(
 )
 ```
 
-The route accepts `model`, `input`, `instructions`, `tools`, `tool_choice`, `parallel_tool_calls`, `reasoning`, `max_output_tokens`, `temperature`, `top_p`, `stream`, `store`, `include`, `prompt_cache_key`, `safety_identifier`, `user` and `client_metadata`.
+The route accepts `model`, `input`, `instructions`, `tools`, `tool_choice`, `parallel_tool_calls`, `reasoning`, `max_output_tokens`, `temperature`, `top_p`, `text`, `stream`, `store`, `include`, `prompt_cache_key`, `safety_identifier`, `user`, `service_tier` and `client_metadata`.
 
 - Hedra doesn't store responses. `store` must be `false` or left out, and a request that sets `previous_response_id` or `conversation`, or sends an `item_reference` item, returns `400`. Send the whole conversation in `input`.
 - `tools` takes `function` tools and `namespace` tools. Hedra offers a namespace's functions to the model as `<namespace>__<name>`, and returns a call to one with its `namespace` and `name`.
 - `reasoning.effort` takes OpenAI's values: `minimal` becomes `low`, `medium` becomes the model's default effort, and `xhigh` becomes `max`.
 - The model's reasoning arrives as a `reasoning` item. Sending that item back in `input` returns the reasoning to the model.
+- `text.format` takes `text`, `json_object` or `json_schema`, as `response_format` does, so `client.responses.parse` works. The route accepts `text.verbosity` and `service_tier` and ignores them.
 - `max_output_tokens` bounds the output as `max_tokens` does.
-- Without `max_output_tokens`, output is limited to 4,096 tokens, and a response that reaches the limit ends with `status: "incomplete"`.
+- Without `max_output_tokens`, output is limited to 32,768 tokens, or to the model's `max_output_tokens` if that is lower, and a response that reaches the limit ends with `status: "incomplete"`.
 - `stream: true` streams the response as Responses events, which the SDK's `client.responses.stream` reads.
 - Errors use the chat route's body and codes ([Errors](#errors)).
 
 ## Messages API
 
-`POST /v3/anthropic/v1/messages` serves the same models in Anthropic's Messages API format, with the same keys and billing. The Anthropic SDK appends `/v1/messages` to its base URL, so set the base URL to `https://api.hedra.com/v3/anthropic`. The SDK sends `api_key` as `x-api-key`; `auth_token` sends it as `Authorization: Bearer`, and both work. The message's `id` is the request's job id.
+`POST /v3/anthropic/v1/messages` serves the same models in Anthropic's Messages API format, with the same keys and billing. The Anthropic SDK appends `/v1/messages` to its base URL, so set the base URL to `https://api.hedra.com/v3/anthropic`. For a client that appends only `/messages`, such as the AI SDK's `@ai-sdk/anthropic` provider, set the base URL to `https://api.hedra.com/v3/anthropic/v1`. The Anthropic SDK sends `api_key` as `x-api-key`; `auth_token` sends it as `Authorization: Bearer`, and both work. The message's `id` is the request's job id.
 
 <CodeGroup>
 
@@ -347,7 +347,7 @@ The route accepts `model`, `messages`, `max_tokens`, `system`, `tools`, `tool_ch
 | Error `code` | A lowercase string | An uppercase v3 code; `type` follows the HTTP status |
 | Neither `max_tokens` nor `max_completion_tokens` | Up to the model's output limit | Up to 4,096 tokens, or the model's `max_output_tokens` if lower |
 | `n` above 1 | Accepted | `400` |
-| A field outside [Request fields](#request-fields), such as `store` or `metadata` | Accepted | `400` naming the field |
+| A field outside [Request fields](#request-fields), such as `metadata` | Accepted | `400` naming the field |
 | Reasoning text | Not returned | `reasoning_content` on the message and on each delta |
 | A non-streaming request that runs long | Runs until the SDK's timeout, 10 minutes by default | `504` after 120 seconds |
 

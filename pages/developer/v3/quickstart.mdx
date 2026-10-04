@@ -10,13 +10,26 @@ description: "Create an API key, fund the wallet, pick a model, and submit, poll
 </div>
 
 Generate images, video, and audio with over 100 models through one API. Fund
-your wallet, then every model runs through the same three requests: submit a
-job, poll it, download the output. Browse the
+your wallet, then every image, video, and audio model runs through the same
+three requests: submit a job, poll it, download the output. Browse the
 [model catalog](https://www.hedra.com/develop/models) to pick one.
+
+The API also serves open-weight LLMs through `POST /v3/chat/completions`, in
+OpenAI's chat completions format, and bills each request to the same wallet.
+[Chat completions](/pages/developer/v3/chat-completions) shows how to call them
+with the stock OpenAI SDK.
 
 ### Step 1: Create an API key
 
-Generate a key in the [developer console](https://www.hedra.com/develop/api-keys).
+Generate a key in the [developer console](https://www.hedra.com/develop/api-keys),
+and put it in the `HEDRA_KEY` environment variable, which the examples below
+use:
+
+```bash
+export HEDRA_KEY="<key_id>:<secret>"
+```
+
+Send the key in this header with every request:
 
 ```
 Authorization: Key <key_id>:<secret>
@@ -85,6 +98,9 @@ See [Job progress](/pages/developer/v3/job-progress).
   </Card>
   <Card title="Quality levels" href="/pages/developer/v3/quality-levels">
     How each quality level changes price and latency across models.
+  </Card>
+  <Card title="Chat completions" href="/pages/developer/v3/chat-completions">
+    Call open-weight LLMs with the OpenAI or Anthropic SDK.
   </Card>
 </CardGroup>
 
