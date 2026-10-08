@@ -1,0 +1,84 @@
+---
+title: "How long Hedra keeps v3 job data, and how to delete a job"
+sidebarTitle: "Data retention"
+description: "When a v3 job's outputs expire, how long output URLs work, when Hedra erases a job's files, prompt and logs, and how to erase a job's data at once with DELETE /v3/jobs/{job_id}."
+---
+
+Hedra keeps the files a job reads and writes for a fixed period, and then
+erases them along with the job's prompt and logs. Download each output to your
+own storage before it expires. To erase a job's data sooner, for example when
+one of your users asks you to delete their photo or recording, delete the job.
+
+## Download outputs before `expires_at`
+
+In `GET /v3/jobs/{job_id}` and in webhook payloads, each image, video and audio
+output includes `expires_at`, the time until which Hedra keeps the output. By
+default, `expires_at` is 24 hours after you submit the job.
+
+```json
+{
+  "status": "COMPLETED",
+  "asset_id": "asset_9b41…",
+  "url": "https://…",
+  "expires_at": "2026-10-09T17:42:06.318204Z",
+  "content_type": "video/mp4",
+  "width": 1280,
+  "height": 720,
+  "duration_ms": 5000
+}
+```
+
+- `url` works for up to an hour. Every response from `GET /v3/jobs/{job_id}`,
+  and every webhook delivery attempt, includes a newly signed `url`, so request
+  the job again when you need a working `url`.
+- To use the output as an input to another job, pass its `asset_id` before
+  `expires_at`. See [Chain generations](/pages/developer/v3/chain-generations).
+
+## When Hedra erases a job's data
+
+By default, about four days after you submit a job, three days after its
+outputs' `expires_at`, Hedra erases:
+
+- the job's outputs;
+- the files the job read from your `POST /v3/files` uploads;
+- the job's prompt;
+- the job's logs.
+
+From then on, `GET /v3/jobs/{job_id}` reports each output's `status` as
+`EXPIRED`, with null `url` and `asset_id`, and reports no prompt and no logs.
+Hedra keeps no job's logs for more than 30 days.
+
+Hedra keeps a usage record of the job: `GET /v3/jobs` still lists it with its
+model, status and submission time, and `GET /v3/jobs/{job_id}` still reports its
+cost and each output's dimensions and duration.
+
+## Delete a job now
+
+`DELETE /v3/jobs/{job_id}` erases a finished job's outputs, the files it read
+from your uploads, its prompt and its logs before it returns `204`. Hedra then
+keeps only the job's usage record, as it does for an expired job.
+
+```bash
+curl -X DELETE https://api.hedra.com/v3/jobs/$JOB_ID \
+  -H "Authorization: Key $HEDRA_KEY"
+```
+
+- The key needs the `jobs:write` scope.
+- Delete a job once its `status` is `COMPLETED` or `FAILED`. While the job
+  runs, the request returns `409` with a `Retry-After` header.
+- If the request returns `503`, send it again to finish the erasure. Deleting a
+  job that Hedra has already erased returns `204`.
+- Hedra erases an input that you passed by `asset_id` with the job that
+  produced it.
+
+Hedra also stores each file you upload with `POST /v3/files` apart from the jobs
+that read it, and erases that copy within a few days of the upload.
+
+## Choose a retention period for an enterprise workspace
+
+An enterprise workspace can have its own retention period, from 2 hours to 30
+days, in place of the default 24 hours.
+[Talk to us](https://www.hedra.com/enterprise) to set one. The period applies to
+every job in the workspace: its outputs and the files it read from your uploads.
+Each output's `expires_at` is then the job's submission time plus the period,
+and Hedra erases the job's data within an hour after that time.

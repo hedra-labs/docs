@@ -1,6 +1,6 @@
 ---
 title: "Chain v3 generations with asset_id"
-description: "Reuse a completed v3 job's output as an asset_id in the next submit, and handle the EXPIRED status and 48-hour media retention window."
+description: "Reuse a completed v3 job's output as an asset_id in the next submit before the output's expires_at, and handle the EXPIRED status."
 sidebarTitle: "Chain generations"
 ---
 
@@ -48,7 +48,7 @@ curl -X POST https://api.hedra.com/v3/models/veo-3 \
   -d "{\"input\": {\"start_keyframe\": {\"source\": \"asset\", \"asset_id\": \"$ASSET_ID\"}, \"prompt\": \"the dog runs through the field\"}}"
 ```
 
-## Output status and the 48-hour retention window
+## Output status and expiry
 
 Each item in `outputs[]` carries a `status`:
 
@@ -56,16 +56,9 @@ Each item in `outputs[]` carries a `status`:
 | --- | --- |
 | `COMPLETED` | The output produced media. `url` and `asset_id` are populated. |
 | `FAILED` | The output failed. `error` describes the failure; `url` and `asset_id` are null. |
-| `EXPIRED` | The generated media has been garbage-collected. Metadata is retained, but `url` and `asset_id` are null. |
+| `EXPIRED` | Hedra has erased the output. `url` and `asset_id` are null; the output's dimensions and duration remain. |
 
-Generated media is retained for **48 hours** after a job completes. After that window the underlying files are deleted and the output flips to `EXPIRED`. The job record itself remains — you can still read its metadata (dimensions, duration, timing, error envelope) — but you cannot download the bytes or reference the output as an asset in a new submit.
-
-This affects two kinds of callers in particular:
-
-- **Long-lived polling loops.** If a client polls a job more than 48 hours after it completed, expect `outputs[].status = "EXPIRED"` with `url: null` and `asset_id: null`.
-- **Webhook replays.** A webhook delivery that is replayed after the retention window carries the same `EXPIRED` payload as a poll would — the retention window is measured from the original completion time, not from delivery.
-
-If you need the output beyond 48 hours, download it to your own storage soon after the job completes.
+Each output's `expires_at` is the deadline to download the output and to pass its `asset_id` to another job; by default, it is 24 hours after you submit the job. Hedra erases the output some time after `expires_at`, and its `status` then becomes `EXPIRED`. [Data retention](/pages/developer/v3/data-retention) explains when Hedra erases a job's data, and how to erase it sooner.
 
 ```python
 import time

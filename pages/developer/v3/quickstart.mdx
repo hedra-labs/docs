@@ -87,6 +87,10 @@ While the job runs, the status response carries `progress` and
 `estimated_completion_at`, so you can tell your users how long it will take.
 See [Job progress](/pages/developer/v3/job-progress).
 
+An output's `url` works for up to an hour. Download the file before the
+output's `expires_at`, 24 hours after you submitted the job by default. See
+[Data retention](/pages/developer/v3/data-retention).
+
 ### Next steps
 
 <CardGroup cols={2}>
