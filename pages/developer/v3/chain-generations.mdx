@@ -56,9 +56,9 @@ Each item in `outputs[]` carries a `status`:
 | --- | --- |
 | `COMPLETED` | The output produced media. `url` and `asset_id` are populated. |
 | `FAILED` | The output failed. `error` describes the failure; `url` and `asset_id` are null. |
-| `EXPIRED` | Hedra has erased the output. `url` and `asset_id` are null; the output's dimensions and duration remain. |
+| `EXPIRED` | Hedra has erased the output. `url`, `asset_id` and `expires_at` are null; the output's dimensions and duration remain. |
 
-Each output's `expires_at` is the deadline to download the output and to pass its `asset_id` to another job; by default, it is 24 hours after you submit the job. Hedra erases the output some time after `expires_at`, and its `status` then becomes `EXPIRED`. [Data retention](/pages/developer/v3/data-retention) explains when Hedra erases a job's data, and how to erase it sooner.
+Each output's `expires_at` is the deadline to download the output and to pass its `asset_id` to another job; it is 24 hours after you submit the job. Hedra erases the output some time after `expires_at`, and its `status` then becomes `EXPIRED`. [Data retention](/pages/developer/v3/data-retention) explains when Hedra erases a job's data, and how to erase it sooner.
 
 ```python
 import time
