@@ -56,7 +56,6 @@ The body is the same envelope `GET /v3/jobs/{job_id}` returns, minus its poll-on
       "status": "COMPLETED",
       "asset_id": "asset_9b41…",
       "url": "https://…",
-      "expires_at": "2026-10-09T17:42:06.318204Z",
       "content_type": "image/png",
       "width": 1024,
       "height": 1024,
@@ -69,12 +68,6 @@ The body is the same envelope `GET /v3/jobs/{job_id}` returns, minus its poll-on
 ```
 
 On `job.failed`, `status` is `FAILED` and `error` carries the same error envelope the poll endpoint returns.
-
-<Note>
-  Each output's `url` works for up to an hour after Hedra sends it. Download the
-  output, or chain its `asset_id`, before the output's `expires_at`; see
-  [Data retention](/pages/developer/v3/data-retention).
-</Note>
 
 ## Verify the signature
 

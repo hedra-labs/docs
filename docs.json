@@ -130,8 +130,7 @@
           {
             "group": "Concepts",
             "pages": [
-              "pages/developer/v3/quality-levels",
-              "pages/developer/v3/data-retention"
+              "pages/developer/v3/quality-levels"
             ]
           },
           {
