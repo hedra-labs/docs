@@ -41,19 +41,19 @@ const client = new OpenAI({
 
 ## Choose a model
 
-A chat model's id is its full `org/model` id, matched without regard to case:
+Hedra matches a chat model's id without regard to case:
 
 | Model | Images per request |
 | --- | --- |
-| `zai-org/glm-5.3` | up to 8 |
-| `zai-org/glm-5.3-flash` | up to 64 |
-| `moonshotai/kimi-k3` | up to 96 |
-| `deepseek-ai/deepseek-v4-pro-0813` | none |
-| `deepseek-ai/deepseek-v4.1-flash` | up to 64 |
+| `glm-5.3` | up to 8 |
+| `glm-5.3-flash` | up to 64 |
+| `kimi-k3` | up to 96 |
+| `deepseek-v4-pro-0813` | none |
+| `deepseek-v4.1-flash` | up to 64 |
 
-`GET /v3/models` lists them with each model's `context_length`, `max_output_tokens` and per-token prices. `GET /v3/models/{model}` also returns the model's `input_schema`, the JSON Schema of the requests it accepts: for example, `moonshotai/kimi-k3` accepts `top_p` only as `0.95` and `temperature` only from 0 to 1. A bare id such as `kimi-k3` returns `404`, and the message names the full id.
+`GET /v3/models` lists them with each model's `context_length`, `max_output_tokens` and per-token prices. `GET /v3/models/{model}` also returns the model's `input_schema`, the JSON Schema of the requests it accepts: for example, `kimi-k3` accepts `top_p` only as `0.95` and `temperature` only from 0 to 1.
 
-The examples below use `zai-org/glm-5.3`.
+The examples below use `glm-5.3`.
 
 ## Send a request
 
@@ -61,7 +61,7 @@ The examples below use `zai-org/glm-5.3`.
 
 ```python Python
 response = client.chat.completions.create(
-    model="zai-org/glm-5.3",
+    model="glm-5.3",
     messages=[{"role": "user", "content": "Write a two-sentence script for a product intro video."}],
 )
 print(response.choices[0].message.content)
@@ -69,7 +69,7 @@ print(response.choices[0].message.content)
 
 ```typescript TypeScript
 const response = await client.chat.completions.create({
-  model: "zai-org/glm-5.3",
+  model: "glm-5.3",
   messages: [{ role: "user", content: "Write a two-sentence script for a product intro video." }],
 });
 console.log(response.choices[0].message.content);
@@ -85,7 +85,7 @@ A non-streaming request must finish within 120 seconds. After that the API answe
 
 Every chat model reasons by default. The reasoning text arrives in `reasoning_content`, a field OpenAI's format does not have, on the message or on stream deltas. Reasoning tokens count toward `max_tokens` and are billed as output. A reasoning model can spend all 4,096 tokens of the default bound reasoning and return `finish_reason: length` with no answer, so set `max_tokens` higher for long reasoning.
 
-`reasoning_effort` takes the values in the model's `input_schema`: `minimal`, `low`, `medium`, `high`, `xhigh` and `max` on every model, and `none`, which turns reasoning off, on every model except `zai-org/glm-5.3` and `zai-org/glm-5.3-flash`. Hedra sends `minimal` to the model as `low`, `medium` as `high` and `xhigh` as `max`. Leaving it out uses the model's default, which is `max` on `moonshotai/kimi-k3`.
+`reasoning_effort` takes the values in the model's `input_schema`: `minimal`, `low`, `medium`, `high`, `xhigh` and `max` on every model, and `none`, which turns reasoning off, on every model except `glm-5.3` and `glm-5.3-flash`. Hedra sends `minimal` to the model as `low`, `medium` as `high` and `xhigh` as `max`. Leaving it out uses the model's default, which is `max` on `kimi-k3`.
 
 ## Stream the response
 
@@ -95,7 +95,7 @@ Pass `stream: true`. To get token counts, also pass `stream_options: {"include_u
 
 ```python Python
 stream = client.chat.completions.create(
-    model="zai-org/glm-5.3",
+    model="glm-5.3",
     messages=[{"role": "user", "content": "Explain SSE in two sentences."}],
     stream=True,
     stream_options={"include_usage": True},
@@ -109,7 +109,7 @@ for chunk in stream:
 
 ```typescript TypeScript
 const stream = await client.chat.completions.create({
-  model: "zai-org/glm-5.3",
+  model: "glm-5.3",
   messages: [{ role: "user", content: "Explain SSE in two sentences." }],
   stream: true,
   stream_options: { include_usage: true },
@@ -151,9 +151,9 @@ The route accepts these top-level fields and answers any other with `400` naming
 - Messages take the roles `system`, `developer`, `user`, `assistant` and `tool`.
 - `stop` works on every model.
 - `logprobs: true` and `top_logprobs` return `400`: no model returns log probabilities.
-- `seed` is accepted and passed to the model. It is best effort, as on OpenAI: in our tests only 1 of 50 same-seed pairs at `temperature: 1` returned the same text, and `temperature: 0` alone repeated only on `moonshotai/kimi-k3` and `deepseek-ai/deepseek-v4-pro-0813`. Do not rely on either for reproducible output. Responses carry no `system_fingerprint`.
-- `frequency_penalty` and `presence_penalty` discourage the model from repeating words. `frequency_penalty` is accepted only at `0` on `zai-org/glm-5.3`, `zai-org/glm-5.3-flash`, `deepseek-ai/deepseek-v4-pro-0813` and `deepseek-ai/deepseek-v4.1-flash`, which accept any `presence_penalty`. `moonshotai/kimi-k3` accepts `frequency_penalty` and `presence_penalty` only at `0`.
-- `moonshotai/kimi-k3` always calls tools in parallel, and returns `400` for `parallel_tool_calls: false`: leave it out.
+- `seed` is accepted and passed to the model. It is best effort, as on OpenAI: in our tests only 1 of 50 same-seed pairs at `temperature: 1` returned the same text, and `temperature: 0` alone repeated only on `kimi-k3` and `deepseek-v4-pro-0813`. Do not rely on either for reproducible output. Responses carry no `system_fingerprint`.
+- `frequency_penalty` and `presence_penalty` discourage the model from repeating words. `frequency_penalty` is accepted only at `0` on `glm-5.3`, `glm-5.3-flash`, `deepseek-v4-pro-0813` and `deepseek-v4.1-flash`, which accept any `presence_penalty`. `kimi-k3` accepts `frequency_penalty` and `presence_penalty` only at `0`.
+- `kimi-k3` always calls tools in parallel, and returns `400` for `parallel_tool_calls: false`: leave it out.
 - A message's `content` is a string or a list of `text` and `image_url` parts. An image URL must be `https://` or a `data:` URL. A model that does not take images, or a request with more images than the model accepts, returns `400`.
 - A request body over 45 MB, `data:` images included, returns `400` with `param` `body`.
 
@@ -201,14 +201,14 @@ The exception names are the Python SDK's. The TypeScript SDK uses the same names
 import openai
 
 try:
-    client.chat.completions.create(model="zai-org/glm-5.3", messages=[{"role": "user", "content": "Hi"}])
+    client.chat.completions.create(model="glm-5.3", messages=[{"role": "user", "content": "Hi"}])
 except openai.APIStatusError as e:
     print(e.status_code, e.code, e.message, e.request_id)
 ```
 
 ```typescript TypeScript
 try {
-  await client.chat.completions.create({ model: "zai-org/glm-5.3", messages: [{ role: "user", content: "Hi" }] });
+  await client.chat.completions.create({ model: "glm-5.3", messages: [{ role: "user", content: "Hi" }] });
 } catch (e) {
   if (e instanceof OpenAI.APIError) {
     console.log(e.status, e.code, e.message, e.requestID);
@@ -241,7 +241,7 @@ Each chat request is a job, and the completion's `id` is its job id (`job_<uuid>
 
 ```python Python
 response = client.responses.create(
-    model="zai-org/glm-5.3",
+    model="glm-5.3",
     input="Write a two-sentence script for a product intro video.",
 )
 print(response.output_text)
@@ -249,7 +249,7 @@ print(response.output_text)
 
 ```typescript TypeScript
 const response = await client.responses.create({
-  model: "zai-org/glm-5.3",
+  model: "glm-5.3",
   input: "Write a two-sentence script for a product intro video.",
 });
 console.log(response.output_text);
@@ -261,7 +261,7 @@ To continue a conversation, send the earlier input, the previous response's `out
 
 ```python
 followup = client.responses.create(
-    model="zai-org/glm-5.3",
+    model="glm-5.3",
     input=[
         {"role": "user", "content": "Write a two-sentence script for a product intro video."},
         *response.output,
@@ -298,7 +298,7 @@ client = Anthropic(
     api_key=os.environ["HEDRA_KEY"],
 )
 message = client.messages.create(
-    model="zai-org/glm-5.3",
+    model="glm-5.3",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "Write a two-sentence script for a product intro video."}
@@ -315,7 +315,7 @@ const client = new Anthropic({
   apiKey: process.env.HEDRA_KEY,
 });
 const message = await client.messages.create({
-  model: "zai-org/glm-5.3",
+  model: "glm-5.3",
   max_tokens: 1024,
   messages: [
     { role: "user", content: "Write a two-sentence script for a product intro video." },
@@ -331,7 +331,7 @@ The route accepts `model`, `messages`, `max_tokens`, `system`, `tools`, `tool_ch
 - `max_tokens` is required, as on Anthropic's API.
 - `tools` takes client tools, with `name`, `description` and `input_schema`. A server tool, such as `web_search_20250305`, returns `400`.
 - The model's reasoning arrives as a `thinking` block with an empty `signature`. Sending that block back in `messages` returns the reasoning to the model.
-- `output_config.effort` takes Anthropic's values, `low` to `max`, and sets the model's reasoning effort. `thinking: {"type": "disabled"}` turns reasoning off, which `zai-org/glm-5.3` and `zai-org/glm-5.3-flash` answer with `400`: those models always reason. `thinking.budget_tokens`, `cache_control`, `metadata` and `context_management` are accepted and ignored.
+- `output_config.effort` takes Anthropic's values, `low` to `max`, and sets the model's reasoning effort. `thinking: {"type": "disabled"}` turns reasoning off, which `glm-5.3` and `glm-5.3-flash` answer with `400`: those models always reason. `thinking.budget_tokens`, `cache_control`, `metadata` and `context_management` are accepted and ignored.
 - A `tool_result` block's images go to the model with the next user message, since a tool result holds text alone on the OpenAI format the models run on. A model that does not take images gets a note in their place.
 - `stream: true` streams the response as Messages events, which the SDK's `client.messages.stream` reads.
 - `usage.input_tokens` leaves out the prompt tokens the model served from its cache, which `cache_read_input_tokens` counts, and `usage.cost` is the request's charge in US dollars.
@@ -363,4 +363,4 @@ Other OpenAI-compatible hosts accept fields that return `400` here. Remove them 
 | `chat_template`, `chat_template_args` | `400` |
 | `continuous_usage_stats` in `stream_options` | Use `stream_options: {"include_usage": true}` |
 | `logprobs: true` | `400` |
-| `parallel_tool_calls: false` on `moonshotai/kimi-k3` | `400` |
+| `parallel_tool_calls: false` on `kimi-k3` | `400` |
