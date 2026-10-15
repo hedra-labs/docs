@@ -36,6 +36,11 @@
           "anchor": "API Dashboard",
           "icon": "layout-dashboard",
           "href": "https://www.hedra.com/app/settings/api"
+        },
+        {
+          "anchor": "MCP server",
+          "icon": "plug",
+          "href": "https://www.hedra.com/mcp"
         }
       ]
     },
