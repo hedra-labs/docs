@@ -19,11 +19,11 @@ export HEDRA_KEY="<key_id>:<secret>"
 
 | Model | Input | Time of one OpenCode run |
 | --- | --- | --- |
-| `zai-org/glm-5.3` | text and images | 79 s |
-| `zai-org/glm-5.3-flash` | text and images | 35 s |
-| `moonshotai/kimi-k3` | text and images | 83 s |
-| `deepseek-ai/deepseek-v4-pro-0813` | text | 141 s |
-| `deepseek-ai/deepseek-v4.1-flash` | text and images | 27 s |
+| `glm-5.3` | text and images | 79 s |
+| `glm-5.3-flash` | text and images | 35 s |
+| `kimi-k3` | text and images | 83 s |
+| `deepseek-v4-pro-0813` | text | 141 s |
+| `deepseek-v4.1-flash` | text and images | 27 s |
 
 On 2026-09-30 we had OpenCode, on each model, write unit tests for one module of a large Python repository and run them until they passed. Every model finished in 8 to 14 requests. `GET /v3/models` returns each model's current per-token prices.
 
@@ -51,10 +51,10 @@ Save this as `~/.claude-hedra/settings.json`:
   "apiKeyHelper": "echo $HEDRA_KEY",
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.hedra.com/v3/anthropic",
-    "ANTHROPIC_MODEL": "zai-org/glm-5.3[1m]",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "zai-org/glm-5.3[1m]",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "zai-org/glm-5.3[1m]",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "zai-org/glm-5.3-flash",
+    "ANTHROPIC_MODEL": "glm-5.3[1m]",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-5.3[1m]",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.3[1m]",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5.3-flash",
     "CLAUDE_CODE_AUTO_MODE_SERVER": "0"
   }
 }
@@ -77,7 +77,7 @@ Claude Code reads its settings from the directory in `CLAUDE_CONFIG_DIR`, so onl
 </Step>
 </Steps>
 
-`CLAUDE_CONFIG_DIR=~/.claude-hedra claude --model 'moonshotai/kimi-k3[1m]'` switches models for one session. Claude Code's `/effort` levels become the model's `reasoning_effort`, and the model's reasoning appears as thinking. In print mode (`claude -p`), Claude Code writes `[claude-code:unrecognized_model]` to stderr for a Hedra model id, and the session runs normally.
+`CLAUDE_CONFIG_DIR=~/.claude-hedra claude --model 'kimi-k3[1m]'` switches models for one session. Claude Code's `/effort` levels become the model's `reasoning_effort`, and the model's reasoning appears as thinking. In print mode (`claude -p`), Claude Code writes `[claude-code:unrecognized_model]` to stderr for a Hedra model id, and the session runs normally.
 
 Claude Code's cost figures, in `/cost` and in the `total_cost_usd` of `claude -p --output-format json`, don't match Hedra's charges. Hedra's charge for each request is in the response's `usage.cost`, on the [Jobs tab](https://www.hedra.com/develop/jobs) of the developer console, and in `GET /v3/jobs/{job_id}`.
 
@@ -99,7 +99,7 @@ npm install -g @openai/codex
 Save this as `~/.codex/hedra.config.toml`:
 
 ```toml
-model = "zai-org/glm-5.3"
+model = "glm-5.3"
 model_provider = "hedra"
 
 [features]
@@ -123,7 +123,7 @@ codex --profile hedra
 </Step>
 </Steps>
 
-`codex --profile hedra --model moonshotai/kimi-k3` switches models. Hedra maps Codex's `model_reasoning_effort` values onto the models' own: `minimal` to `low`, `medium` to the model's default effort, and `xhigh` to `max`.
+`codex --profile hedra --model kimi-k3` switches models. Hedra maps Codex's `model_reasoning_effort` values onto the models' own: `minimal` to `low`, `medium` to the model's default effort, and `xhigh` to `max`.
 
 </Tab>
 <Tab title="OpenCode">
@@ -154,11 +154,11 @@ Save this as `~/.config/opencode/opencode.json`, or add the `hedra` entry to the
         "apiKey": "{env:HEDRA_KEY}"
       },
       "models": {
-        "zai-org/glm-5.3": { "name": "GLM-5.3" },
-        "zai-org/glm-5.3-flash": { "name": "GLM-5.3 Flash" },
-        "moonshotai/kimi-k3": { "name": "Kimi K3" },
-        "deepseek-ai/deepseek-v4-pro-0813": { "name": "DeepSeek V4 Pro 0813" },
-        "deepseek-ai/deepseek-v4.1-flash": { "name": "DeepSeek V4.1 Flash" }
+        "glm-5.3": { "name": "GLM-5.3" },
+        "glm-5.3-flash": { "name": "GLM-5.3 Flash" },
+        "kimi-k3": { "name": "Kimi K3" },
+        "deepseek-v4-pro-0813": { "name": "DeepSeek V4 Pro 0813" },
+        "deepseek-v4.1-flash": { "name": "DeepSeek V4.1 Flash" }
       }
     }
   }
@@ -169,7 +169,7 @@ Save this as `~/.config/opencode/opencode.json`, or add the `hedra` entry to the
 <Step title="Start OpenCode">
 
 ```bash
-opencode --model hedra/zai-org/glm-5.3
+opencode --model hedra/glm-5.3
 ```
 
 </Step>
@@ -200,11 +200,11 @@ Save this as `~/.pi/agent/models.json`. With `"$HEDRA_KEY"`, Pi reads the key fr
       "api": "openai-completions",
       "apiKey": "$HEDRA_KEY",
       "models": [
-        { "id": "zai-org/glm-5.3", "contextWindow": 1048576 },
-        { "id": "zai-org/glm-5.3-flash", "contextWindow": 1048576 },
-        { "id": "moonshotai/kimi-k3", "contextWindow": 1048576 },
-        { "id": "deepseek-ai/deepseek-v4-pro-0813", "contextWindow": 1048576 },
-        { "id": "deepseek-ai/deepseek-v4.1-flash", "contextWindow": 1048576 }
+        { "id": "glm-5.3", "contextWindow": 1048576 },
+        { "id": "glm-5.3-flash", "contextWindow": 1048576 },
+        { "id": "kimi-k3", "contextWindow": 1048576 },
+        { "id": "deepseek-v4-pro-0813", "contextWindow": 1048576 },
+        { "id": "deepseek-v4.1-flash", "contextWindow": 1048576 }
       ]
     }
   }
@@ -217,7 +217,7 @@ Save this as `~/.pi/agent/models.json`. With `"$HEDRA_KEY"`, Pi reads the key fr
 <Step title="Start Pi">
 
 ```bash
-pi --provider hedra --model zai-org/glm-5.3
+pi --provider hedra --model glm-5.3
 ```
 
 </Step>
@@ -249,7 +249,7 @@ curl "https://api.hedra.com/v3/usage?start=2026-09-30T21:00:00Z&group_by=model" 
 
 ## Troubleshooting
 
-- **Codex prints `Model metadata for zai-org/glm-5.3 not found`.** Codex has no metadata for Hedra's models, and the session runs normally without it.
+- **Codex prints `Model metadata for glm-5.3 not found`.** Codex has no metadata for Hedra's models, and the session runs normally without it.
 - **Claude Code's WebSearch tool fails.** WebSearch runs on Anthropic's web search server tool, which Hedra answers with `400`. WebFetch reads pages itself and works.
 - **A missing key, or a `401` response.** When `HEDRA_KEY` is unset, Codex prints `Missing environment variable: HEDRA_KEY`, OpenCode prints `Missing credentials` and Pi prints `No API key found for hedra`. Set `HEDRA_KEY` in the terminal that starts the agent, and restart the agent.
 - **A `402` response.** Your API wallet's balance cannot cover the request. [Add funds](https://www.hedra.com/develop/billing) and send the message again.
