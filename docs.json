@@ -40,7 +40,7 @@
         {
           "anchor": "MCP server",
           "icon": "plug",
-          "href": "https://www.hedra.com/mcp"
+          "href": "/pages/developer/v3/mcp"
         }
       ]
     },
@@ -117,7 +117,8 @@
           {
             "group": "Getting Started",
             "pages": [
-              "pages/developer/v3/quickstart"
+              "pages/developer/v3/quickstart",
+              "pages/developer/v3/mcp"
             ]
           },
           {
