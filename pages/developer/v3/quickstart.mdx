@@ -19,6 +19,22 @@ OpenAI's chat completions format, and bills each request to the same wallet.
 [Chat completions](/pages/developer/v3/chat-completions) shows how to call them
 with the stock OpenAI SDK.
 
+To use Hedra from Claude, Cursor, Codex or ChatGPT, add the Hedra MCP server,
+`https://mcp.hedra.com`, to the client instead of calling the API. The client
+signs you in with your Hedra account, and you need no API key:
+
+<CardGroup cols={3}>
+  <Card title="Add to Claude" icon="plug" href="https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Hedra&connectorUrl=https%3A%2F%2Fmcp.hedra.com">
+    Opens Claude's connector dialog with Hedra filled in.
+  </Card>
+  <Card title="Add to Cursor" icon="plug" href="cursor://anysphere.cursor-deeplink/mcp/install?name=hedra&config=eyJ1cmwiOiJodHRwczovL21jcC5oZWRyYS5jb20ifQ%3D%3D">
+    Installs the Hedra MCP server in Cursor.
+  </Card>
+  <Card title="Codex, ChatGPT, Claude Code" icon="plug" href="/pages/developer/v3/mcp">
+    Setup steps for every client.
+  </Card>
+</CardGroup>
+
 ### Step 1: Create an API key
 
 Generate a key in the [developer console](https://www.hedra.com/develop/api-keys),

@@ -36,6 +36,11 @@
           "anchor": "API Dashboard",
           "icon": "layout-dashboard",
           "href": "https://www.hedra.com/app/settings/api"
+        },
+        {
+          "anchor": "MCP server",
+          "icon": "plug",
+          "href": "/pages/developer/v3/mcp"
         }
       ]
     },
@@ -112,7 +117,8 @@
           {
             "group": "Getting Started",
             "pages": [
-              "pages/developer/v3/quickstart"
+              "pages/developer/v3/quickstart",
+              "pages/developer/v3/mcp"
             ]
           },
           {

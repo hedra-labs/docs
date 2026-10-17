@@ -1,0 +1,111 @@
+---
+title: "Connect Claude, Cursor, Codex and ChatGPT to the Hedra MCP server"
+sidebarTitle: "MCP server"
+description: "Add https://mcp.hedra.com to Claude, Claude Code, Codex, Cursor, ChatGPT or Hermes, sign in with your Hedra account, and generate video, images and audio from the chat."
+---
+
+The Hedra MCP server is `https://mcp.hedra.com`. Add that URL to an MCP client
+and sign in with your Hedra account. The client can then generate video,
+images, speech, music and sound effects with every model in the
+[catalog](/pages/developer/v3/model-catalog), read your Hedra library, and save
+what it makes there. You need no API key. Use your Hedra subscription or pay
+as you go; [MCP settings](https://www.hedra.com/develop/mcp) in the
+developer console shows the workspace a client acts in and how Hedra bills its
+usage.
+
+## Add the server
+
+<Tabs>
+<Tab title="Claude">
+
+<Steps>
+<Step title="Add Hedra to Claude">
+
+[Add to Claude](https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=Hedra&connectorUrl=https%3A%2F%2Fmcp.hedra.com)
+opens claude.ai's **Add custom connector** dialog with the name `Hedra` and the
+URL `https://mcp.hedra.com` filled in. To add it by hand, open **Customize →
+Connectors → Add custom connector** and enter that URL.
+
+</Step>
+<Step title="Connect and sign in">
+
+Click **Add**, then **Connect**, and finish the Hedra sign-in.
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab title="Claude Code">
+
+```bash
+claude mcp add --transport http hedra https://mcp.hedra.com
+```
+
+Run `/mcp` and complete the Hedra sign-in in the browser window it opens.
+
+</Tab>
+<Tab title="Codex">
+
+```bash
+codex mcp add hedra --url https://mcp.hedra.com
+```
+
+Start Codex and approve the Hedra sign-in when it prompts you.
+
+</Tab>
+<Tab title="Cursor">
+
+[Add to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=hedra&config=eyJ1cmwiOiJodHRwczovL21jcC5oZWRyYS5jb20ifQ%3D%3D)
+installs the server. To add it by hand, put this in `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "hedra": { "url": "https://mcp.hedra.com" }
+  }
+}
+```
+
+Reload Cursor, then sign in to Hedra from the MCP panel.
+
+</Tab>
+<Tab title="ChatGPT">
+
+Open **Settings → Apps**, add a custom app, and paste `https://mcp.hedra.com`.
+Some plans need developer mode on first. Then authorize Hedra.
+
+</Tab>
+<Tab title="Hermes">
+
+Add this to `~/.hermes/config.yaml`:
+
+```yaml
+mcp_servers:
+  hedra:
+    url: "https://mcp.hedra.com"
+    auth: oauth
+```
+
+Hermes opens the Hedra sign-in and keeps the token after the OAuth callback.
+
+</Tab>
+</Tabs>
+
+## Try it
+
+Ask the client:
+
+```text
+Use Hedra to make a hero image for a coffee brand landing page, 16:9, moody morning light
+```
+
+The client submits the job and shows the image when it finishes. Ask for a
+video, a voice or a song the same way, or name a model from the catalog.
+
+## If the client reports 404
+
+The server URL is `https://mcp.hedra.com` on its own. A connector saved with a
+curl command, or with an `api.hedra.com` URL, gets 404 from every chat that uses
+it. Remove that connector and add the URL above. The REST API at
+`api.hedra.com` is for code you write, with an API key; the
+[quickstart](/pages/developer/v3/quickstart) covers it.
