@@ -6,6 +6,9 @@ description: "Create a v3 key, authenticate HTTP and SDK requests, and choose sc
 Create a key in the [developer console](https://www.hedra.com/develop/api-keys).
 The credential has the form `<key_id>:<secret>`. Store it server-side as
 `HEDRA_API_KEY`; do not embed a long-lived key in browser code.
+If a legacy v2 integration already uses that variable, use a separate terminal
+or a command-scoped assignment for v3; see the
+[migration guide](/pages/developer/v3/migrate-from-v2).
 
 | Client | Authentication |
 | --- | --- |
