@@ -463,7 +463,10 @@
     "default": "system"
   },
   "seo": {
-    "indexing": "navigable"
+    "indexing": "all",
+    "metatags": {
+      "canonical": "https://www.hedra.com/docs"
+    }
   },
   "icons": {
     "library": "tabler"

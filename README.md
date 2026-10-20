@@ -24,6 +24,9 @@ The `Sync OpenAPI schemas` workflow refreshes both schemas. Put documentation
 annotations in `openapi-v3-overrides.json` or `openapi-overrides.json` so they
 survive regeneration. The workflow injects SDK samples and runs
 `scripts/generate_v3_reference_nav.py` to regenerate v3 reference navigation.
+The workflow requires the `OPENAPI_SYNC_TOKEN` repository secret with contents
+and pull-request write access.
+Run `python3 scripts/sync_openapi.py` to refresh `openapi.json` locally.
 
 Legacy pages use `noindex`, including generated operations through their
 `x-mint.metadata` overrides. After deployment, check the emitted robots metadata,
