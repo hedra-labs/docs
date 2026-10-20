@@ -1,0 +1,44 @@
+---
+title: "Upload files and reuse outputs"
+description: "Upload media for v3 model inputs, preserve upload handles, and chain server-issued asset references."
+---
+
+Upload input bytes with `POST /v3/files`. The API returns a `url`, detected
+`content_type`, and `expires_at`. Keep the URL unchanged, including its query
+string; it is the upload handle.
+
+```bash
+curl --fail-with-body -X POST https://api.hedra.com/v3/files \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -F "file=@input.png"
+```
+
+Put the handle in the media field advertised by your model's schema. For
+Veo 3, a start frame is passed as:
+
+```json
+{"source":"url","url":"<url returned by POST /v3/files>"}
+```
+
+under `input.start_image`. For GPT Image 2, image-editing references belong in
+`input.images`, an array. Arbitrary external URLs are not equivalent to a
+Hedra upload handle. See [video inference](/pages/developer/v3/generate-video)
+for a full input object.
+
+## Expiry and limits
+
+Use the returned `expires_at` to determine whether a handle can still be
+submitted. The current contract describes a one-hour upload-handle lifetime.
+Re-upload expired inputs. File type, byte size, and media duration limits differ
+by model and input slot; inspect `GET /v3/models/{model}/openapi.json`.
+
+Output URLs are signed download URLs. An output marked `EXPIRED` has no
+retrievable URL or asset ID. Download outputs you need to retain; do not use a
+signed URL as permanent storage. The public contract does not establish a single
+retention guarantee for every model or account.
+
+## Reuse a generated output
+
+Read the completed output's server-issued `asset_id` and use
+`{"source":"asset","asset_id":"asset_..."}` in the next model's media input.
+Do not derive it from `job_id`. See [Chain inference jobs](/pages/developer/v3/chain-generations).

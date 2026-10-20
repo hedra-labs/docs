@@ -35,7 +35,7 @@ REFERENCE_SOURCES = {
     "cli": "https://raw.githubusercontent.com/hedra-labs/hedra-cli/main/reference.md",
 }
 NODE_PREAMBLE = (
-    'import { HedraClient } from "hedra-node";\n'
+    'import { HedraClient } from "@hedra/sdk";\n'
     "\n"
     'const client = new HedraClient({ apiKey: "YOUR_API_KEY" });\n'
     "\n"

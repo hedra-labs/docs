@@ -1,0 +1,14 @@
+---
+title: "Messages API"
+description: "Endpoint and compatibility guide for POST /v3/anthropic/v1/messages on Hedra."
+---
+
+`POST /v3/anthropic/v1/messages`
+
+Use a Hedra key with `chat:write` and a funded API wallet. See the
+[Messages API request guide](/pages/developer/v3/chat-completions#messages-api) for
+supported fields, responses, SDK examples, and compatibility differences.
+
+These routes serve supported language models. They are separate from the
+asynchronous image, video, and audio job-submission API. Do not assume every
+field or behavior of the upstream SDK's API is supported.

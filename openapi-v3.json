@@ -316,7 +316,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.list();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.list();\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.list();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.list();\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
         ]
       }
@@ -605,7 +605,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.get(\"job_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.get(\"job_id\");\n"
           }
         ]
       }
@@ -912,7 +912,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.getStatus(\"job_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.getStatus(\"job_id\");\n"
           }
         ]
       }
@@ -1233,7 +1233,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.listJobLogs(\"job_id\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.listJobLogs(\"job_id\");\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.listJobLogs(\"job_id\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.listJobLogs(\"job_id\");\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
         ]
       }
@@ -1549,7 +1549,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await client.jobs.stream(\"job_id\");\nfor await (const item of response) {\n    console.log(item);\n}\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await client.jobs.stream(\"job_id\");\nfor await (const item of response) {\n    console.log(item);\n}\n"
           }
         ]
       }
@@ -1806,7 +1806,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.list();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.list();\n"
           }
         ]
       }
@@ -2166,7 +2166,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitCreatifyAurora({\n    input: {\n        resolution: \"480p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitCreatifyAurora({\n    input: {\n        resolution: \"480p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -2526,7 +2526,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitDreamina31({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitDreamina31({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\"\n    }\n});\n"
           }
         ]
       }
@@ -2886,7 +2886,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsAudioIsolation({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsAudioIsolation({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -3246,7 +3246,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsEnglishStsV2({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsEnglishStsV2({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -3606,7 +3606,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsFlashMultilingualV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsFlashMultilingualV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -3966,7 +3966,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsFlashV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsFlashV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -4326,7 +4326,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMultilingualStsV2({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMultilingualStsV2({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -4686,7 +4686,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMultilingualV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMultilingualV2({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -5046,7 +5046,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMusic({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMusic({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -5406,7 +5406,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsSoundEffects({\n    input: {\n        text: \"text\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsSoundEffects({\n    input: {\n        text: \"text\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -5766,7 +5766,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsV3({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsV3({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -6126,7 +6126,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsVoiceClone({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        name: \"name\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsVoiceClone({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        name: \"name\"\n    }\n});\n"
           }
         ]
       }
@@ -6486,7 +6486,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitEyelineIdRelight({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitEyelineIdRelight({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
           }
         ]
       }
@@ -6846,7 +6846,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitEyelineIdRestyle({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitEyelineIdRestyle({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
           }
         ]
       }
@@ -7206,7 +7206,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux11Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux11Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
           }
         ]
       }
@@ -7566,7 +7566,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux11Ultra({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux11Ultra({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -7926,7 +7926,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"auto\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"auto\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -8286,7 +8286,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux3VideoUpscalerCreative({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux3VideoUpscalerCreative({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -8646,7 +8646,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux3VideoUpscalerPrecise({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux3VideoUpscalerPrecise({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -9006,7 +9006,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxDev({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxDev({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
           }
         ]
       }
@@ -9366,7 +9366,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxKontextMax({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxKontextMax({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
           }
         ]
       }
@@ -9726,7 +9726,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxKontextPro({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFluxKontextPro({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
           }
         ]
       }
@@ -10086,7 +10086,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Flex({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Flex({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -10446,7 +10446,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Klein9B({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Klein9B({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -10806,7 +10806,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Max({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Max({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -11166,7 +11166,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitFlux2Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -11526,7 +11526,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGeminiOmniFlash({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGeminiOmniFlash({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -11886,7 +11886,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGeminiOmniFlash11({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"360p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGeminiOmniFlash11({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"360p\"\n    }\n});\n"
           }
         ]
       }
@@ -12246,7 +12246,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage15({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage15({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
           }
         ]
       }
@@ -12606,7 +12606,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
           }
         ]
       }
@@ -12966,7 +12966,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage25Flare({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage25Flare({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
           }
         ]
       }
@@ -13326,7 +13326,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage25Sunburst({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGptImage25Sunburst({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
           }
         ]
       }
@@ -13686,7 +13686,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokImagine({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokImagine({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
           }
         ]
       }
@@ -14046,7 +14046,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokImagine20({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"2:1\",\n        resolution: \"1k\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokImagine20({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"2:1\",\n        resolution: \"1k\"\n    }\n});\n"
           }
         ]
       }
@@ -14406,7 +14406,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokVideo({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"auto\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitGrokVideo({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"auto\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -14766,7 +14766,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHappyHorse({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHappyHorse({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -15126,7 +15126,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraAvatar({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraAvatar({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -15486,7 +15486,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraCharacter3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraCharacter3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -15846,7 +15846,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHeygenPhotoAvatar4({\n    input: {\n        aspect_ratio: \"16:9\",\n        resolution: \"360p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHeygenPhotoAvatar4({\n    input: {\n        aspect_ratio: \"16:9\",\n        resolution: \"360p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -16206,7 +16206,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHidreamO1Image({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHidreamO1Image({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -16566,7 +16566,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitIdeogramV2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitIdeogramV2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
           }
         ]
       }
@@ -16926,7 +16926,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitIdeogramV4({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitIdeogramV4({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\"\n    }\n});\n"
           }
         ]
       }
@@ -17286,7 +17286,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitImagen3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitImagen3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\"\n    }\n});\n"
           }
         ]
       }
@@ -17646,7 +17646,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitImagen4({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitImagen4({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
           }
         ]
       }
@@ -18006,7 +18006,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling16({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling16({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
           }
         ]
       }
@@ -18366,7 +18366,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling21Master({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling21Master({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -18726,7 +18726,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling25Turbo({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling25Turbo({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -19086,7 +19086,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling26MotionControl({\n    input: {\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling26MotionControl({\n    input: {\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
           }
         ]
       }
@@ -19446,7 +19446,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling26Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling26Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -19806,7 +19806,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingAiAvatarV2({\n    input: {\n        aspect_ratio: \"16:9\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingAiAvatarV2({\n    input: {\n        aspect_ratio: \"16:9\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -20166,7 +20166,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO1({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO1({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -20526,7 +20526,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO3({\n    input: {\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO3({\n    input: {\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -20886,7 +20886,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO3Edit({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO3Edit({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
           }
         ]
       }
@@ -21246,7 +21246,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO3Reference({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingO3Reference({\n    input: {\n        prompt: \"prompt\",\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
           }
         ]
       }
@@ -21606,7 +21606,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingV3({\n    input: {\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingV3({\n    input: {\n        aspect_ratio: \"16:9\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -21966,7 +21966,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingV3MotionControl({\n    input: {\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKlingV3MotionControl({\n    input: {\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"720p\"\n    }\n});\n"
           }
         ]
       }
@@ -22326,7 +22326,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKrea2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKrea2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
           }
         ]
       }
@@ -22686,7 +22686,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLtx23({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"1080p\",\n        duration_ms: 1,\n        aspect_ratio: \"auto\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLtx23({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"1080p\",\n        duration_ms: 1,\n        aspect_ratio: \"auto\"\n    }\n});\n"
           }
         ]
       }
@@ -23046,7 +23046,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLtx25({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"1080p\",\n        aspect_ratio: \"auto\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLtx25({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"1080p\",\n        aspect_ratio: \"auto\"\n    }\n});\n"
           }
         ]
       }
@@ -23406,7 +23406,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLumaRay32({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"3:4\",\n        resolution: \"540p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitLumaRay32({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"3:4\",\n        resolution: \"540p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -23766,7 +23766,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMaiImage25({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMaiImage25({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\"\n    }\n});\n"
           }
         ]
       }
@@ -24126,7 +24126,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxH3({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxH3({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -24486,7 +24486,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxH3MaxCameraControls({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"480p\",\n        duration_ms: 1,\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        camera_trajectory: [{\n                time: 1.1,\n                azimuth: 1.1,\n                elevation: 1.1,\n                distance: 1.1\n            }]\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxH3MaxCameraControls({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"480p\",\n        duration_ms: 1,\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        camera_trajectory: [{\n                time: 1.1,\n                azimuth: 1.1,\n                elevation: 1.1,\n                distance: 1.1\n            }]\n    }\n});\n"
           }
         ]
       }
@@ -24846,7 +24846,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxH3MaxTurbo({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxH3MaxTurbo({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -25206,7 +25206,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo02({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo02({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -25566,7 +25566,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo23({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo23({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -25926,7 +25926,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxSpeech25HdPreview({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxSpeech25HdPreview({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -26286,7 +26286,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxSpeech25TurboPreview({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxSpeech25TurboPreview({\n    input: {\n        text: \"text\",\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
         ]
       }
@@ -26646,7 +26646,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMuseImage({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMuseImage({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\"\n    }\n});\n"
           }
         ]
       }
@@ -27006,7 +27006,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBanana({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBanana({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"1K\"\n    }\n});\n"
           }
         ]
       }
@@ -27366,7 +27366,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBanana2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\",\n        resolution: \"512px\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBanana2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\",\n        resolution: \"512px\"\n    }\n});\n"
           }
         ]
       }
@@ -27726,7 +27726,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBananaPro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\",\n        resolution: \"1K\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitNanoBananaPro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\",\n        resolution: \"1K\"\n    }\n});\n"
           }
         ]
       }
@@ -28086,7 +28086,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitOmnihuman15({\n    input: {\n        resolution: \"720p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitOmnihuman15({\n    input: {\n        resolution: \"720p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -28446,7 +28446,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitPixverseV6({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"360p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitPixverseV6({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"360p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -28806,7 +28806,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitQwenImage2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitQwenImage2({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\"\n    }\n});\n"
           }
         ]
       }
@@ -29166,7 +29166,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitRecraftV3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitRecraftV3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
           }
         ]
       }
@@ -29526,7 +29526,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\"\n    }\n});\n"
           }
         ]
       }
@@ -29886,7 +29886,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21Edit({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\",\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21Edit({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\",\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
           }
         ]
       }
@@ -30246,7 +30246,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21Remix({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\",\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitReve21Remix({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"4:1\",\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
           }
         ]
       }
@@ -30606,7 +30606,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSana({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSana({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\"\n    }\n});\n"
           }
         ]
       }
@@ -30966,7 +30966,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance15Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance15Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -31326,7 +31326,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance20({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"4K\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance20({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"4K\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -31686,7 +31686,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance20Mini({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance20Mini({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -32046,7 +32046,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance25({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedance25({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -32406,7 +32406,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream40({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream40({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -32766,7 +32766,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream45({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1440p (2K QHD)\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream45({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1440p (2K QHD)\"\n    }\n});\n"
           }
         ]
       }
@@ -33126,7 +33126,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream50Lite({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1440p (2K QHD)\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream50Lite({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1440p (2K QHD)\"\n    }\n});\n"
           }
         ]
       }
@@ -33486,7 +33486,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream50Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSeedream50Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -33846,7 +33846,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSora2Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitSora2Pro({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -34206,7 +34206,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazImageUpscaler({\n    input: {\n        source_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        target_resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazImageUpscaler({\n    input: {\n        source_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        target_resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -34566,7 +34566,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazImageUpscalerTransparency({\n    input: {\n        source_image: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazImageUpscalerTransparency({\n    input: {\n        source_image: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -34926,7 +34926,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazImageUpscalerWonder({\n    input: {\n        source_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        target_resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazImageUpscalerWonder({\n    input: {\n        source_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        target_resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -35286,7 +35286,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscaler({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscaler({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -35646,7 +35646,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerHyperion25({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerHyperion25({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -36006,7 +36006,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerStarlightFast({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerStarlightFast({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -36366,7 +36366,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerStarlightHq({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerStarlightHq({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -36726,7 +36726,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerStarlightPrecise({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitTopazVideoUpscalerStarlightPrecise({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        },\n        resolution: \"1080p\"\n    }\n});\n"
           }
         ]
       }
@@ -37086,7 +37086,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeedFabric10({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"480p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeedFabric10({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"480p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -37446,7 +37446,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeedVideoBackgroundRemoval({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeedVideoBackgroundRemoval({\n    input: {\n        source_video: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
         ]
       }
@@ -37806,7 +37806,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo2({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo2({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
           }
         ]
       }
@@ -38166,7 +38166,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -38526,7 +38526,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo31({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitVeo31({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"720p\"\n    }\n});\n"
           }
         ]
       }
@@ -38886,7 +38886,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitViduQ3({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"540p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitViduQ3({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"540p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -39246,7 +39246,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitViduQ3Reference({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\",\n        duration_ms: 1,\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitViduQ3Reference({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"16:9\",\n        resolution: \"540p\",\n        duration_ms: 1,\n        images: [{\n                source: \"url\",\n                url: \"url\"\n            }]\n    }\n});\n"
           }
         ]
       }
@@ -39606,7 +39606,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitWan27({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitWan27({\n    input: {\n        prompt: \"prompt\",\n        resolution: \"720p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -39966,7 +39966,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitWan30({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitWan30({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"adaptive\",\n        resolution: \"480p\",\n        duration_ms: 1\n    }\n});\n"
           }
         ]
       }
@@ -40216,7 +40216,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.get(\"model\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.get(\"model\");\n"
           }
         ]
       },
@@ -40585,7 +40585,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submit(\"model\", {\n    input: {\n        \"key\": \"value\"\n    }\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submit(\"model\", {\n    input: {\n        \"key\": \"value\"\n    }\n});\n"
           }
         ]
       }
@@ -40906,7 +40906,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.models.listModelJobs(\"model\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.models.listModelJobs(\"model\");\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.models.listModelJobs(\"model\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.models.listModelJobs(\"model\");\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
         ]
       }
@@ -41197,7 +41197,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.listVoices(\"model\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.listVoices(\"model\");\n"
           }
         ]
       }
@@ -41551,7 +41551,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.searchVoices(\"model\", {\n    q: \"q\"\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.searchVoices(\"model\", {\n    q: \"q\"\n});\n"
           }
         ]
       }
@@ -41804,7 +41804,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.getOpenapi(\"model\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.getOpenapi(\"model\");\n"
           }
         ]
       }
@@ -42103,7 +42103,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.estimate(\"model\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.estimate(\"model\");\n"
           }
         ]
       }
@@ -42389,7 +42389,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.create();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.create();\n"
           }
         ]
       },
@@ -42683,7 +42683,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.list();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.list();\n"
           }
         ]
       }
@@ -42982,7 +42982,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.rotate(\"key_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.rotate(\"key_id\");\n"
           }
         ]
       }
@@ -43264,7 +43264,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.revoke(\"key_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.revoke(\"key_id\");\n"
           }
         ]
       }
@@ -43550,7 +43550,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.tokens.create();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.tokens.create();\n"
           }
         ]
       }
@@ -43890,7 +43890,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.files.upload({\n    file: fs.createReadStream(\"/path/to/your/file\")\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.files.upload({\n    file: fs.createReadStream(\"/path/to/your/file\")\n});\n"
           }
         ]
       }
@@ -44166,7 +44166,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getBalance();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getBalance();\n"
           }
         ]
       }
@@ -44493,7 +44493,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getUsage();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getUsage();\n"
           }
         ]
       }
@@ -44804,7 +44804,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.listTransactions();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.listTransactions();\n"
           }
         ]
       }
@@ -45041,7 +45041,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getPublicKey();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getPublicKey();\n"
           }
         ]
       }
@@ -45317,7 +45317,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getDefault();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getDefault();\n"
           }
         ]
       },
@@ -45601,7 +45601,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.putDefault({\n    url: \"url\"\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.putDefault({\n    url: \"url\"\n});\n"
           }
         ]
       },
@@ -45868,7 +45868,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.deleteDefault();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.deleteDefault();\n"
           }
         ]
       }
@@ -46144,7 +46144,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.testDefault();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.testDefault();\n"
           }
         ]
       }
@@ -46454,7 +46454,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.webhooks.listDeliveries();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.webhooks.listDeliveries();\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.webhooks.listDeliveries();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.webhooks.listDeliveries();\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
         ]
       }
@@ -46744,7 +46744,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.redeliver(\"job_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.redeliver(\"job_id\");\n"
           }
         ]
       }
@@ -47020,7 +47020,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.listLogDrains();\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.listLogDrains();\n"
           }
         ]
       },
@@ -47304,7 +47304,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.createLogDrain({\n    name: \"name\",\n    url: \"url\"\n});\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.createLogDrain({\n    name: \"name\",\n    url: \"url\"\n});\n"
           }
         ]
       }
@@ -47593,7 +47593,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.getLogDrain(\"drain_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.getLogDrain(\"drain_id\");\n"
           }
         ]
       },
@@ -47890,7 +47890,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.updateLogDrain(\"drain_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.updateLogDrain(\"drain_id\");\n"
           }
         ]
       },
@@ -48170,7 +48170,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.deleteLogDrain(\"drain_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.deleteLogDrain(\"drain_id\");\n"
           }
         ]
       }
@@ -48459,7 +48459,7 @@
           {
             "lang": "typescript",
             "label": "hedra-node",
-            "source": "import { HedraClient } from \"hedra-node\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.testLogDrain(\"drain_id\");\n"
+            "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.testLogDrain(\"drain_id\");\n"
           }
         ]
       }

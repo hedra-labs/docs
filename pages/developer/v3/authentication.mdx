@@ -1,0 +1,27 @@
+---
+title: "Authentication and API keys"
+description: "Create a v3 key, authenticate HTTP and SDK requests, and choose scopes for your integration."
+---
+
+Create a key in the [developer console](https://www.hedra.com/develop/api-keys).
+The credential has the form `<key_id>:<secret>`. Store it server-side as
+`HEDRA_API_KEY`; do not embed a long-lived key in browser code.
+
+| Client | Authentication |
+| --- | --- |
+| Direct HTTP | `Authorization: Key <key_id>:<secret>` |
+| Hedra Python and TypeScript SDKs | Pass the key as `api_key` / `apiKey`; the SDK sends Bearer authentication |
+| OpenAI-compatible clients | Pass the Hedra key as the client's API key; use `https://api.hedra.com/v3` as its base URL |
+| Ephemeral browser access | Use a token minted through `POST /v3/tokens`; inspect its scopes, workspace, and expiry |
+
+The v3 contract accepts both Key authentication and Bearer credentials. These
+are different header formats, not separate API wallets.
+
+Choose the scopes required by the endpoints you call. A `403` can indicate a
+missing scope or unavailable workspace access; a `401` indicates invalid or
+missing credentials. Language-model calls require `chat:write`.
+
+See the **Access** API reference for creating, listing, rotating, and deleting
+keys, and minting tokens. See [Errors and retries](/pages/developer/v3/errors-and-retries)
+for handling failures. Legacy v2 uses a different header; follow the
+[migration guide](/pages/developer/v3/migrate-from-v2).

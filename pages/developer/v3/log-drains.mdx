@@ -12,7 +12,7 @@ Each drained event is one of the job's customer-visible lifecycle records: `queu
 
 ```bash
 curl -X POST https://api.hedra.com/v3/log-drains \
-  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "production",
@@ -32,7 +32,7 @@ You can create multiple drains; each receives every event independently. Before 
 
 ```bash
 curl -X POST https://api.hedra.com/v3/log-drains/$DRAIN_ID/test \
-  -H "Authorization: Key $HEDRA_KEY"
+  -H "Authorization: Key $HEDRA_API_KEY"
 # → {"ok": true, "response_status": 200, "error": null}
 ```
 
@@ -74,7 +74,7 @@ With `format: "otlp"`, each batch is posted as one binary-protobuf `ExportLogsSe
 
 ```bash
 curl -X POST https://api.hedra.com/v3/log-drains \
-  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "otel-collector",
@@ -94,7 +94,7 @@ Each failed batch increments the drain's `consecutive_failures`; any successful 
 
 ```bash
 curl -X PATCH https://api.hedra.com/v3/log-drains/$DRAIN_ID \
-  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"enabled": true}'
 ```

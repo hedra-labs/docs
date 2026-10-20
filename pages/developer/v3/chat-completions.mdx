@@ -24,7 +24,7 @@ from openai import OpenAI
 
 client = OpenAI(
     base_url="https://api.hedra.com/v3",
-    api_key=os.environ["HEDRA_KEY"],  # "<key_id>:<secret>" or "sk_hedra_…"
+    api_key=os.environ["HEDRA_API_KEY"],  # "<key_id>:<secret>" or "sk_hedra_…"
 )
 ```
 
@@ -33,7 +33,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   baseURL: "https://api.hedra.com/v3",
-  apiKey: process.env.HEDRA_KEY, // "<key_id>:<secret>" or "sk_hedra_…"
+  apiKey: process.env.HEDRA_API_KEY, // "<key_id>:<secret>" or "sk_hedra_…"
 });
 ```
 
@@ -295,7 +295,7 @@ from anthropic import Anthropic
 
 client = Anthropic(
     base_url="https://api.hedra.com/v3/anthropic",
-    api_key=os.environ["HEDRA_KEY"],
+    api_key=os.environ["HEDRA_API_KEY"],
 )
 message = client.messages.create(
     model="glm-5.3",
@@ -312,7 +312,7 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const client = new Anthropic({
   baseURL: "https://api.hedra.com/v3/anthropic",
-  apiKey: process.env.HEDRA_KEY,
+  apiKey: process.env.HEDRA_API_KEY,
 });
 const message = await client.messages.create({
   model: "glm-5.3",

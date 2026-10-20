@@ -1,0 +1,14 @@
+---
+title: "Responses API"
+description: "Endpoint and compatibility guide for POST /v3/responses on Hedra."
+---
+
+`POST /v3/responses`
+
+Use a Hedra key with `chat:write` and a funded API wallet. See the
+[Responses API request guide](/pages/developer/v3/chat-completions#responses-api) for
+supported fields, responses, SDK examples, and compatibility differences.
+
+These routes serve supported language models. They are separate from the
+asynchronous image, video, and audio job-submission API. Do not assume every
+field or behavior of the upstream SDK's API is supported.

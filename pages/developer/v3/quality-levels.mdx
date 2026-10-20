@@ -1,12 +1,12 @@
 ---
 title: "Quality levels: pick v3 model tiers with input.quality"
 sidebarTitle: "Quality levels"
-description: "Select a v3 model's speed and fidelity tier with the required input.quality parameter, and read the tier that ran back on job results and webhooks."
+description: "Select a v3 model's speed and fidelity tier with the model-specific input.quality parameter, and read the tier that ran back on job results and webhooks."
 ---
 
 Some models publish more than one quality tier — a faster/cheaper variant beside
 a higher-fidelity one. In the v3 API those tiers live on a single public model
-id, and you pick the tier per request with a required `input.quality` string.
+id, and you pick the tier per request with an `input.quality` string.
 
 ## When it applies
 
@@ -15,7 +15,7 @@ other model the field is not accepted. To see the accepted values for a specific
 model, call `GET /v3/models/{model}` (or `GET /v3/models/{model}/openapi.json`)
 and read the `quality` enum on that model's input schema.
 
-Today the merged public model ids and their published levels are:
+Examples of model IDs and their published quality levels:
 
 | Model | `input.quality` values |
 |-------|------------------------|
@@ -29,7 +29,7 @@ Today the merged public model ids and their published levels are:
 | `minimax-hailuo-02` | `standard`, `pro` |
 | `minimax-hailuo-23` | `standard`, `pro`, `fast-standard`, `fast-pro` |
 
-`GET /v3/models` is the source of truth — always trust the enum published there
+`GET /v3/models/{model}` is the source of truth — always trust its input schema
 over any static list.
 
 ## How to submit
@@ -38,7 +38,7 @@ Pass `input.quality` alongside the rest of your inputs:
 
 ```bash
 curl -X POST https://api.hedra.com/v3/models/veo-3 \
-  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "input": {
@@ -53,7 +53,7 @@ curl -X POST https://api.hedra.com/v3/models/veo-3 \
 
 ```bash
 curl -X POST https://api.hedra.com/v3/models/gpt-image-2 \
-  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "input": {
@@ -67,8 +67,10 @@ curl -X POST https://api.hedra.com/v3/models/gpt-image-2 \
 
 ## Validation errors
 
-- A missing `input.quality` on a model that requires one returns `400
-  INVALID_ARGUMENT` listing the accepted values.
+- Check the model schema: `required` determines whether `quality` must be sent;
+  a published `default` identifies the default tier. For example, GPT Image 2
+  publishes `medium` and Veo 3 publishes `standard`. Set the tier explicitly
+  when predictable cost and quality matter.
 - An unknown value returns `400 INVALID_ARGUMENT` with the same value list.
 - Sending `quality` to a model that has no quality levels also returns `400
   INVALID_ARGUMENT`.
