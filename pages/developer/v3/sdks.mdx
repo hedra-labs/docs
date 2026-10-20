@@ -1,0 +1,27 @@
+---
+title: "SDKs and developer tools"
+description: "Install the Hedra Python SDK, TypeScript SDK, or CLI and build on API v3."
+---
+
+| Tool | Install | Source and reference |
+| --- | --- | --- |
+| Python | `pip install hedra-sdk` | [hedra-python](https://github.com/hedra-labs/hedra-python) |
+| TypeScript / JavaScript | `npm install @hedra/sdk` | [hedra-node](https://github.com/hedra-labs/hedra-node) |
+| CLI | `npm install --global @hedra/cli` | [hedra-cli](https://github.com/hedra-labs/hedra-cli) |
+
+The SDKs target API v3 and read `HEDRA_API_KEY`. See the
+[quickstart](/pages/developer/v3/quickstart) for complete SDK examples. Consult
+the installed package's reference for pagination, timeout, retry, and streaming
+options; those APIs can change between SDK versions.
+
+For language models, use the existing OpenAI or Anthropic clients with the
+[documented compatibility routes](/pages/developer/v3/chat-completions).
+To run coding tools on Hedra-hosted language models, see
+[Coding agents](/pages/developer/v3/coding-agents).
+
+## API contract
+
+[Download the v3 OpenAPI contract](https://api.hedra.com/v3/openapi.json).
+Each media model also exposes its request contract at
+`GET /v3/models/{model}/openapi.json`. Use these contracts to validate inputs and
+inspect models introduced after your SDK version was generated.

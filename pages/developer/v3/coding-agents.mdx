@@ -9,10 +9,10 @@ Run Claude Code, Codex CLI, OpenCode or Pi on GLM-5.3, Kimi K3 and DeepSeek V4 w
 ## Before you start
 
 - **A key with the `chat:write` scope and a funded API wallet.** See [Before you start](/pages/developer/v3/chat-completions#before-you-start) in the chat completions guide.
-- **The key in the `HEDRA_KEY` environment variable** of the terminal that starts the agent:
+- **The key in the `HEDRA_API_KEY` environment variable** of the terminal that starts the agent:
 
 ```bash
-export HEDRA_KEY="<key_id>:<secret>"
+export HEDRA_API_KEY="<key_id>:<secret>"
 ```
 
 ## Choose a model
@@ -48,7 +48,7 @@ Save this as `~/.claude-hedra/settings.json`:
 
 ```json
 {
-  "apiKeyHelper": "echo $HEDRA_KEY",
+  "apiKeyHelper": "echo $HEDRA_API_KEY",
   "env": {
     "ANTHROPIC_BASE_URL": "https://api.hedra.com/v3/anthropic",
     "ANTHROPIC_MODEL": "glm-5.3[1m]",
@@ -108,7 +108,7 @@ apps = false
 [model_providers.hedra]
 name = "Hedra"
 base_url = "https://api.hedra.com/v3"
-env_key = "HEDRA_KEY"
+env_key = "HEDRA_API_KEY"
 ```
 
 Codex sends the tool definitions of your ChatGPT apps, such as GitHub and Slack, with every request, which can add tens of thousands of tokens. `apps = false` leaves them out of Hedra sessions.
@@ -151,7 +151,7 @@ Save this as `~/.config/opencode/opencode.json`, or add the `hedra` entry to the
       "name": "Hedra",
       "options": {
         "baseURL": "https://api.hedra.com/v3",
-        "apiKey": "{env:HEDRA_KEY}"
+        "apiKey": "{env:HEDRA_API_KEY}"
       },
       "models": {
         "glm-5.3": { "name": "GLM-5.3" },
@@ -190,7 +190,7 @@ npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 </Step>
 <Step title="Add Hedra as a provider">
 
-Save this as `~/.pi/agent/models.json`. With `"$HEDRA_KEY"`, Pi reads the key from the `HEDRA_KEY` environment variable.
+Save this as `~/.pi/agent/models.json`. With `"$HEDRA_API_KEY"`, Pi reads the key from the `HEDRA_API_KEY` environment variable.
 
 ```json
 {
@@ -198,7 +198,7 @@ Save this as `~/.pi/agent/models.json`. With `"$HEDRA_KEY"`, Pi reads the key fr
     "hedra": {
       "baseUrl": "https://api.hedra.com/v3",
       "api": "openai-completions",
-      "apiKey": "$HEDRA_KEY",
+      "apiKey": "$HEDRA_API_KEY",
       "models": [
         { "id": "glm-5.3", "contextWindow": 1048576 },
         { "id": "glm-5.3-flash", "contextWindow": 1048576 },
@@ -244,12 +244,12 @@ An agent sends its instructions, its tool definitions and the conversation so fa
 
 ```bash
 curl "https://api.hedra.com/v3/usage?start=2026-09-30T21:00:00Z&group_by=model" \
-  -H "Authorization: Key $HEDRA_KEY"
+  -H "Authorization: Key $HEDRA_API_KEY"
 ```
 
 ## Troubleshooting
 
 - **Codex prints `Model metadata for glm-5.3 not found`.** Codex has no metadata for Hedra's models, and the session runs normally without it.
 - **Claude Code's WebSearch tool fails.** WebSearch runs on Anthropic's web search server tool, which Hedra answers with `400`. WebFetch reads pages itself and works.
-- **A missing key, or a `401` response.** When `HEDRA_KEY` is unset, Codex prints `Missing environment variable: HEDRA_KEY`, OpenCode prints `Missing credentials` and Pi prints `No API key found for hedra`. Set `HEDRA_KEY` in the terminal that starts the agent, and restart the agent.
+- **A missing key, or a `401` response.** When `HEDRA_API_KEY` is unset, Codex prints `Missing environment variable: HEDRA_API_KEY`, OpenCode prints `Missing credentials` and Pi prints `No API key found for hedra`. Set `HEDRA_API_KEY` in the terminal that starts the agent, and restart the agent.
 - **A `402` response.** Your API wallet's balance cannot cover the request. [Add funds](https://www.hedra.com/develop/billing) and send the message again.

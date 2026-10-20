@@ -1,0 +1,32 @@
+---
+title: "Generate speech"
+description: "Run audio inference on the Hedra v3 API with a model-specific request and the shared asynchronous job lifecycle."
+---
+
+Choose a voice with `GET /v3/models/elevenlabs-v3/voices`. Replace the example voice ID with one returned for your account before submitting.
+
+## Submit a job
+
+Set `HEDRA_API_KEY` as shown in the [quickstart](/pages/developer/v3/quickstart).
+This example submits to `elevenlabs-v3`; its payload is not interchangeable with
+another model's schema.
+
+```bash
+curl --fail-with-body -X POST https://api.hedra.com/v3/models/elevenlabs-v3 \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"input":{"text":"Inspection complete. All components passed.","voice_id":"voice_REPLACE_WITH_ID_FROM_CATALOG"}}'
+```
+
+The `202` response contains a `job_id`. Follow the
+[submit, wait, and download workflow](/pages/developer/v3/quickstart#submit-wait-and-download),
+or use [webhooks](/pages/developer/v3/webhooks). Check output status before
+retrieving URLs. To estimate this request first, send its body to
+`POST /v3/models/elevenlabs-v3/estimate`.
+
+## Inputs and limits
+
+Inspect `GET /v3/models/elevenlabs-v3/openapi.json` for accepted fields, defaults,
+and constraints. See [Files and outputs](/pages/developer/v3/files) for media
+references and [Quality levels](/pages/developer/v3/quality-levels) for models
+that expose a tier selector.

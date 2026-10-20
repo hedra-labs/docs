@@ -29,6 +29,12 @@ Studio credits or an existing subscription fund v3 requests.
 
 Keep the v3 credential in `HEDRA_KEY`, separate from the legacy
 `HEDRA_API_KEY`, so both integrations can run during migration.
+The v3 quickstart and SDK examples use `HEDRA_API_KEY`. Run them in a separate
+terminal, or pass the v3 key only to that command, for example
+`HEDRA_API_KEY="$HEDRA_KEY" python quickstart.py` or
+`HEDRA_API_KEY="$HEDRA_KEY" npx tsx quickstart.mts` after saving the
+[quickstart examples](/pages/developer/v3/quickstart). These command-scoped
+assignments leave the legacy key in your current shell unchanged.
 
 ```bash
 export HEDRA_KEY="<key_id>:<secret>"

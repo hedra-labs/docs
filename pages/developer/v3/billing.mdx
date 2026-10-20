@@ -1,0 +1,34 @@
+---
+title: "Pricing and API billing"
+description: "Estimate inference costs, fund the USD API wallet, and inspect v3 usage and job charges."
+---
+
+v3 uses a prepaid API wallet in US dollars. Add funds in the
+[developer console](https://www.hedra.com/develop/billing). Studio subscription
+credits are separate; they do not fund v3 jobs.
+
+## Estimate before submitting
+
+For image, video, and audio jobs, send the same model-specific input to
+`POST /v3/models/{model}/estimate` before submitting it. The estimate is a price,
+not a completion-time guarantee, and creates no job. See the
+[quickstart](/pages/developer/v3/quickstart) for an example.
+
+Model choice, dimensions, duration, and quality can affect the charge. Read the
+model's published schema and pricing information instead of hard-coding a price
+from an example. Language-model pricing and usage are described in
+[Chat completions](/pages/developer/v3/chat-completions#billing-and-concurrency).
+
+## Inspect charges
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /v3/balance` | Read the API wallet balance |
+| `GET /v3/usage` | Inspect usage; see the reference for supported filters |
+| `GET /v3/transactions` | Inspect wallet transactions |
+| `GET /v3/jobs/{job_id}` | Read the job's `cost` and `currency` when available |
+
+`402 INSUFFICIENT_BALANCE` means the request cannot currently be funded. Inspect
+the error before retrying; see [Errors and retries](/pages/developer/v3/errors-and-retries).
+For volume pricing or deployment-specific charges,
+[contact Hedra](https://www.hedra.com/enterprise).

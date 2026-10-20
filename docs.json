@@ -51,29 +51,50 @@
         "icon": "code",
         "groups": [
           {
-            "group": "Getting Started",
+            "group": "Start here",
             "pages": [
               "index",
               "pages/developer/v3/quickstart",
-              "pages/developer/v3/mcp"
+              "pages/developer/v3/mcp",
+              "pages/developer/v3/authentication",
+              "pages/developer/v3/billing"
             ]
           },
           {
-            "group": "Guides",
+            "group": "Managed inference",
             "pages": [
               "pages/developer/v3/model-catalog",
-              "pages/developer/v3/chat-completions",
-              "pages/developer/v3/coding-agents",
-              "pages/developer/v3/job-progress",
-              "pages/developer/v3/log-drains",
-              "pages/developer/v3/webhooks",
-              "pages/developer/v3/chain-generations"
+              "pages/developer/v3/generate-image",
+              "pages/developer/v3/generate-video",
+              "pages/developer/v3/generate-audio",
+              "pages/developer/v3/files",
+              "pages/developer/v3/chain-generations",
+              "pages/developer/v3/quality-levels",
+              "pages/developer/v3/chat-completions"
             ]
           },
           {
-            "group": "Concepts",
+            "group": "Production operations",
             "pages": [
-              "pages/developer/v3/quality-levels"
+              "pages/developer/v3/job-progress",
+              "pages/developer/v3/webhooks",
+              "pages/developer/v3/log-drains",
+              "pages/developer/v3/errors-and-retries"
+            ]
+          },
+          {
+            "group": "SDKs and tools",
+            "pages": [
+              "pages/developer/v3/sdks",
+              "pages/developer/v3/coding-agents"
+            ]
+          },
+          {
+            "group": "Language API reference",
+            "pages": [
+              "pages/developer/v3/reference/chat",
+              "pages/developer/v3/reference/responses",
+              "pages/developer/v3/reference/messages"
             ]
           },
           {

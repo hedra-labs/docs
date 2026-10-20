@@ -1,0 +1,55 @@
+---
+title: "Errors, limits, and retries"
+description: "Handle v3 HTTP errors, job failures, rate limits, timeouts, and idempotent submission."
+---
+
+A successful HTTP submission accepts work; it does not mean the job completed.
+Track the returned `job_id` until `COMPLETED` or `FAILED`, then inspect each
+output. A completed job can contain an output whose status is `FAILED` or `EXPIRED`.
+
+## HTTP errors
+
+| Status | Action |
+| --- | --- |
+| `400` | Correct the payload using the model schema and error details |
+| `401` | Check the credential and authentication header |
+| `402` | Inspect wallet availability and the returned balance error |
+| `403` | Check the key's scopes and workspace access |
+| `404` | Check the model or job ID and whether it is visible to this key |
+| `429` | Respect `Retry-After`; reduce polling or concurrency |
+| `5xx` | Inspect the returned error and `retryable` flag; use bounded retries where appropriate |
+
+Error envelopes include a stable `code`, a `message`, and `retryable` where
+published. Read `details` for field-level validation failures. Do not retry
+invalid inputs indefinitely.
+
+## Avoid duplicate submissions
+
+The submit body supports `idempotency_key`. Generate one key per logical job,
+keep it with the submitted payload, and reuse it when retrying that same job.
+Do not reuse it for different inputs. The SDKs also support idempotent requests;
+consult the installed SDK's reference for its retry and idempotency options.
+
+If a submission times out after reaching the server, it may already have created
+a job. Do not submit a fresh logical job just because the client stopped waiting.
+
+## Rate limits and polling
+
+Use the response's `Retry-After` and `X-RateLimit-*` headers when present. Limits
+can depend on the key, account, and endpoint; a number in an example is not a
+universal quota. Ask [Hedra](https://www.hedra.com/enterprise) about your workload.
+
+For sustained workloads, use [webhooks](/pages/developer/v3/webhooks) or the
+job status stream instead of aggressive polling. Use bounded polling with a
+local deadline and keep the job ID so a later process can resume it. A local
+timeout does not cancel server-side work.
+
+## Investigate a failed job
+
+Read `GET /v3/jobs/{job_id}` and `GET /v3/jobs/{job_id}/logs`. Store job IDs and
+structured error codes in your own logs. Use
+[log drains](/pages/developer/v3/log-drains) to collect lifecycle events and
+[Hedra Status](https://status.hedra.com/) to check incidents.
+
+Do not assume image/video job errors and SDK-compatible language-model errors
+have identical behavior. See [language-model errors](/pages/developer/v3/chat-completions#errors).
