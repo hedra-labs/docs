@@ -1,23 +1,198 @@
 ---
-title: "Hedra v3 API Quickstart | Developer Platform"
+title: "Run your first inference job"
 sidebarTitle: "Quickstart"
-description: "Create an API key, fund the wallet, pick a model, and submit, poll, and download your first job on the Hedra v3 API using one endpoint and one key."
+description: "Create a Hedra v3 API key, fund your API wallet, and submit, wait for, and download an inference result with Python, TypeScript, or cURL."
 ---
 
-<div className="page-header">
-  <h1>Hedra Developer Platform</h1>
-  <p>V3 API Quickstart</p>
-</div>
+Run an image model and save its output. The same job lifecycle applies to
+video and audio models; each model defines its own inputs.
 
-Generate images, video, and audio with over 100 models through one API. Fund
-your wallet, then every image, video, and audio model runs through the same
-three requests: submit a job, poll it, download the output. Browse the
-[model catalog](https://www.hedra.com/develop/models) to pick one.
+## Create a key and fund your wallet
 
-The API also serves open-weight LLMs through `POST /v3/chat/completions`, in
-OpenAI's chat completions format, and bills each request to the same wallet.
-[Chat completions](/pages/developer/v3/chat-completions) shows how to call them
-with the stock OpenAI SDK.
+1. Create a key in the [developer console](https://www.hedra.com/develop/api-keys).
+2. Add funds to your [API wallet](https://www.hedra.com/develop/billing).
+3. Set the credential in a terminal dedicated to v3. If your current shell runs
+   a legacy integration using `HEDRA_API_KEY`, open a separate terminal first:
+
+```bash
+export HEDRA_API_KEY="<key_id>:<secret>"
+```
+
+The v3 API uses a **prepaid USD wallet**, separate from Studio credits. An
+unfunded wallet cannot pay for a generation. See
+[Authentication](/pages/developer/v3/authentication) and
+[Pricing and billing](/pages/developer/v3/billing).
+
+## Check the cost
+
+This example uses `gpt-image-2`. You can estimate the charge before submitting;
+an estimate does not create a job.
+
+```bash
+curl --fail-with-body -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"input":{"prompt":"An industrial inspection camera on a workbench","aspect_ratio":"1:1","resolution":"1K","quality":"medium","output_format":"png"}}'
+```
+
+## Submit, wait, and download
+
+Choose a language. Each example prints a job ID, waits for a terminal state,
+and downloads the first completed output to `output.png` in your current directory.
+Running it submits a billable job and replaces that local file if it exists.
+A local timeout stops waiting; it does **not** cancel the job.
+
+<Tabs>
+<Tab title="Python">
+
+Install the [Python SDK](https://github.com/hedra-labs/hedra-python) and HTTP client:
+
+```bash
+python -m pip install hedra-sdk httpx
+```
+
+Save as `quickstart.py` and run `python quickstart.py`:
+
+```python
+import os
+import time
+from pathlib import Path
+
+import httpx
+from hedra import Hedra
+
+client = Hedra(api_key=os.environ["HEDRA_API_KEY"], timeout=30.0)
+ack = client.jobs.submit(
+    model="gpt-image-2",
+    input={"prompt": "An industrial inspection camera on a workbench",
+           "aspect_ratio": "1:1", "resolution": "1K",
+           "quality": "medium", "output_format": "png"},
+)
+print(f"Job: {ack.job_id}", flush=True)
+deadline = time.monotonic() + 600
+while True:
+    if time.monotonic() >= deadline:
+        raise TimeoutError(f"Still running: {ack.job_id}. Resume polling; do not resubmit.")
+    status = client.jobs.get_status(job_id=ack.job_id)
+    if status.status in ("COMPLETED", "FAILED"):
+        break
+    time.sleep(5)
+
+result = client.jobs.get(job_id=ack.job_id)
+if result.status == "FAILED":
+    raise RuntimeError(str(result.error))
+outputs = result.outputs or []
+if not outputs or outputs[0].status != "COMPLETED" or not outputs[0].url:
+    raise RuntimeError("No downloadable output; inspect the job's output status and error.")
+# Download without forwarding the API credential to the storage host.
+with httpx.stream("GET", str(outputs[0].url), timeout=60.0, follow_redirects=True) as response:
+    response.raise_for_status()
+    with Path("output.png").open("wb") as output:
+        for chunk in response.iter_bytes():
+            output.write(chunk)
+print("Saved output.png")
+```
+</Tab>
+<Tab title="TypeScript">
+
+Use Node.js 20 or later. Install the [TypeScript SDK](https://github.com/hedra-labs/hedra-node):
+
+```bash
+npm install @hedra/sdk
+npm install --save-dev tsx typescript @types/node
+```
+
+Save as `quickstart.mts` and run `npx tsx quickstart.mts`:
+
+```typescript
+import { HedraClient } from "@hedra/sdk";
+import { writeFile } from "node:fs/promises";
+
+const key = process.env.HEDRA_API_KEY;
+if (!key) throw new Error("Set HEDRA_API_KEY first");
+const client = new HedraClient({ apiKey: key });
+const ack = await client.jobs.submit("gpt-image-2", {
+  input: { prompt: "An industrial inspection camera on a workbench",
+    aspect_ratio: "1:1", resolution: "1K", quality: "medium", output_format: "png" },
+}, { timeoutInSeconds: 30 });
+console.log(`Job: ${ack.job_id}`);
+const deadline = Date.now() + 600_000;
+while (true) {
+  if (Date.now() >= deadline) {
+    throw new Error(`Still running: ${ack.job_id}. Resume polling; do not resubmit.`);
+  }
+  const status = await client.jobs.getStatus(ack.job_id, {}, { timeoutInSeconds: 30 });
+  if (status.status === "COMPLETED" || status.status === "FAILED") break;
+  await new Promise(resolve => setTimeout(resolve, 5000));
+}
+const result = await client.jobs.get(ack.job_id, {}, { timeoutInSeconds: 30 });
+if (result.status === "FAILED") throw new Error(JSON.stringify(result.error));
+const output = result.outputs?.[0];
+if (!output || output.status !== "COMPLETED" || !output.url) {
+  throw new Error("No downloadable output; inspect the job's output status and error.");
+}
+// Download without forwarding the API credential to the storage host.
+const download = await fetch(output.url, { signal: AbortSignal.timeout(60_000) });
+if (!download.ok) throw new Error(`Download failed: ${download.status}`);
+await writeFile("output.png", Buffer.from(await download.arrayBuffer()));
+console.log("Saved output.png");
+```
+</Tab>
+<Tab title="cURL">
+
+Requires Bash, cURL with `--fail-with-body` support, and `jq`.
+Save as `quickstart.sh` and run `bash quickstart.sh`:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+: "${HEDRA_API_KEY:?Set HEDRA_API_KEY first}"
+API="https://api.hedra.com/v3"
+ACK=$(curl --fail-with-body --silent --show-error --max-time 30 \
+  -X POST "$API/models/gpt-image-2" \
+  -H "Authorization: Key $HEDRA_API_KEY" -H "Content-Type: application/json" \
+  -d '{"input":{"prompt":"An industrial inspection camera on a workbench","aspect_ratio":"1:1","resolution":"1K","quality":"medium","output_format":"png"}}')
+JOB_ID=$(printf '%s' "$ACK" | jq -er '.job_id')
+echo "Job: $JOB_ID"
+DEADLINE=$((SECONDS + 600))
+while true; do
+  if (( SECONDS >= DEADLINE )); then
+    echo "Still running: $JOB_ID. Resume polling; do not resubmit." >&2
+    exit 1
+  fi
+  STATUS=$(curl --fail-with-body --silent --show-error --max-time 30 \
+    "$API/jobs/$JOB_ID/status" -H "Authorization: Key $HEDRA_API_KEY" | jq -er '.status')
+  case "$STATUS" in
+    COMPLETED) break ;;
+    FAILED) echo "Job failed: $JOB_ID. Inspect GET /v3/jobs/$JOB_ID." >&2; exit 1 ;;
+    IN_QUEUE|IN_PROGRESS) sleep 5 ;;
+    *) echo "Unexpected status: $STATUS" >&2; exit 1 ;;
+  esac
+done
+RESULT=$(curl --fail-with-body --silent --show-error --max-time 30 \
+  "$API/jobs/$JOB_ID" -H "Authorization: Key $HEDRA_API_KEY")
+URL=$(printf '%s' "$RESULT" | jq -er '.outputs[0] | select(.status == "COMPLETED") | .url // empty')
+# Download without forwarding the API credential to the storage host.
+curl --fail --location --silent --show-error --max-time 120 "$URL" -o output.png
+echo "Saved output.png"
+```
+</Tab>
+</Tabs>
+
+Expected result: a printed `job_...` ID, followed by `Saved output.png`.
+If a job fails or times out, use that ID to inspect it before submitting again.
+See [Errors and retries](/pages/developer/v3/errors-and-retries).
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Choose a model" href="/pages/developer/v3/model-catalog">Compare modalities and inspect model-specific schemas.</Card>
+  <Card title="Send media inputs" href="/pages/developer/v3/files">Upload files and reuse generated assets.</Card>
+  <Card title="Receive webhooks" href="/pages/developer/v3/webhooks">Handle completion without polling.</Card>
+  <Card title="Call language models" href="/pages/developer/v3/chat-completions">Use the OpenAI or Anthropic SDK with supported v3 routes.</Card>
+</CardGroup>
+
+## Use Hedra from an AI client
 
 To use Hedra from Claude, Cursor, Codex or ChatGPT, add the Hedra MCP server,
 `https://mcp.hedra.com`, to the client instead of calling the API. The client
@@ -34,97 +209,3 @@ signs you in with your Hedra account, and you need no API key:
     Setup steps for every client.
   </Card>
 </CardGroup>
-
-### Step 1: Create an API key
-
-Generate a key in the [developer console](https://www.hedra.com/develop/api-keys),
-and put it in the `HEDRA_KEY` environment variable, which the examples below
-use:
-
-```bash
-export HEDRA_KEY="<key_id>:<secret>"
-```
-
-Send the key in this header with every request:
-
-```
-Authorization: Key <key_id>:<secret>
-```
-
-### Step 2: Fund the API wallet
-
-The API bills a **prepaid wallet** held in US dollars. (This USD balance is
-separate from your Hedra Studio credit balance.) Add funds in the
-[developer console](https://www.hedra.com/develop/billing), and read the wallet
-any time with `GET /balance`.
-
-Until you add funds, `POST /models/{id}` will return `402 INSUFFICIENT_BALANCE`.
-
-### Step 3: Pick a model
-
-`GET /models` lists every model with its `id` and display `name`, so a model
-you know by name ("GPT Image 2") gives you the id for its submit path
-(`POST /models/gpt-image-2`). Each model publishes its typed input schema at
-`GET /models/{id}/openapi.json`.
-
-```bash
-curl https://api.hedra.com/v3/models -H "Authorization: Key $HEDRA_KEY"
-```
-
-Optionally, to see a job's price before you submit it, ask for an estimate:
-
-```bash
-curl -X POST https://api.hedra.com/v3/models/gpt-image-2/estimate \
-  -H "Authorization: Key $HEDRA_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"input": {"prompt": "a space cat", "quality": "medium", "aspect_ratio": "1:1", "resolution": "1K"}}'
-```
-
-### Step 4: Submit, poll, download
-
-Every generation follows the same lifecycle: submit a job, poll it, then read
-the output URL.
-
-```bash
-# 1. Submit: capture the job id from the 202 response
-JOB_ID=$(curl -sS -X POST https://api.hedra.com/v3/models/gpt-image-2 \
-  -H "Authorization: Key $HEDRA_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"input": {"prompt": "a space cat", "quality": "medium", "aspect_ratio": "1:1", "resolution": "1K"}}' | jq -r .job_id)
-
-# 2. Poll until status is COMPLETED (or FAILED)
-curl https://api.hedra.com/v3/jobs/$JOB_ID/status -H "Authorization: Key $HEDRA_KEY"
-
-# 3. Read the result: outputs[].url holds the generated file
-curl https://api.hedra.com/v3/jobs/$JOB_ID -H "Authorization: Key $HEDRA_KEY"
-```
-
-While the job runs, the status response carries `progress` and
-`estimated_completion_at`, so you can tell your users how long it will take.
-See [Job progress](/pages/developer/v3/job-progress).
-
-### Next steps
-
-<CardGroup cols={2}>
-  <Card title="Model catalog" href="/pages/developer/v3/model-catalog">
-    Every model, with its id, name, and purpose.
-  </Card>
-  <Card title="Chain generations" href="/pages/developer/v3/chain-generations">
-    Pass a completed job's output as input to the next job.
-  </Card>
-  <Card title="Quality levels" href="/pages/developer/v3/quality-levels">
-    How each quality level changes price and latency across models.
-  </Card>
-  <Card title="Chat completions" href="/pages/developer/v3/chat-completions">
-    Call open-weight LLMs with the OpenAI or Anthropic SDK.
-  </Card>
-</CardGroup>
-
-### Enterprise
-
-For volume pricing and custom limits, [talk to us](https://www.hedra.com/enterprise).
-
-### Legacy API
-
-Integrations built on the legacy `/web-app/public` API keep working. Their
-guide is the [legacy API quickstart](/pages/developer/legacy/quickstart).

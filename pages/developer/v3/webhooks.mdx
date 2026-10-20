@@ -18,16 +18,16 @@ A per-job URL always wins over the default; the default only covers jobs that di
 ```bash
 # Per job: pass the URL at submit
 curl -X POST https://api.hedra.com/v3/models/gpt-image-2 \
-  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "input": {"prompt": "a space cat", "aspect_ratio": "1:1", "resolution": "1K"},
+    "input": {"prompt": "An industrial inspection camera on a workbench", "quality": "medium", "aspect_ratio": "1:1", "resolution": "1K"},
     "webhook": "https://example.com/hedra/webhook"
   }'
 
 # Account default: one endpoint for every job without a per-job URL
 curl -X PUT https://api.hedra.com/v3/webhooks/default \
-  -H "Authorization: Key $HEDRA_KEY" \
+  -H "Authorization: Key $HEDRA_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"url": "https://example.com/hedra/webhook", "enabled": true}'
 ```
@@ -36,7 +36,7 @@ Setting `enabled: false` pauses the default endpoint without discarding the URL;
 
 ```bash
 curl -X POST https://api.hedra.com/v3/webhooks/default/test \
-  -H "Authorization: Key $HEDRA_KEY"
+  -H "Authorization: Key $HEDRA_API_KEY"
 # → {"ok": true, "response_status": 200, "error": null}
 ```
 
@@ -74,7 +74,7 @@ On `job.failed`, `status` is `FAILED` and `error` carries the same error envelop
 Every delivery is signed with Hedra's ed25519 key — the same key for every account, so you can fetch it once and cache it:
 
 ```bash
-curl https://api.hedra.com/v3/webhooks/public-key -H "Authorization: Key $HEDRA_KEY"
+curl https://api.hedra.com/v3/webhooks/public-key -H "Authorization: Key $HEDRA_API_KEY"
 # → {"algorithm": "ed25519", "public_key": "<base64>"}
 ```
 
@@ -145,14 +145,14 @@ The one exception is `X-Hedra-Webhook-Redelivery: true`: an operator asked for t
 
 ```bash
 curl "https://api.hedra.com/v3/webhooks/deliveries?limit=20" \
-  -H "Authorization: Key $HEDRA_KEY"
+  -H "Authorization: Key $HEDRA_API_KEY"
 ```
 
 An endpoint that is unreachable for the whole retry window is marked `FAILED` and not retried again. Replay it:
 
 ```bash
 curl -X POST https://api.hedra.com/v3/webhooks/deliveries/$JOB_ID/redeliver \
-  -H "Authorization: Key $HEDRA_KEY"
+  -H "Authorization: Key $HEDRA_API_KEY"
 ```
 
 A replay re-sends on the same delivery record — the webhook id stays the same, every attempt of the replayed cycle carries `X-Hedra-Webhook-Redelivery: true`, and the previous outcome is archived in the delivery's `redeliveries` list. A replay answers `409` while a delivery for the job is still in flight.
