@@ -36,11 +36,6 @@
           "anchor": "Developer Console",
           "icon": "layout-dashboard",
           "href": "https://www.hedra.com/develop/api-keys"
-        },
-        {
-          "anchor": "MCP server",
-          "icon": "plug",
-          "href": "/pages/developer/v3/mcp"
         }
       ]
     },
