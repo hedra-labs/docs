@@ -33,9 +33,9 @@
           "href": "https://discord.com/invite/KXeUUa6cXD"
         },
         {
-          "anchor": "API Dashboard",
+          "anchor": "Developer Console",
           "icon": "layout-dashboard",
-          "href": "https://www.hedra.com/app/settings/api"
+          "href": "https://www.hedra.com/develop/api-keys"
         },
         {
           "anchor": "MCP server",
@@ -46,77 +46,14 @@
     },
     "products": [
       {
-        "product": "Agent platform",
-        "description": "Create with the agent and manual tools",
-        "icon": "message-circle",
-        "groups": [
-          {
-            "group": "Start here",
-            "pages": [
-              "pages/app/getting-started/overview",
-              "pages/app/getting-started/start-with-an-idea",
-              "pages/app/getting-started/spaces",
-              "pages/app/getting-started/multiplayer",
-              "pages/app/getting-started/library"
-            ]
-          },
-          {
-            "group": "Build with the agent",
-            "pages": [
-              "pages/app/getting-started/references-and-elements",
-              "pages/app/getting-started/skills-and-connectors"
-            ]
-          },
-          {
-            "group": "Workflows",
-            "pages": [
-              "pages/app/content-creation/create-image",
-              "pages/app/content-creation/animate-your-photos",
-              "pages/app/content-creation/how-to-create-ugc-ads",
-              "pages/app/content-creation/create-avatar-video",
-              "pages/app/content-creation/creating-music-videos",
-              "pages/app/content-creation/how-to-swap-your-face"
-            ]
-          },
-          {
-            "group": "Manual tools",
-            "pages": [
-              "pages/app/getting-started/manual-tools",
-              "pages/app/getting-started/manual-image",
-              "pages/app/getting-started/video-models",
-              "pages/app/content-creation/create-audio",
-              "pages/app/content-creation/edit-videos-in-composer"
-            ]
-          },
-          {
-            "group": "Credits & Billing",
-            "pages": [
-              "pages/app/billing/generation-history",
-              "pages/app/billing/annual-subscriptions",
-              "pages/app/billing/payment-methods",
-              "pages/app/billing/change-plan",
-              "pages/app/billing/cancel-subscription",
-              "pages/app/billing/how-credits-work"
-            ]
-          },
-          {
-            "group": "Account",
-            "pages": [
-              "pages/app/account/forgot-password",
-              "pages/app/account/delete-account",
-              "pages/app/account/creator-program"
-            ]
-          }
-        ]
-      },
-      {
         "product": "Developer platform",
-        "description": "Unified accelerated inference for visual media",
+        "description": "Multimodal inference and post-training",
         "icon": "code",
         "groups": [
           {
             "group": "Getting Started",
             "pages": [
+              "index",
               "pages/developer/v3/quickstart",
               "pages/developer/v3/mcp"
             ]
@@ -326,43 +263,109 @@
                 ]
               }
             ]
-          }
-        ]
-      },
-      {
-        "product": "Legacy API",
-        "description": "The v2 generations API, supported for existing integrations",
-        "icon": "archive",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "pages/developer/legacy/quickstart"
-            ]
           },
           {
-            "group": "Guides",
+            "group": "Resources",
             "pages": [
-              "pages/developer/guides/generate-image",
-              "pages/developer/guides/generate-video",
-              "pages/developer/guides/generate-avatar-video",
-              "pages/developer/guides/generate-audio",
-              "pages/developer/guides/automate-with-n8n"
-            ]
-          },
-          {
-            "group": "API Reference",
-            "openapi": "/openapi.json",
-            "pages": [
-              "GET /models",
-              "GET /voices",
-              "GET /assets",
-              "POST /assets",
-              "POST /assets/{id}/upload",
-              "GET /generations",
-              "POST /generations",
-              "GET /generations/{generation_id}/status",
-              "GET /billing/credits"
+              "pages/developer/v3/migrate-from-v2",
+              {
+                "group": "Legacy v2",
+                "pages": [
+                  {
+                    "group": "Getting Started",
+                    "pages": [
+                      "pages/developer/legacy/quickstart"
+                    ]
+                  },
+                  {
+                    "group": "Guides",
+                    "pages": [
+                      "pages/developer/guides/generate-image",
+                      "pages/developer/guides/generate-video",
+                      "pages/developer/guides/generate-avatar-video",
+                      "pages/developer/guides/generate-audio",
+                      "pages/developer/guides/automate-with-n8n"
+                    ]
+                  },
+                  {
+                    "group": "API Reference",
+                    "openapi": "/openapi.json",
+                    "pages": [
+                      "GET /models",
+                      "GET /voices",
+                      "GET /assets",
+                      "POST /assets",
+                      "POST /assets/{id}/upload",
+                      "GET /generations",
+                      "POST /generations",
+                      "GET /generations/{generation_id}/status",
+                      "GET /billing/credits"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Studio help",
+                "pages": [
+                  {
+                    "group": "Start here",
+                    "pages": [
+                      "pages/app/getting-started/overview",
+                      "pages/app/getting-started/start-with-an-idea",
+                      "pages/app/getting-started/spaces",
+                      "pages/app/getting-started/multiplayer",
+                      "pages/app/getting-started/library"
+                    ]
+                  },
+                  {
+                    "group": "Build with the agent",
+                    "pages": [
+                      "pages/app/getting-started/references-and-elements",
+                      "pages/app/getting-started/skills-and-connectors"
+                    ]
+                  },
+                  {
+                    "group": "Workflows",
+                    "pages": [
+                      "pages/app/content-creation/create-image",
+                      "pages/app/content-creation/animate-your-photos",
+                      "pages/app/content-creation/how-to-create-ugc-ads",
+                      "pages/app/content-creation/create-avatar-video",
+                      "pages/app/content-creation/creating-music-videos",
+                      "pages/app/content-creation/how-to-swap-your-face"
+                    ]
+                  },
+                  {
+                    "group": "Manual tools",
+                    "pages": [
+                      "pages/app/getting-started/manual-tools",
+                      "pages/app/getting-started/manual-image",
+                      "pages/app/getting-started/video-models",
+                      "pages/app/content-creation/create-audio",
+                      "pages/app/content-creation/edit-videos-in-composer"
+                    ]
+                  },
+                  {
+                    "group": "Credits & Billing",
+                    "pages": [
+                      "pages/app/billing/generation-history",
+                      "pages/app/billing/annual-subscriptions",
+                      "pages/app/billing/payment-methods",
+                      "pages/app/billing/change-plan",
+                      "pages/app/billing/cancel-subscription",
+                      "pages/app/billing/how-credits-work"
+                    ]
+                  },
+                  {
+                    "group": "Account",
+                    "pages": [
+                      "pages/app/account/forgot-password",
+                      "pages/app/account/delete-account",
+                      "pages/app/account/creator-program"
+                    ]
+                  }
+                ]
+              }
             ]
           }
         ]
@@ -439,10 +442,7 @@
     "default": "system"
   },
   "seo": {
-    "indexing": "all",
-    "metatags": {
-      "canonical": "https://www.hedra.com/docs"
-    }
+    "indexing": "navigable"
   },
   "icons": {
     "library": "tabler"

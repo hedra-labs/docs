@@ -74,7 +74,8 @@
         "x-mint": {
           "metadata": {
             "title": "List Available AI Models (Legacy API)",
-            "sidebarTitle": "List Available AI Models"
+            "sidebarTitle": "List Available AI Models",
+            "noindex": true
           }
         },
         "description": "Retrieve the list of AI models available through the Hedra API, including image, video, and audio generation models.",
@@ -118,7 +119,8 @@
         "x-mint": {
           "metadata": {
             "title": "List Available Voices (Legacy API)",
-            "sidebarTitle": "List Available Voices"
+            "sidebarTitle": "List Available Voices",
+            "noindex": true
           }
         },
         "description": "Retrieve the list of text-to-speech voices available for audio generation and avatar videos.",
@@ -198,7 +200,8 @@
         "x-mint": {
           "metadata": {
             "title": "List Uploaded & Generated Assets (Legacy API)",
-            "sidebarTitle": "List Uploaded & Generated Assets"
+            "sidebarTitle": "List Uploaded & Generated Assets",
+            "noindex": true
           }
         },
         "description": "Retrieve your uploaded and generated assets by asset type, with optional filtering by IDs.",
@@ -256,7 +259,8 @@
         "x-mint": {
           "metadata": {
             "title": "Create Asset (Legacy API)",
-            "sidebarTitle": "Create Asset"
+            "sidebarTitle": "Create Asset",
+            "noindex": true
           }
         },
         "description": "Create a new asset record before uploading a supported file to use in generations.",
@@ -338,7 +342,8 @@
         "x-mint": {
           "metadata": {
             "title": "Upload Asset (Legacy API)",
-            "sidebarTitle": "Upload Asset"
+            "sidebarTitle": "Upload Asset",
+            "noindex": true
           }
         },
         "description": "Upload the file contents for a previously created asset.",
@@ -504,7 +509,8 @@
         "x-mint": {
           "metadata": {
             "title": "List Your Generations (Legacy API)",
-            "sidebarTitle": "List Your Generations"
+            "sidebarTitle": "List Your Generations",
+            "noindex": true
           }
         },
         "description": "Retrieve a paginated list of your generations, with optional filtering by type, date, or prompt.",
@@ -682,7 +688,8 @@
         "x-mint": {
           "metadata": {
             "title": "Generate Asset (Legacy API)",
-            "sidebarTitle": "Generate Asset"
+            "sidebarTitle": "Generate Asset",
+            "noindex": true
           }
         },
         "description": "Start a new image, video, or audio generation using your chosen model and inputs.",
@@ -744,7 +751,8 @@
         "x-mint": {
           "metadata": {
             "title": "Get Generation Status (Legacy API)",
-            "sidebarTitle": "Get Generation Status"
+            "sidebarTitle": "Get Generation Status",
+            "noindex": true
           }
         },
         "description": "Check the status of a generation and retrieve the resulting asset when it completes.",
@@ -784,7 +792,8 @@
         "x-mint": {
           "metadata": {
             "title": "Get Your Credit Balance (Legacy API)",
-            "sidebarTitle": "Get Your Credit Balance"
+            "sidebarTitle": "Get Your Credit Balance",
+            "noindex": true
           }
         },
         "description": "Retrieve the current API credit balance for your account.",

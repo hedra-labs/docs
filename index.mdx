@@ -1,32 +1,35 @@
 ---
-title: "About Hedra"
-description: "Hedra builds visual intelligence models and infrastructure. Move from idea to finished work with Hedra Agent or build with the Developer platform."
+title: "Hedra Developer Documentation"
+sidebarTitle: "Overview"
+description: "Build with Hedra's multimodal inference and post-training stack. Start with the v3 API and explore WM Runtime, Hedra Training, and GPU Sandboxes."
 ---
 
-Hedra builds state-of-the-art models and the infrastructure to accelerate and
-deploy visual intelligence at scale.
-
-Hedra is used by millions for research, ideation, and the production of the
-world's best visual work.
-
-Move from research to production with Hedra Agent, or build directly with our
-state-of-the-art inference engine through the Developer platform.
+Hedra provides infrastructure for running and adapting multimodal models.
+Start with managed inference through the **v3 API**: one integration for image,
+video, audio, and language models, backed by a prepaid API wallet.
 
 <CardGroup cols={2}>
-  <Card
-    title="Agent platform"
-    icon="message-circle"
-    href="/pages/app/getting-started/overview"
-  >
-    Turn ideas into finished visual work with Hedra Agent, Spaces, reusable
-    skills, and manual creative tools.
+  <Card title="Make your first API request" icon="code" href="/pages/developer/v3/quickstart">
+    Create a key, fund your wallet, and run a model through the v3 API.
   </Card>
-  <Card
-    title="Developer platform"
-    icon="code"
-    href="/pages/developer/v3/quickstart"
-  >
-    Build with Hedra's inference engine and access the most powerful open- and
-    closed-source models through Hedra's infrastructure.
+  <Card title="Explore models" icon="grid" href="/pages/developer/v3/model-catalog">
+    Choose a model, inspect its input schema, and estimate a request's cost.
   </Card>
 </CardGroup>
+
+## From inference to post-training
+
+WM Runtime is Hedra's engine for multimodal workloads. Hedra Training connects
+model adaptation and evaluation with deployment. GPU Sandboxes provide isolated
+compute for custom code and pipelines.
+
+Training and GPU Sandboxes are currently **research previews**. See
+[Hedra's platform overview](https://www.hedra.com/) or
+[contact the engineering team](https://www.hedra.com/enterprise) to discuss access
+and supported workloads. For bringing your own model or deploying on your own
+infrastructure, see [deployment options](https://www.hedra.com/inference).
+
+## Existing integrations
+
+Building a new integration? Use v3. If you use the `/web-app/public` API,
+read [Migrate from v2 to v3](/pages/developer/v3/migrate-from-v2).

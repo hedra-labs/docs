@@ -1,0 +1,83 @@
+---
+title: "Migrate from v2 to v3"
+description: "Move an existing Hedra integration from the legacy generations API to v3 model jobs, with new authentication, billing, inputs, and result handling."
+---
+
+Use **v3 for new integrations**. The legacy `/web-app/public` API remains
+available for existing integrations. This guide does not announce a shutdown date.
+
+## What changes
+
+| Area | Legacy v2 | v3 |
+| --- | --- | --- |
+| Base URL | `https://api.hedra.com/web-app/public` | `https://api.hedra.com/v3` |
+| Authentication | `X-API-Key` | `Authorization: Key <key_id>:<secret>`; SDKs can send the credential as Bearer |
+| Billing | Studio credits and a paid subscription | Separate prepaid API wallet in USD |
+| Submit | `POST /generations`, with a type and model slug | `POST /models/{model}`, with a model-specific `input` object |
+| Model selection | Legacy provider/model slugs | Public IDs from `GET /models`; inspect each model's schema |
+| Input files | Create an asset, then upload to it | `POST /files`; pass the returned URL as the model's media reference |
+| Result identifier | Generation `id` | `job_id` |
+| Polling | `/generations/{id}/status` | `/jobs/{job_id}/status` |
+| Success state | `complete` | `COMPLETED` |
+| Result retrieval | Legacy asset workflow | `/jobs/{job_id}` returns `outputs[]` with URLs and asset IDs |
+
+## 1. Set up a v3 key and wallet
+
+Create a key in the [developer console](https://www.hedra.com/develop/api-keys)
+and fund the [API wallet](https://www.hedra.com/develop/billing). Do not assume
+Studio credits or an existing subscription fund v3 requests.
+
+```bash
+export HEDRA_API_KEY="<key_id>:<secret>"
+curl --fail-with-body https://api.hedra.com/v3/models \
+  -H "Authorization: Key $HEDRA_API_KEY"
+```
+
+## 2. Map each workload to a v3 model
+
+Use the [model catalog](/pages/developer/v3/model-catalog). Do not mechanically
+translate a v2 model slug or copy its payload: fields and capabilities differ.
+Read `GET /v3/models/{model}/openapi.json` and build the model's `input` object.
+
+For example, a v3 image request uses `input.prompt`, rather than the legacy
+`text_prompt` field:
+
+```bash
+curl --fail-with-body -X POST https://api.hedra.com/v3/models/gpt-image-2 \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"input":{"prompt":"An industrial inspection camera on a workbench","aspect_ratio":"1:1","resolution":"1K","quality":"medium"}}'
+```
+
+Check required fields, media slots, dimensions, durations, and output counts for
+each model. A legacy batch or inline-audio workflow may need multiple v3 jobs;
+do not assume a one-to-one replacement exists.
+
+## 3. Update uploads and result handling
+
+Upload input bytes through `POST /v3/files` and pass the returned URL verbatim
+in a reference such as `{"source":"url","url":"<returned URL>"}`. Use the
+media field advertised by the chosen model; for Veo 3 the start frame field is
+`start_image`. Re-upload if the handle has expired.
+
+Store the returned `job_id`, poll until `COMPLETED` or `FAILED`, then fetch
+`GET /v3/jobs/{job_id}`. Inspect each output's status before downloading its URL.
+Use the server-issued `outputs[].asset_id` to
+[chain jobs](/pages/developer/v3/chain-generations); never derive it from a job ID.
+
+## 4. Validate and cut over
+
+Test one representative input for each workload. Verify its output, cost,
+error handling, and file lifecycle. Confirm that every model and feature your
+integration needs has a supported v3 path before switching production traffic.
+
+Use [webhooks](/pages/developer/v3/webhooks) or
+[job progress](/pages/developer/v3/job-progress) for completion handling, and
+[log drains](/pages/developer/v3/log-drains) for observability.
+
+Keep the previous integration available during your rollout. Ask
+[Hedra engineering](https://www.hedra.com/enterprise) about unsupported workloads
+or account-specific migration requirements.
+
+The [legacy quickstart](/pages/developer/legacy/quickstart) remains available
+for maintaining existing integrations.

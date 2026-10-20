@@ -1,47 +1,43 @@
-# Mintlify Starter Kit
+# Hedra developer documentation
 
-Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
+Source for [Hedra's documentation](https://www.hedra.com/docs), built with
+Mintlify. The docs focus on the v3 Developer platform, with legacy v2 resources
+for existing integrations. Studio help lives under Resources alongside Legacy v2,
+with no top-level product or landing-page promotion.
 
-- Guide pages
-- Navigation
-- Customizations
-- API Reference pages
-- Use of popular components
+## Local preview
 
-### Development
+Install the current Mintlify CLI (`npm install -g mint`), then run `mint dev`
+from this directory. Configuration lives in `docs.json`. Run `mint broken-links`
+before submitting navigation changes.
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
+## Content and API schemas
 
-```
-npm i -g mintlify
-```
+- `index.mdx`: developer landing page.
+- `pages/developer/v3/`: current guides.
+- `pages/app/`: Studio help, nested under Resources.
+- `pages/developer/legacy/` and `pages/developer/guides/`: legacy v2 documentation.
+- `openapi-v3.json`: generated v3 API contract and examples.
+- `openapi.json`: generated legacy v2 contract.
 
-Run the following command at the root of your documentation (where mint.json is)
+The `Sync OpenAPI schemas` workflow refreshes both schemas. Put documentation
+annotations in `openapi-v3-overrides.json` or `openapi-overrides.json` so they
+survive regeneration. The workflow injects SDK samples and runs
+`scripts/generate_v3_reference_nav.py` to regenerate v3 reference navigation.
 
-```
-mintlify dev
-```
+Legacy pages use `noindex`, including generated operations through their
+`x-mint.metadata` overrides. After deployment, check the emitted robots metadata,
+search results, sitemap, and `llms.txt`; configuration alone is not proof of
+indexing behavior. Preserve working legacy URLs while promoting v3.
 
-### OpenAPI
+## Publishing
 
-`openapi.json` is generated from the production v2 FastAPI schema. Refresh it
-locally with:
+The connected Mintlify deployment publishes changes to the default branch.
+Review a preview and a pull request before merging. Local edits do not publish.
 
-```bash
-python3 scripts/sync_openapi.py
-```
+## Editing guidelines
 
-Keep documentation-only descriptions in `openapi-overrides.json` instead of
-editing the generated schema. The `Sync v2 OpenAPI` workflow checks the
-production schema daily and opens or updates a pull request when it changes. It
-requires an `OPENAPI_SYNC_TOKEN` repository secret with contents and pull
-request write access.
-
-### Publishing Changes
-
-Install our Github App to auto propagate changes from your repo to your deployment. Changes will be deployed to production automatically after pushing to the default branch. Find the link to install on your dashboard. 
-
-#### Troubleshooting
-
-- Mintlify dev isn't running - Run `mintlify install` it'll re-install dependencies.
-- Page loads as a 404 - Make sure you are running in a folder with `mint.json`
+Use current schemas and SDKs for examples. Distinguish generally available
+features, research previews, and engineering-assisted deployments. Do not add
+unreleased APIs, performance guarantees, or a legacy shutdown date without an
+approved product source.
