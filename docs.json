@@ -33,9 +33,14 @@
           "href": "https://discord.com/invite/KXeUUa6cXD"
         },
         {
-          "anchor": "Developer Console",
+          "anchor": "Models",
+          "icon": "layout-grid",
+          "href": "https://www.hedra.com/develop/models"
+        },
+        {
+          "anchor": "Console",
           "icon": "layout-dashboard",
-          "href": "https://www.hedra.com/develop/api-keys"
+          "href": "https://www.hedra.com/develop"
         },
         {
           "anchor": "MCP server",
@@ -435,7 +440,14 @@
       "destination": "/pages/app/getting-started/overview"
     }
   ],
-  "navbar": {},
+  "navbar": {
+    "links": [
+      {
+        "label": "Get an API key",
+        "href": "https://www.hedra.com/develop/api-keys"
+      }
+    ]
+  },
   "contextual": {
     "options": [
       "copy",
