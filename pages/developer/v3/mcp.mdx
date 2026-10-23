@@ -1,17 +1,32 @@
 ---
 title: "Connect Claude, Cursor, Codex and ChatGPT to the Hedra MCP server"
 sidebarTitle: "MCP server"
-description: "Add https://mcp.hedra.com to Claude, Claude Code, Codex, Cursor, ChatGPT or Hermes, sign in with your Hedra account, and generate video, images and audio from the chat."
+description: "Connect an AI client to Hedra tools for model discovery, cost estimates, supported media jobs, and library access. Understand MCP, CLI, and API authentication."
 ---
 
 The Hedra MCP server is `https://mcp.hedra.com`. Add that URL to an MCP client
-and sign in with your Hedra account. The client can then generate video,
-images, speech, music and sound effects with every model in the
-[catalog](/pages/developer/v3/model-catalog), read your Hedra library, and save
-what it makes there. You need no API key. Use your Hedra subscription or pay
-as you go; [MCP settings](https://www.hedra.com/develop/mcp) in the
-developer console shows the workspace a client acts in and how Hedra bills its
-usage.
+and sign in with your Hedra account. Your client can use the tools exposed by the
+server to discover models, inspect their inputs, estimate supported jobs, run
+media workloads, and retrieve results from your Hedra library.
+
+## Choose how to connect
+
+| Integration | Use it for | Authentication and billing |
+| --- | --- | --- |
+| MCP server | Let an assistant call Hedra's available tools | Hedra sign-in; selected workspace and billing mode in [MCP settings](https://www.hedra.com/develop/mcp) |
+| CLI | Inspect model contracts, submit jobs, and manage API operations from a terminal | `hedra-cli auth login` or an API key; v3 API wallet |
+| REST API / compatible SDK | Call image-understanding and reasoning models or integrate asynchronous model jobs into your application | API key and prepaid v3 API wallet |
+
+MCP does not require you to paste an API key into the assistant. Use your Hedra
+subscription or pay as you go according to the selected MCP billing mode.
+The CLI and REST API use the API wallet; Studio subscription credits are separate.
+
+For image understanding and reasoning through the API, use the
+[chat completions guide](/pages/developer/v3/chat-completions). Models in the API
+catalog and tools exposed by an MCP connection are different inventories: check
+your client's tool list before requesting a capability. To use Hedra as the
+language-model provider for a coding assistant, see
+[Coding agents](/pages/developer/v3/coding-agents).
 
 ## Add the server
 
@@ -91,16 +106,36 @@ Hermes opens the Hedra sign-in and keeps the token after the OAuth callback.
 </Tab>
 </Tabs>
 
-## Try it
+## Inspect a model before running it
 
-Ask the client:
+Start with a read-only discovery task:
 
 ```text
-Use Hedra to make a hero image for a coffee brand landing page, 16:9, moody morning light
+Use Hedra to list the models available through this connection. Inspect the input requirements of one model suitable for my task. Do not submit a job yet.
 ```
 
-The client submits the job and shows the image when it finishes. Ask for a
-video, a voice or a song the same way, or name a model from the catalog.
+The server exposes `list_models` and `get_model` for model discovery. For a
+supported media job, use `estimate` with the intended inputs before asking the
+client to run it. Confirm the selected workspace and billing mode in
+[MCP settings](https://www.hedra.com/develop/mcp).
+
+When you run a job, name the model, provide its required inputs, and retrieve the
+result through the tools available in your client. Image, video, speech, music,
+and sound-effect tools remain available for those workloads; they do not imply
+that every model or REST endpoint has a corresponding MCP tool.
+
+## Inspect the same catalog from the CLI
+
+```bash
+npm install --global @hedra/cli
+hedra-cli models list
+hedra-cli models get --model glm-5.3
+```
+
+Model discovery is available without credentials. For authenticated operations,
+run `hedra-cli auth login`, complete the browser sign-in, and check the workspace
+with `hedra-cli auth status`. Use `hedra-cli <resource> --help` to see the commands
+in your installed version. See the [CLI command reference](https://github.com/hedra-labs/hedra-cli#commands).
 
 ## If the client reports 404
 
