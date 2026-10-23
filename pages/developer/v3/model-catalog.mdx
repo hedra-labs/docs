@@ -10,12 +10,17 @@ The number of models changes; inspect the live catalog for current availability.
 
 | Task | Starting point | Check before integrating |
 | --- | --- | --- |
+| Language or vision-language inference | [Vision and reasoning](/pages/developer/v3/quickstart) | Supported model IDs, image support, context, streaming, pricing |
 | Image generation or editing | [Image inference](/pages/developer/v3/generate-image) | Reference images, aspect ratio, resolution, quality, output format |
 | Video generation | [Video inference](/pages/developer/v3/generate-video) | Start/end frames, duration, resolution, audio, latency |
 | Speech generation | [Audio inference](/pages/developer/v3/generate-audio) | Available voices, text length, language and speech controls |
-| Language or vision-language inference | [Chat and compatibility APIs](/pages/developer/v3/chat-completions) | Supported model IDs, image support, context, streaming, pricing |
 
 ## Inspect a model's contract
+
+For chat models, read `GET /v3/models/{model}` and inspect `chat.input_modalities`,
+`chat.max_images_per_request`, `input_schema`, and `chat.pricing`. The per-model
+`openapi.json` route below describes asynchronous media models.
+
 
 ```bash
 curl --fail-with-body https://api.hedra.com/v3/models \

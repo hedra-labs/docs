@@ -1,0 +1,54 @@
+---
+title: "Hedra infrastructure and availability"
+sidebarTitle: "Platform and availability"
+description: "Understand Hedra's managed inference API, World Model Runtime, model adaptation, and deployment options, including research-preview access."
+---
+
+Hedra provides infrastructure for running and adapting multimodal models.
+Developers can start with managed inference through the v3 API, using a shared
+API wallet and model-specific contracts. The broader platform connects inference,
+model adaptation, and compute for custom workloads.
+
+## What can I integrate with today?
+
+| Workload | Integration | Getting started |
+| --- | --- | --- |
+| Image understanding and text reasoning | Supported models through `/v3/chat/completions`; compatibility routes also include `/v3/responses` and `/v3/anthropic/v1/messages` | [Vision and reasoning quickstart](/pages/developer/v3/quickstart) |
+| Image, video, and audio generation | Asynchronous jobs through `/v3/models/{model}` | [Model-job quickstart](/pages/developer/v3/model-jobs) |
+| Model adaptation and evaluation | Hedra Training, a research preview | [Discuss access](https://www.hedra.com/enterprise) |
+| Isolated compute for custom code and pipelines | GPU Sandboxes, a research preview | [Discuss your workload](https://www.hedra.com/enterprise) |
+
+Use the [model catalog](/pages/developer/v3/model-catalog) to confirm a model's
+current inputs, outputs, limits, and price. Availability of a catalog model does
+not imply that every modality or feature is supported through every endpoint.
+
+## What is World Model Runtime?
+
+World Model Runtime is Hedra's engine for multimodal workloads. It is part of the
+infrastructure behind the platform. Developers using managed inference integrate
+with the documented API routes and model contracts.
+
+See [World Model Runtime](https://www.hedra.com/wmr) for the runtime overview.
+For a workload involving a world-action or vision-language-action model, discuss
+the model and serving requirements with the engineering team. The image-understanding
+quickstart returns text; it is not a robot-control or world-action endpoint.
+
+## How do deployment options differ?
+
+Managed catalog inference is the self-service API path described in these docs.
+Bringing your own model or deploying on your own infrastructure has a separate
+onboarding process. See [deployment options](https://www.hedra.com/inference)
+and [contact engineering](https://www.hedra.com/enterprise) with your model,
+expected input/output sizes, throughput, latency target, and infrastructure requirements.
+
+## How does this relate to Studio and the Creative Agent?
+
+Studio is Hedra's creative workspace. Its help pages remain under **Resources →
+Studio help**. The developer platform uses API keys and a prepaid USD API wallet;
+Studio subscription credits do not fund v3 API requests. See
+[API billing](/pages/developer/v3/billing).
+
+Connecting an assistant to Hedra's MCP server is also different from running the
+assistant's language model on Hedra. See [MCP setup](/pages/developer/v3/mcp) for
+connected tools and [Coding agents](/pages/developer/v3/coding-agents) for the
+language-model provider configuration.
