@@ -60,6 +60,7 @@
             "pages": [
               "index",
               "pages/developer/v3/quickstart",
+              "pages/developer/v3/platform",
               "pages/developer/v3/mcp",
               "pages/developer/v3/authentication",
               "pages/developer/v3/billing"
@@ -69,13 +70,14 @@
             "group": "Managed inference",
             "pages": [
               "pages/developer/v3/model-catalog",
+              "pages/developer/v3/chat-completions",
+              "pages/developer/v3/model-jobs",
               "pages/developer/v3/generate-image",
               "pages/developer/v3/generate-video",
               "pages/developer/v3/generate-audio",
               "pages/developer/v3/files",
               "pages/developer/v3/chain-generations",
-              "pages/developer/v3/quality-levels",
-              "pages/developer/v3/chat-completions"
+              "pages/developer/v3/quality-levels"
             ]
           },
           {
@@ -487,5 +489,6 @@
     "examples": {
       "autogenerate": false
     }
-  }
+  },
+  "description": "Hedra infrastructure for multimodal inference: image understanding, reasoning, model jobs, and production operations. Explore World Model Runtime and research-preview capabilities."
 }

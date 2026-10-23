@@ -1,31 +1,27 @@
-import { HedraClient } from "@hedra/sdk";
-import { writeFile } from "node:fs/promises";
+import OpenAI from "openai";
 
-const key = process.env.HEDRA_API_KEY;
-if (!key) throw new Error("Set HEDRA_API_KEY first");
-const client = new HedraClient({ apiKey: key });
-const ack = await client.jobs.submit("gpt-image-2", {
-  input: { prompt: "An industrial inspection camera on a workbench",
-    aspect_ratio: "1:1", resolution: "1K", quality: "medium", output_format: "png" },
-}, { timeoutInSeconds: 30 });
-console.log(`Job: ${ack.job_id}`);
-const deadline = Date.now() + 600_000;
-while (true) {
-  if (Date.now() >= deadline) {
-    throw new Error(`Still running: ${ack.job_id}. Resume polling; do not resubmit.`);
-  }
-  const status = await client.jobs.getStatus(ack.job_id, {}, { timeoutInSeconds: 30 });
-  if (status.status === "COMPLETED" || status.status === "FAILED") break;
-  await new Promise(resolve => setTimeout(resolve, 5000));
+const apiKey = process.env.HEDRA_API_KEY;
+if (!apiKey) throw new Error("Set HEDRA_API_KEY first");
+const client = new OpenAI({
+  apiKey,
+  baseURL: "https://api.hedra.com/v3",
+  timeout: 130_000,
+  maxRetries: 0,
+});
+const response = await client.chat.completions.create({
+  model: "glm-5.3",
+  messages: [{
+    role: "user",
+    content: [
+      { type: "text", text: "List the visible objects and their spatial relationships. Describe only what the image shows." },
+      { type: "image_url", image_url: { url: "https://imagedelivery.net/yn_JX_LzJpQI9TTynGwR_Q/www-redesign/training/hero-robot-lab-20261019/public" } },
+    ],
+  }],
+  reasoning_effort: "low",
+  max_tokens: 4096,
+});
+const choice = response.choices[0];
+if (choice?.finish_reason !== "stop" || !choice.message.content) {
+  throw new Error(`No complete answer; finish_reason=${choice?.finish_reason}`);
 }
-const result = await client.jobs.get(ack.job_id, {}, { timeoutInSeconds: 30 });
-if (result.status === "FAILED") throw new Error(JSON.stringify(result.error));
-const output = result.outputs?.[0];
-if (!output || output.status !== "COMPLETED" || !output.url) {
-  throw new Error("No downloadable output; inspect the job's output status and error.");
-}
-// Download without forwarding the API credential to the storage host.
-const download = await fetch(output.url, { signal: AbortSignal.timeout(60_000) });
-if (!download.ok) throw new Error(`Download failed: ${download.status}`);
-await writeFile("output.png", Buffer.from(await download.arrayBuffer()));
-console.log("Saved output.png");
+console.log(choice.message.content);

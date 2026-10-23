@@ -1,0 +1,12 @@
+{
+  "model": "glm-5.3",
+  "messages": [{
+    "role": "user",
+    "content": [
+      {"type": "text", "text": "List the visible objects and their spatial relationships. Describe only what the image shows."},
+      {"type": "image_url", "image_url": {"url": "https://imagedelivery.net/yn_JX_LzJpQI9TTynGwR_Q/www-redesign/training/hero-robot-lab-20261019/public"}}
+    ]
+  }],
+  "reasoning_effort": "low",
+  "max_tokens": 4096
+}
