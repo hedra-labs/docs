@@ -1,0 +1,36 @@
+---
+title: "Krea 3: roughly 6x faster 2K image editing"
+sidebarTitle: "Krea 3 optimization"
+description: "Hedra reduced Krea 3 2K image edits from about 22 seconds to 3.6 seconds on the same four AMD Instinct MI355X GPUs through distillation and inference optimization."
+---
+
+Hedra reduced Krea 3 2K image-editing latency from about **22 seconds to 3.6
+seconds**, roughly **6x faster**, on the same four AMD Instinct MI355X GPUs.
+The work combined distillation and inference optimization and took under a week.
+
+## What changed?
+
+| Condition | Baseline | Optimized result |
+| --- | --- | --- |
+| Task | Krea 3 image editing at 2K | Krea 3 image editing at 2K |
+| Hardware | Four AMD Instinct MI355X GPUs | The same four AMD Instinct MI355X GPUs |
+| Model | Original bf16 model | Distilled model |
+| Sampling steps | 30 | 14 |
+| Edit latency | About 22 seconds | 3.6 seconds |
+
+The comparison holds the hardware constant while changing the model and its
+inference execution. The latency improvement reflects both distillation and
+inference optimization.
+
+## How does this connect to Hedra inference?
+
+Krea 3 runs on AMD Instinct MI355X on Hedra. This work demonstrates the model
+factory's approach: optimize a model for a specific task and hardware, then carry
+that work into the infrastructure that serves it.
+
+The reported timing describes this 2K editing workload and configuration. For an
+API integration, inspect the current [model contract](/pages/developer/v3/model-catalog)
+and [job workflow](/pages/developer/v3/model-jobs).
+
+To discuss optimizing your own model, see
+[Custom models and serving](/pages/developer/v3/custom-models).
