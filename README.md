@@ -28,8 +28,9 @@ The workflow requires the `OPENAPI_SYNC_TOKEN` repository secret with contents
 and pull-request write access.
 Run `python3 scripts/sync_openapi.py` to refresh `openapi.json` locally.
 
-Legacy pages use `noindex`, including generated operations through their
-`x-mint.metadata` overrides. After deployment, check the emitted robots metadata,
+Studio help and legacy pages use `noindex`. Studio remains available under Resources
+and through existing URLs, but is excluded from discovery and AI context. Generated
+legacy operations use `x-mint.metadata` overrides. After deployment, check the emitted robots metadata,
 search results, sitemap, and `llms.txt`; configuration alone is not proof of
 indexing behavior. Preserve working legacy URLs while promoting v3.
 
