@@ -1,12 +1,16 @@
 ---
 title: "Hedra Developer Documentation"
 sidebarTitle: "Overview"
-description: "Build with Hedra infrastructure for multimodal inference. Start with image understanding and reasoning, then explore model jobs, API operations, and deployment options."
+description: "Build with Hedra models and infrastructure for multimodal and physical AI. Start with the v3 API or work with Hedra researchers on a specialized model."
 ---
 
-Hedra provides infrastructure for running and adapting multimodal models.
-Start with managed inference through the **v3 API**: one integration for image,
-video, audio, and language models, backed by a prepaid API wallet.
+Hedra is an a16z-backed research company building models and infrastructure for
+multimodal and physical AI. Build a specialized model with Hedra researchers,
+bring an existing model to discuss serving, or start with a catalog model through
+the self-service **v3 API**.
+
+The API supports image understanding, reasoning, and image, video, and audio
+generation, backed by a prepaid API wallet.
 
 <CardGroup cols={2}>
   <Card title="Make your first API request" icon="code" href="/pages/developer/v3/quickstart">
@@ -17,8 +21,8 @@ video, audio, and language models, backed by a prepaid API wallet.
   </Card>
 </CardGroup>
 
-For supported integration paths and preview access, see
-[Platform and availability](/pages/developer/v3/platform).
+For the research engagement and self-service integration paths, see
+[Research and inference](/pages/developer/v3/platform).
 
 ## Docs and console
 
@@ -27,17 +31,22 @@ Use these docs for integration guides, examples, and the API reference.
 and manage API access and billing. To start an integration,
 [get an API key](https://www.hedra.com/develop/api-keys).
 
-## From inference to post-training
+## Build a model for your task and hardware
 
-World Model Runtime is Hedra's engine for multimodal workloads. Hedra Training connects
-model adaptation and evaluation with deployment. GPU Sandboxes provide isolated
-compute for custom code and pipelines.
+With **RSI as a service**, forward-deployed Hedra researchers work inside your
+team to customize and optimize a model, set up data capture and evaluations,
+and connect training to production serving. The service is hands-on, with
+research and inference under one roof.
 
-Training and GPU Sandboxes are currently **research previews**. See
-[Hedra's platform overview](https://www.hedra.com/) or
-[contact the engineering team](https://www.hedra.com/enterprise) to discuss access
-and supported workloads. For bringing your own model or deploying on your own
-infrastructure, see [deployment options](https://www.hedra.com/inference).
+[Learn how custom model engagements work](/pages/developer/v3/custom-models),
+including how to bring an existing model to Hedra inference.
+
+## Research results
+
+Read the results and measurement conditions for
+[Krea 3 image-editing optimization](/pages/research/krea-3-optimization),
+[physically consistent video](/pages/research/physical-consistency), and
+[robot gripper adaptation in simulation](/pages/research/gripper-adaptation).
 
 ## Existing integrations
 

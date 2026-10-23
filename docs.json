@@ -52,7 +52,7 @@
     "products": [
       {
         "product": "Developer platform",
-        "description": "Multimodal inference and post-training",
+        "description": "Specialized models and production inference",
         "icon": "code",
         "groups": [
           {
@@ -61,6 +61,7 @@
               "index",
               "pages/developer/v3/quickstart",
               "pages/developer/v3/platform",
+              "pages/developer/v3/custom-models",
               "pages/developer/v3/mcp",
               "pages/developer/v3/authentication",
               "pages/developer/v3/billing"
@@ -87,6 +88,14 @@
               "pages/developer/v3/webhooks",
               "pages/developer/v3/log-drains",
               "pages/developer/v3/errors-and-retries"
+            ]
+          },
+          {
+            "group": "Research results",
+            "pages": [
+              "pages/research/krea-3-optimization",
+              "pages/research/physical-consistency",
+              "pages/research/gripper-adaptation"
             ]
           },
           {
@@ -490,5 +499,5 @@
       "autogenerate": false
     }
   },
-  "description": "Hedra infrastructure for multimodal inference: image understanding, reasoning, model jobs, and production operations. Explore World Model Runtime and research-preview capabilities."
+  "description": "Hedra models and infrastructure for multimodal and physical AI. Explore RSI as a service, custom model research, production serving, and the self-service v3 API."
 }

@@ -1,0 +1,34 @@
+---
+title: "Robot gripper adaptation without policy retraining"
+sidebarTitle: "Robot gripper adaptation"
+description: "In a simulation study, Hedra restored robot task success from near zero to near 100% after a gripper change by matching reach and grasp point in the wrist camera view."
+---
+
+In a **simulation study**, Hedra fitted a robot running a trained policy with a
+new gripper and restored task success from **near zero to near 100%**, without
+retraining the policy.
+
+## How did the adaptation work?
+
+Hedra matched the new gripper's reach and grasp point in the wrist camera view.
+This let the trained policy recover task success after the hardware change.
+
+| Condition | Reported outcome |
+| --- | --- |
+| New gripper before adaptation | Task success near zero |
+| New gripper after matching reach and grasp point in the wrist camera view | Task success near 100% |
+| Policy retraining | None |
+| Evaluation environment | Simulation |
+
+## What does this demonstrate?
+
+The study addresses a specific problem: keeping a trained policy useful when its
+robot hardware changes. The result is from simulation, rather than a physical
+robot deployment.
+
+## How can a robotics team work with Hedra?
+
+Bring the task, policy, hardware, and evaluation requirements to Hedra's research
+team. [Custom models and serving](/pages/developer/v3/custom-models) explains the
+engagement process. For public API integration paths, see
+[Research and inference](/pages/developer/v3/platform#which-apis-can-i-call).

@@ -1,0 +1,34 @@
+---
+title: "H3: improving physical consistency and generation speed"
+sidebarTitle: "Physical consistency"
+description: "Retrained H3 scored 34.9 on Physics-IQ versus 30.3 for H3 Max. An autonomously distilled version rendered a five-second clip in under three seconds on AMD MI355X."
+---
+
+Hedra retrained H3 for physical consistency. The retrained model scored **34.9**
+on Google DeepMind's **Physics-IQ** benchmark, compared with **30.3** for H3 Max,
+with comparable visual quality.
+
+## What was measured?
+
+| Model | Physics-IQ score |
+| --- | --- |
+| H3 Max | 30.3 |
+| H3 retrained for physical consistency | 34.9 |
+
+The benchmark measures physical consistency in generated video. The reported
+visual quality is a separate assessment of the output.
+
+## What was the speed result?
+
+An autonomously distilled version rendered a **five-second clip in under three
+seconds on AMD MI355X GPUs**. This is a separate result from the Physics-IQ
+comparison above: the 34.9 score is reported for the retrained model.
+
+## What does this mean for developers?
+
+The work connects model adaptation with efficient serving for a specific
+workload. Use the [model catalog](/pages/developer/v3/model-catalog) for current
+API availability and model contracts.
+
+To discuss physical consistency or model optimization for your task, see
+[Custom models and serving](/pages/developer/v3/custom-models).

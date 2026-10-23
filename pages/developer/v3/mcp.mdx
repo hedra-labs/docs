@@ -124,6 +124,19 @@ result through the tools available in your client. Image, video, speech, music,
 and sound-effect tools remain available for those workloads; they do not imply
 that every model or REST endpoint has a corresponding MCP tool.
 
+## Generate a synthetic research image
+
+After checking your workspace and billing mode, try this generation task:
+
+```text
+Use Hedra to generate one synthetic image for a scene-understanding experiment: a workbench with three distinct tools, a partially obscured box, and an empty shelf. Choose a suitable image model, check its inputs and estimated cost, then generate the image. Return the result with the model and parameters so I can reproduce the setup.
+```
+
+This submits a billable generation job. Save the returned model, parameters, and
+image for your experiment; the example does not run a perception evaluation or
+train a model. For work with Hedra researchers, see
+[Custom models and serving](/pages/developer/v3/custom-models).
+
 ## Inspect the same catalog from the CLI
 
 ```bash

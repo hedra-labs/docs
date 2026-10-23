@@ -1,54 +1,76 @@
 ---
-title: "Hedra infrastructure and availability"
-sidebarTitle: "Platform and availability"
-description: "Understand Hedra's managed inference API, World Model Runtime, model adaptation, and deployment options, including research-preview access."
+title: "Hedra: specialized model research and production inference"
+sidebarTitle: "Research and inference"
+description: "Understand RSI as a service, how Hedra researchers build models for your task and hardware, and how to start with custom models or self-service inference."
 ---
 
-Hedra provides infrastructure for running and adapting multimodal models.
-Developers can start with managed inference through the v3 API, using a shared
-API wallet and model-specific contracts. The broader platform connects inference,
-model adaptation, and compute for custom workloads.
+Hedra is an a16z-backed research company building models and infrastructure for
+multimodal and physical AI. Its model factory builds specialized models for each
+task and its hardware, and its inference infrastructure serves them in production.
 
-## What can I integrate with today?
+## What is RSI as a service?
+
+RSI as a service brings Hedra's model-building research and inference infrastructure
+to media, vision, and physical AI teams. Forward-deployed researchers work inside
+your team to understand the task and hardware, customize a starting model, and
+build the data, evaluation, training, and serving loop around it.
+
+RSI stands for **recursive self-improvement**: systems that get better at improving
+themselves. The service is hands-on: Hedra researchers work directly with customers.
+The longer-term research direction is agents that help build and optimize models,
+and a model factory that gets faster with every model it produces.
+
+See [How Hedra builds a specialized model](/pages/developer/v3/custom-models) for
+the engagement process.
+
+## How do I get started?
+
+| Starting point | Path | Next step |
+| --- | --- | --- |
+| A task a general-purpose model cannot solve | Work with Hedra researchers to build and optimize a specialized model | [Prepare your research engagement](/pages/developer/v3/custom-models) |
+| An existing model you want to serve | Discuss the model and its production requirements with Hedra | [Bring an existing model](/pages/developer/v3/custom-models#can-hedra-serve-my-existing-model) |
+| A supported model in the public catalog | Integrate directly through the self-service v3 API | [Make your first API request](/pages/developer/v3/quickstart) |
+
+Custom model research and existing-model serving use a separate onboarding process
+from the self-service API. [Contact the team](https://www.hedra.com/enterprise)
+to discuss your task, model, hardware, and production requirements.
+
+## Which APIs can I call?
 
 | Workload | Integration | Getting started |
 | --- | --- | --- |
 | Image understanding and text reasoning | Supported models through `/v3/chat/completions`; compatibility routes also include `/v3/responses` and `/v3/anthropic/v1/messages` | [Vision and reasoning quickstart](/pages/developer/v3/quickstart) |
 | Image, video, and audio generation | Asynchronous jobs through `/v3/models/{model}` | [Model-job quickstart](/pages/developer/v3/model-jobs) |
-| Model adaptation and evaluation | Hedra Training, a research preview | [Discuss access](https://www.hedra.com/enterprise) |
-| Isolated compute for custom code and pipelines | GPU Sandboxes, a research preview | [Discuss your workload](https://www.hedra.com/enterprise) |
 
-Use the [model catalog](/pages/developer/v3/model-catalog) to confirm a model's
-current inputs, outputs, limits, and price. Availability of a catalog model does
-not imply that every modality or feature is supported through every endpoint.
+Use the [model catalog](/pages/developer/v3/model-catalog) to confirm current
+inputs, outputs, limits, and prices. A catalog listing does not mean every
+endpoint or connected tool supports that model.
 
-## What is World Model Runtime?
+The image-understanding quickstart returns text. For a robot-control, world-action,
+or vision-language-action workload, discuss the model and serving requirements
+with Hedra researchers; this guide does not provide a public robot-control API.
 
-World Model Runtime is Hedra's engine for multimodal workloads. It is part of the
-infrastructure behind the platform. Developers using managed inference integrate
-with the documented API routes and model contracts.
+## What results has Hedra demonstrated?
 
-See [World Model Runtime](https://www.hedra.com/wmr) for the runtime overview.
-For a workload involving a world-action or vision-language-action model, discuss
-the model and serving requirements with the engineering team. The image-understanding
-quickstart returns text; it is not a robot-control or world-action endpoint.
+- [Krea 3 image editing](/pages/research/krea-3-optimization): about 22 seconds to
+  3.6 seconds for 2K edits on the same four AMD Instinct MI355X GPUs, using
+  distillation and inference optimization.
+- [Physically consistent video](/pages/research/physical-consistency): retrained H3
+  scored 34.9 on Physics-IQ versus 30.3 for H3 Max, with comparable visual quality.
+- [Robot gripper adaptation](/pages/research/gripper-adaptation): in simulation,
+  task success recovered from near zero to near 100% after a gripper change,
+  without retraining the policy.
 
-## How do deployment options differ?
+Read the individual summaries for the conditions behind the measurements.
 
-Managed catalog inference is the self-service API path described in these docs.
-Bringing your own model or deploying on your own infrastructure has a separate
-onboarding process. See [deployment options](https://www.hedra.com/inference)
-and [contact engineering](https://www.hedra.com/enterprise) with your model,
-expected input/output sizes, throughput, latency target, and infrastructure requirements.
-
-## How does this relate to Studio and the Creative Agent?
+## How does this relate to Studio and connected assistants?
 
 Studio is Hedra's creative workspace. Its help pages remain under **Resources →
 Studio help**. The developer platform uses API keys and a prepaid USD API wallet;
 Studio subscription credits do not fund v3 API requests. See
 [API billing](/pages/developer/v3/billing).
 
-Connecting an assistant to Hedra's MCP server is also different from running the
+Connecting an assistant to Hedra's MCP server is different from running the
 assistant's language model on Hedra. See [MCP setup](/pages/developer/v3/mcp) for
 connected tools and [Coding agents](/pages/developer/v3/coding-agents) for the
 language-model provider configuration.

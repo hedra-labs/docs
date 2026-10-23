@@ -1,0 +1,66 @@
+---
+title: "Build a specialized model or bring your own"
+sidebarTitle: "Custom models and serving"
+description: "Work with Hedra researchers from task definition and data capture through evaluation, model optimization, and production serving, or discuss serving an existing model."
+---
+
+Hedra researchers build models customized for your task and optimized for your
+hardware. Hedra's inference infrastructure then serves them at production scale.
+You can start with a problem that needs a specialized model or bring an existing
+model to discuss serving.
+
+## How does Hedra build a specialized model?
+
+<Steps>
+  <Step title="Define the task and hardware">
+    Forward-deployed researchers work inside your team to understand the problem,
+    the inputs and outputs, and the hardware the model needs to run on. Bring
+    examples of where your current model falls short and the success criteria
+    for the workload.
+  </Step>
+  <Step title="Build the data and evaluation loop">
+    Researchers set up data capture, the data pipeline, and evaluations. The
+    evaluation connects model behavior to the task the team needs to solve.
+  </Step>
+  <Step title="Customize and optimize the model">
+    The team customizes the starting model for the job and optimizes it for the
+    target hardware. Model quality and serving performance are evaluated together.
+  </Step>
+  <Step title="Serve and keep improving">
+    Hedra serves the model at scale and connects training to serving so it can
+    keep improving on your production data. Building and serving under one roof
+    carries optimization work into production.
+  </Step>
+</Steps>
+
+This is a hands-on research engagement. RSI's longer-term direction is agents
+that help build and optimize models. See
+[What is RSI as a service?](/pages/developer/v3/platform#what-is-rsi-as-a-service).
+
+## Can Hedra serve my existing model?
+
+Yes. Teams can bring an existing model to discuss running it on Hedra inference
+without building a new model with Hedra researchers. Start by sharing the model
+and workload requirements so the team can scope the serving setup.
+
+Useful information for that conversation includes:
+
+- The model architecture, checkpoint format, and any custom runtime dependencies.
+- Representative inputs and outputs, including their sizes and shapes.
+- Quality evaluations and the latency, throughput, and concurrency you need.
+- Target hardware and any data-handling or deployment constraints.
+
+[Discuss your model with Hedra](https://www.hedra.com/enterprise).
+The engagement determines the integration and deployment plan; the public model
+catalog is not a self-service upload interface for arbitrary checkpoints.
+
+## Can I start with an API instead?
+
+If a model in the public catalog fits your task, use the self-service v3 API.
+Create an API key, fund the API wallet, and follow the
+[vision and reasoning quickstart](/pages/developer/v3/quickstart) or the
+[asynchronous model-job quickstart](/pages/developer/v3/model-jobs).
+
+The API guides document callable endpoints and model contracts. Custom model
+research and serving are scoped with the team rather than enabled by a quickstart
+API request.
