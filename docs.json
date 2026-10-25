@@ -10,10 +10,10 @@
   "fonts": {
     "family": "Geist"
   },
-  "favicon": "/assets/favicon.svg",
+  "favicon": "/assets/logo/hedra-mark.jpg",
   "logo": {
-    "light": "/assets/logo/light.svg",
-    "dark": "/assets/logo/dark.svg",
+    "light": "/assets/logo/hedra-mark-light.svg",
+    "dark": "/assets/logo/hedra-mark-dark.svg",
     "href": "https://www.hedra.com"
   },
   "styling": {
