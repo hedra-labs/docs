@@ -45,3 +45,16 @@ Use current schemas and SDKs for examples. Distinguish generally available
 features, research previews, and engineering-assisted deployments. Do not add
 unreleased APIs, performance guarantees, or a legacy shutdown date without an
 approved product source.
+
+## Brand assets
+
+Use the original SVGs from [Hedra's brand guide](https://brand.hedra.com/logo).
+The sidebar uses the horizontal lockup at its original 567:56 aspect ratio:
+
+- `assets/logo/light.svg`: [Carbon lockup](https://brand.hedra.com/assets/v1/logo-banner-carbon.svg).
+- `assets/logo/dark.svg`: [White lockup](https://brand.hedra.com/assets/v1/logo-banner-white.svg).
+- `assets/favicon.svg`: the unchanged path from the [White mark](https://brand.hedra.com/assets/v1/mark-white.svg), centered on a square Carbon background without stretching.
+
+The light and dark page grounds use Stone (`#F2F1ED`) and Carbon (`#141414`)
+from the [official tokens](https://brand.hedra.com/tokens.json). Source kit version:
+1.5.0. Keep logo geometry and proportions intact when updating these files.
