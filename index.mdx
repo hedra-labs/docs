@@ -1,24 +1,26 @@
 ---
-title: "Hedra Developer Documentation"
+title: "Build with Hedra"
 sidebarTitle: "Overview"
-description: "Build with Hedra infrastructure for multimodal inference. Start with image understanding and reasoning, then explore model jobs, API operations, and deployment options."
+description: "Hedra is a research and infrastructure company bringing frontier inference to multimodal and physical AI."
 ---
 
-Hedra provides infrastructure for running and adapting multimodal models.
-Start with managed inference through the **v3 API**: one integration for image,
-video, audio, and language models, backed by a prepaid API wallet.
+Start with managed inference through the **v3 API**. Choose a quickstart below;
+each walks you through creating an API key, funding your API wallet, and making
+your first request.
 
 <CardGroup cols={2}>
-  <Card title="Make your first API request" icon="code" href="/pages/developer/v3/quickstart">
-    Create a key, fund your wallet, and understand an image with the v3 chat API.
+  <Card title="Understand images and reason" icon="code" href="/pages/developer/v3/quickstart">
+    Send an image and a question. Read the answer directly from the chat API response.
   </Card>
-  <Card title="Explore models" icon="layout-grid" href="/pages/developer/v3/model-catalog">
-    Choose a model, inspect its input schema, and estimate a request's cost.
+  <Card title="Generate images, video, or audio" icon="layout-grid" href="/pages/developer/v3/model-jobs">
+    Submit a model job, follow its progress, and retrieve the output.
   </Card>
 </CardGroup>
 
-For supported integration paths and preview access, see
-[Platform and availability](/pages/developer/v3/platform).
+Choose a model and check its inputs, limits, and pricing in the
+[model catalog](/pages/developer/v3/model-catalog). To use Hedra from an assistant
+or your terminal, start with [MCP setup](/pages/developer/v3/mcp) or
+[SDKs and developer tools](/pages/developer/v3/sdks).
 
 ## Docs and console
 
@@ -29,6 +31,12 @@ and manage API access and billing. To start an integration,
 
 ## From inference to post-training
 
+Hedra's research and infrastructure connect model adaptation, evaluation, and
+deployment for real-world workloads. For physical AI models, bringing your own
+model, or deploying on your own infrastructure, start with
+[Platform and availability](/pages/developer/v3/platform) and
+[deployment options](https://www.hedra.com/inference).
+
 World Model Runtime is Hedra's engine for multimodal workloads. Hedra Training connects
 model adaptation and evaluation with deployment. GPU Sandboxes provide isolated
 compute for custom code and pipelines.
@@ -36,8 +44,7 @@ compute for custom code and pipelines.
 Training and GPU Sandboxes are currently **research previews**. See
 [Hedra's platform overview](https://www.hedra.com/) or
 [contact the engineering team](https://www.hedra.com/enterprise) to discuss access
-and supported workloads. For bringing your own model or deploying on your own
-infrastructure, see [deployment options](https://www.hedra.com/inference).
+and supported workloads.
 
 ## Existing integrations
 

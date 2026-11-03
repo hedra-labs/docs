@@ -411,11 +411,11 @@
     },
     {
       "source": "/pages/developer/realtime-avatar",
-      "destination": "/pages/developer/v3/quickstart"
+      "destination": "/pages/developer/v3/platform"
     },
     {
       "source": "/pages/developer/realtime-avatar/:slug*",
-      "destination": "/pages/developer/v3/quickstart"
+      "destination": "/pages/developer/v3/platform"
     },
     {
       "source": "/pages/app/content-creation/create-element",
@@ -439,6 +439,10 @@
     },
     {
       "source": "/pages/app/getting-started/video-tutorials",
+      "destination": "/pages/app/getting-started/overview"
+    },
+    {
+      "source": "/pages/app/troubleshooting/faq",
       "destination": "/pages/app/getting-started/overview"
     }
   ],
@@ -490,5 +494,10 @@
       "autogenerate": false
     }
   },
-  "description": "Hedra infrastructure for multimodal inference: image understanding, reasoning, model jobs, and production operations. Explore World Model Runtime and research-preview capabilities."
+  "description": "Hedra is a research and infrastructure company bringing frontier inference to multimodal and physical AI. Start building with the v3 API, then explore model adaptation and deployment options.",
+  "feedback": {
+    "thumbs": true,
+    "edits": false,
+    "issues": true
+  }
 }
