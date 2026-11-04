@@ -14,12 +14,165 @@
   "paths": {
     "/models/hedra-avatar": {
       "post": {
-        "description": "Generate audio-driven avatar video from an image and audio input. Inspect this model's input schema for supported inputs and limits.\n\nSubmits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` \u2014 each item in its `outputs[]` follows the `OutputItem` schema \u2014 or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`."
+        "description": "Run Hedra Avatar through the v3 API to generate audio-driven avatar video. Inspect the image and audio inputs, limits, and job output."
       }
     },
     "/models/hedra-character-3": {
       "post": {
-        "description": "Generate audio-driven avatar video from an image and audio input. Inspect this model's input schema for supported inputs and limits.\n\nSubmits an asynchronous job and returns `202` with a job id. Fetch the result at `GET /v3/jobs/{job_id}` \u2014 each item in its `outputs[]` follows the `OutputItem` schema \u2014 or track progress via `GET /v3/jobs/{job_id}/status` / the SSE stream at `GET /v3/jobs/{job_id}/stream`."
+        "description": "Run Hedra Character 3 through the v3 API to generate audio-driven character video. Inspect the required image and audio inputs."
+      }
+    },
+    "/jobs": {
+      "get": {
+        "description": "List inference jobs on Hedra and inspect their status, model, and outputs. Use the available filters and pagination to find a request."
+      }
+    },
+    "/jobs/{job_id}": {
+      "get": {
+        "description": "Retrieve a Hedra inference job by ID. Inspect its status, outputs, errors, usage, and cost using the v3 API."
+      }
+    },
+    "/jobs/{job_id}/status": {
+      "get": {
+        "description": "Check the status of a Hedra inference job, including progress and estimated completion time when available."
+      }
+    },
+    "/jobs/{job_id}/logs": {
+      "get": {
+        "description": "Read the lifecycle logs for a Hedra inference job. Inspect job events and errors to troubleshoot a request."
+      }
+    },
+    "/jobs/{job_id}/stream": {
+      "get": {
+        "description": "Stream status updates for a Hedra inference job with server-sent events. Follow progress through completion or failure."
+      }
+    },
+    "/models": {
+      "get": {
+        "description": "List models available through the Hedra v3 API. Compare modalities and model IDs before inspecting a model-specific inference contract."
+      }
+    },
+    "/models/{model}": {
+      "get": {
+        "description": "Inspect a Hedra model by ID. Read its input and output schemas, supported capabilities, limits, and pricing before integrating."
+      }
+    },
+    "/models/{model}/jobs": {
+      "get": {
+        "description": "List inference jobs for a specific Hedra model. Inspect job history and use the available pagination controls."
+      }
+    },
+    "/models/{model}/estimate": {
+      "post": {
+        "description": "Estimate the price of a Hedra image, video, or audio request using its model-specific inputs, without submitting an inference job."
+      }
+    },
+    "/keys": {
+      "post": {
+        "description": "Create a scoped API key for the Hedra v3 API. Review the credential response and use the key to authenticate your integration."
+      },
+      "get": {
+        "description": "List Hedra API keys for a workspace. Inspect key metadata and scopes to manage credentials used by your v3 integrations."
+      }
+    },
+    "/keys/{key_id}/rotate": {
+      "post": {
+        "description": "Rotate a Hedra API key by ID. Review the rotation request and credential response before updating your integration."
+      }
+    },
+    "/keys/{key_id}": {
+      "delete": {
+        "description": "Revoke a Hedra API key by ID to stop it authenticating v3 API requests. Review the required parameters and response."
+      }
+    },
+    "/tokens": {
+      "post": {
+        "description": "Create a scoped, short-lived Hedra token for client access. Review the token request, workspace, and expiration fields."
+      }
+    },
+    "/balance": {
+      "get": {
+        "description": "Read the prepaid USD API wallet balance for your Hedra workspace. Check available funds before making billable inference requests."
+      }
+    },
+    "/usage": {
+      "get": {
+        "description": "Inspect Hedra v3 API usage over a time range. Use the supported grouping options to review inference consumption."
+      }
+    },
+    "/webhooks/public-key": {
+      "get": {
+        "description": "Retrieve Hedra's Ed25519 public key to verify signed webhook deliveries. Use it with the signature verification steps in the webhook guide."
+      }
+    },
+    "/webhooks/default": {
+      "get": {
+        "description": "Read the default Hedra webhook configuration used for inference jobs that do not specify a per-job webhook URL."
+      },
+      "put": {
+        "description": "Set or update the default Hedra webhook endpoint for job results. Configure the destination URL and whether deliveries are enabled."
+      },
+      "delete": {
+        "description": "Remove the default Hedra webhook configuration. Jobs can still specify a per-job webhook URL when submitted."
+      }
+    },
+    "/webhooks/default/test": {
+      "post": {
+        "description": "Send a test delivery to your default Hedra webhook endpoint. Inspect the response to check the connection before relying on job events."
+      }
+    },
+    "/webhooks/deliveries": {
+      "get": {
+        "description": "List Hedra webhook deliveries and inspect their status, attempts, and outcomes. Use the results to investigate delivery failures."
+      }
+    },
+    "/log-drains": {
+      "get": {
+        "description": "List log drains configured for your Hedra workspace. Inspect destinations, delivery health, and enabled status."
+      },
+      "post": {
+        "description": "Create a Hedra log drain to send job lifecycle events to your HTTPS endpoint in NDJSON or OTLP format."
+      }
+    },
+    "/log-drains/{drain_id}": {
+      "get": {
+        "description": "Read a Hedra log drain by ID. Inspect its configuration, enabled status, and recent delivery health."
+      },
+      "patch": {
+        "description": "Update a Hedra log drain by ID. Change its destination, format, credentials, or enabled status using the published request fields."
+      },
+      "delete": {
+        "description": "Delete a Hedra log drain by ID to stop sending job lifecycle events to its destination."
+      }
+    },
+    "/log-drains/{drain_id}/test": {
+      "post": {
+        "description": "Send a test batch to a Hedra log drain destination. Inspect the response to verify your log receiver configuration."
+      }
+    },
+    "/models/elevenlabs-english-sts-v2": {
+      "post": {
+        "description": "Run ElevenLabs English STS V2 through the Hedra v3 API. Submit a speech-to-speech inference job and retrieve its audio output."
+      }
+    },
+    "/models/elevenlabs-multilingual-sts-v2": {
+      "post": {
+        "description": "Run ElevenLabs Multilingual STS V2 through the Hedra v3 API. Inspect its speech-to-speech inputs, submit a job, and retrieve audio."
+      }
+    },
+    "/models/kling-16": {
+      "post": {
+        "description": "Run Kling 1.6 through the Hedra v3 API. Inspect its video-generation inputs, submit an asynchronous job, and retrieve the result."
+      }
+    },
+    "/models/minimax-hailuo-02": {
+      "post": {
+        "description": "Generate video with MiniMax Hailuo 02 through the Hedra v3 API. Inspect supported inputs and quality levels before submitting a job."
+      }
+    },
+    "/models/minimax-hailuo-23": {
+      "post": {
+        "description": "Generate video with MiniMax Hailuo 2.3 through the Hedra v3 API. Inspect supported inputs and quality levels before submitting a job."
       }
     }
   }
