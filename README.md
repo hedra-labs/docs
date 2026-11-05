@@ -24,6 +24,12 @@ The `Sync OpenAPI schemas` workflow refreshes both schemas. Put documentation
 annotations in `openapi-v3-overrides.json` or `openapi-overrides.json` so they
 survive regeneration. The workflow injects SDK samples and runs
 `scripts/generate_v3_reference_nav.py` to regenerate v3 reference navigation.
+Keep operation descriptions in the backend route handlers or model catalog so
+the published OpenAPI document and SDKs share the same technical documentation.
+Do not set `x-mint.metadata.description` on an operation: Mintlify shows it
+under the page title in place of the operation's description, and in the
+meta description. Verify the API explanation in the page's main content and
+Markdown export, excluding navigation cards and embedded OpenAPI schemas.
 The workflow requires the `OPENAPI_SYNC_TOKEN` repository secret with contents
 and pull-request write access.
 Run `python3 scripts/sync_openapi.py` to refresh `openapi.json` locally.
