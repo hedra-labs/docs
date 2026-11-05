@@ -318,12 +318,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.list();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.list();\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "List Hedra inference jobs with limit and cursor pagination. Read each job's ID, model, quality, status, and creation time."
-          }
-        }
+        ]
       }
     },
     "/jobs/{job_id}": {
@@ -612,12 +607,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.get(\"job_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Retrieve a Hedra inference job by ID. Inspect its status, outputs, errors, usage, and cost using the v3 API."
-          }
-        }
+        ]
       }
     },
     "/jobs/{job_id}/status": {
@@ -924,12 +914,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.getStatus(\"job_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Check the status of a Hedra inference job, including progress and estimated completion time when available."
-          }
-        }
+        ]
       }
     },
     "/jobs/{job_id}/logs": {
@@ -1250,12 +1235,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.jobs.listJobLogs(\"job_id\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.jobs.listJobLogs(\"job_id\");\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Read the lifecycle logs for a Hedra inference job. Inspect job events and errors to troubleshoot a request."
-          }
-        }
+        ]
       }
     },
     "/jobs/{job_id}/stream": {
@@ -1571,12 +1551,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst response = await client.jobs.stream(\"job_id\");\nfor await (const item of response) {\n    console.log(item);\n}\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Stream status updates for a Hedra inference job with server-sent events. Follow progress through completion or failure."
-          }
-        }
+        ]
       }
     },
     "/models": {
@@ -1833,12 +1808,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.list();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "List models available through the Hedra v3 API. Compare modalities and model IDs before inspecting a model-specific inference contract."
-          }
-        }
+        ]
       }
     },
     "/models/creatify-aurora": {
@@ -3278,12 +3248,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsEnglishStsV2({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Run ElevenLabs English STS V2 through the Hedra v3 API. Submit a speech-to-speech inference job and retrieve its audio output."
-          }
-        }
+        ]
       }
     },
     "/models/elevenlabs-flash-multilingual-v2": {
@@ -4363,12 +4328,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitElevenlabsMultilingualStsV2({\n    input: {\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        },\n        voice_id: \"voice_id\"\n    }\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Run ElevenLabs Multilingual STS V2 through the Hedra v3 API. Inspect its speech-to-speech inputs, submit a job, and retrieve audio."
-          }
-        }
+        ]
       }
     },
     "/models/elevenlabs-multilingual-v2": {
@@ -15168,12 +15128,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraAvatar({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Run Hedra Avatar through the v3 API to generate audio-driven avatar video. Inspect the image and audio inputs, limits, and job output."
-          }
-        }
+        ]
       }
     },
     "/models/hedra-character-3": {
@@ -15533,12 +15488,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitHedraCharacter3({\n    input: {\n        prompt: \"prompt\",\n        aspect_ratio: \"1:1\",\n        resolution: \"540p\",\n        start_image: {\n            source: \"url\",\n            url: \"url\"\n        },\n        audio: {\n            source: \"url\",\n            url: \"url\"\n        }\n    }\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Run Hedra Character 3 through the v3 API to generate audio-driven character video. Inspect the required image and audio inputs."
-          }
-        }
+        ]
       }
     },
     "/models/heygen-photo-avatar-4": {
@@ -18058,12 +18008,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitKling16({\n    input: {\n        prompt: \"prompt\"\n    }\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Run Kling 1.6 through the Hedra v3 API. Inspect its video-generation inputs, submit an asynchronous job, and retrieve the result."
-          }
-        }
+        ]
       }
     },
     "/models/kling-21-master": {
@@ -25263,12 +25208,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo02({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Generate video with MiniMax Hailuo 02 through the Hedra v3 API. Inspect supported inputs and quality levels before submitting a job."
-          }
-        }
+        ]
       }
     },
     "/models/minimax-hailuo-23": {
@@ -25628,12 +25568,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.jobs.submitMinimaxHailuo23({\n    input: {\n        prompt: \"prompt\",\n        duration_ms: 1\n    }\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Generate video with MiniMax Hailuo 2.3 through the Hedra v3 API. Inspect supported inputs and quality levels before submitting a job."
-          }
-        }
+        ]
       }
     },
     "/models/minimax-speech-25-hd-preview": {
@@ -40283,12 +40218,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.get(\"model\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Inspect a Hedra model by ID. Read its input and output schemas, supported capabilities, limits, and pricing before integrating."
-          }
-        }
+        ]
       },
       "post": {
         "tags": [
@@ -40978,12 +40908,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.models.listModelJobs(\"model\");\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.models.listModelJobs(\"model\");\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "List inference jobs for a specific Hedra model. Inspect job history and use the available pagination controls."
-          }
-        }
+        ]
       }
     },
     "/models/{model}/voices": {
@@ -42180,12 +42105,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.models.estimate(\"model\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Estimate a model request's price in US dollars without submitting a job, charging funds, or checking the API wallet balance."
-          }
-        }
+        ]
       }
     },
     "/keys": {
@@ -42471,12 +42391,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.create();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Create a scoped API key for the Hedra v3 API. Review the credential response and use the key to authenticate your integration."
-          }
-        }
+        ]
       },
       "get": {
         "tags": [
@@ -42770,12 +42685,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.list();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "List Hedra API keys for a workspace. Inspect key metadata and scopes to manage credentials used by your v3 integrations."
-          }
-        }
+        ]
       }
     },
     "/keys/{key_id}/rotate": {
@@ -43074,12 +42984,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.rotate(\"key_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Rotate a Hedra API key by ID. Review the rotation request and credential response before updating your integration."
-          }
-        }
+        ]
       }
     },
     "/keys/{key_id}": {
@@ -43361,12 +43266,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.keys.revoke(\"key_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Revoke a Hedra API key by ID to stop it authenticating v3 API requests. Review the required parameters and response."
-          }
-        }
+        ]
       }
     },
     "/tokens": {
@@ -43652,12 +43552,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.tokens.create();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Create a short-lived Hedra bearer token for client access. Narrow its scopes or set its lifetime; the response returns the token and its expiration time."
-          }
-        }
+        ]
       }
     },
     "/files": {
@@ -44273,12 +44168,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getBalance();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Read the prepaid USD API wallet balance for your Hedra workspace. Check available funds before making billable inference requests."
-          }
-        }
+        ]
       }
     },
     "/usage": {
@@ -44605,12 +44495,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.billing.getUsage();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Inspect Hedra v3 API usage over a time range. Group it by day or by model to review job and sandbox spend."
-          }
-        }
+        ]
       }
     },
     "/transactions": {
@@ -45158,12 +45043,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getPublicKey();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Retrieve Hedra's Ed25519 public key to verify signed webhook deliveries. Use it with the signature verification steps in the webhook guide."
-          }
-        }
+        ]
       }
     },
     "/webhooks/default": {
@@ -45439,12 +45319,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.getDefault();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Read the default Hedra webhook configuration for job events and API wallet automatic top-up failure notifications."
-          }
-        }
+        ]
       },
       "put": {
         "tags": [
@@ -45728,12 +45603,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.putDefault({\n    url: \"url\"\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Set or update the default Hedra webhook URL for job events and API wallet top-up failures. Enable or pause deliveries."
-          }
-        }
+        ]
       },
       "delete": {
         "tags": [
@@ -46000,12 +45870,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.deleteDefault();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Remove the default Hedra webhook configuration for job and billing events. Submitted jobs can still specify a per-job webhook URL."
-          }
-        }
+        ]
       }
     },
     "/webhooks/default/test": {
@@ -46281,12 +46146,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.webhooks.testDefault();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Send a test delivery to your default Hedra webhook endpoint. Inspect the response to check the connection before relying on job events."
-          }
-        }
+        ]
       }
     },
     "/webhooks/deliveries": {
@@ -46596,12 +46456,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nconst pageableResponse = await client.webhooks.listDeliveries();\nfor await (const item of pageableResponse) {\n    console.log(item);\n}\n\n// Or you can manually iterate page-by-page\nlet page = await client.webhooks.listDeliveries();\nwhile (page.hasNextPage()) {\n    page = await page.getNextPage();\n}\n\n// You can also access the underlying response\nconst response = page.response;\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "List Hedra webhook deliveries and inspect their status, attempts, and outcomes. Use the results to investigate delivery failures."
-          }
-        }
+        ]
       }
     },
     "/webhooks/deliveries/{job_id}/redeliver": {
@@ -47167,12 +47022,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.listLogDrains();\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "List log drains configured for your Hedra workspace. Inspect destinations, delivery health, and enabled status."
-          }
-        }
+        ]
       },
       "post": {
         "tags": [
@@ -47456,12 +47306,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.createLogDrain({\n    name: \"name\",\n    url: \"url\"\n});\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Create a Hedra log drain to send job lifecycle events to your HTTPS endpoint in NDJSON or OTLP format."
-          }
-        }
+        ]
       }
     },
     "/log-drains/{drain_id}": {
@@ -47750,12 +47595,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.getLogDrain(\"drain_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Read a Hedra log drain by ID. Inspect its configuration, enabled status, and recent delivery health."
-          }
-        }
+        ]
       },
       "patch": {
         "tags": [
@@ -48052,12 +47892,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.updateLogDrain(\"drain_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Update a Hedra log drain by ID. Change its destination, format, credentials, or enabled status using the published request fields."
-          }
-        }
+        ]
       },
       "delete": {
         "tags": [
@@ -48337,12 +48172,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.deleteLogDrain(\"drain_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Delete a Hedra log drain by ID to stop sending job lifecycle events to its destination."
-          }
-        }
+        ]
       }
     },
     "/log-drains/{drain_id}/test": {
@@ -48631,12 +48461,7 @@
             "label": "hedra-node",
             "source": "import { HedraClient } from \"@hedra/sdk\";\n\nconst client = new HedraClient({ apiKey: \"YOUR_API_KEY\" });\n\nawait client.logDrains.testLogDrain(\"drain_id\");\n"
           }
-        ],
-        "x-mint": {
-          "metadata": {
-            "description": "Send a test batch to a Hedra log drain destination. Inspect the response to verify your log receiver configuration."
-          }
-        }
+        ]
       }
     }
   },
