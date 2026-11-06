@@ -217,15 +217,15 @@ hedra-cli sandbox port-forward train 9000:8888
 hedra-cli sandbox port-forward train 0:8888
 ```
 
-`port-forward` listens on your machine's `127.0.0.1` and `[::1]` and forwards each connection to the port in the sandbox until you press Ctrl-C. Give one port for both sides, or `<local>:<remote>`; a local port of `0` picks a free one, which it prints. Up to 90 connections are open at once; one more waits for one to close.
+`port-forward` listens on your machine's `127.0.0.1` and `[::1]`, or on the one of them your machine has, and forwards each connection to the port in the sandbox until you press Ctrl-C. Give one port for both sides, or `<local>:<remote>`; a local port of `0` picks a free one, which it prints. Up to 90 connections are open at once; one more waits for one to close.
 
-The server in the sandbox must listen on `127.0.0.1` or on every address. One bound only to `::1` or to another address is not reached.
+The server in the sandbox must listen on `127.0.0.1` or `0.0.0.0`. One bound only to `::1` or to another address is not reached.
 
 <Warning>
 **Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection skips the endpoint-token check that protects the sandbox's `url`, so the server in the sandbox is the only check left. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
 </Warning>
 
-`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side reads, for instance a download faster than your connection, hedra-cli holds the backlog in memory, and resets the connection once about 8 MiB is waiting for it. When 64 MiB is waiting across every connection, it resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
+`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server or a local client reads slowly, the connection is reset once about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
 
 A refused, dropped or reset connection resets only that connection, and the forward keeps listening. The forward stops with an error only when no later connection could succeed: the sandbox stopped, the key lost its scope or was revoked, or the connection to Hedra was refused in a way no retry can fix.
 
