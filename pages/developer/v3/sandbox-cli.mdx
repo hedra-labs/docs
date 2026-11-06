@@ -207,7 +207,7 @@ One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a f
 - A relative sandbox path is relative to the sandbox's working directory.
 - The image needs `sh` and `tar`.
 
-`cp` exits with the code of `tar` in the sandbox, which is 0 for a complete copy. A copy that left out or refused an entry, or that lost output, fails with exit code 255 and says what is missing.
+A complete copy exits 0. A copy in whose `tar` in the sandbox fails exits with that `tar`'s code. A copy out whose `tar` fails, and a copy either way that left out or refused an entry or lost output, exits 255 and says what is missing. A copy out that fails after writing something leaves the partial copy in place and prints where it is; delete it or copy again.
 
 ## Forward a port
 
@@ -286,7 +286,7 @@ How each stream command uses the table:
 
 | Command | Exit codes |
 | --- | --- |
-| `exec`, `shell`, `cp` | The command's own code, or for `cp`, the code of `tar` in the sandbox. Every failure of hedra-cli's own is 255, since the command can exit with any of 0 to 255; the `hedra-cli: <class> (<code>):` line says which failure it was. The exceptions are 3 for a usage error, 130 for Ctrl-C (under `-t` and in `shell`, only before the terminal is in raw mode; after that, Ctrl-C goes to the remote command), 141, 129 and 143. |
+| `exec`, `shell`, `cp` | The command's own code; for `cp`, 0 for a complete copy, or the code of a failed `tar` in the sandbox on a copy in. Every failure of hedra-cli's own is 255, since the command can exit with any of 0 to 255; the `hedra-cli: <class> (<code>):` line says which failure it was. The exceptions are 3 for a usage error, 130 for Ctrl-C (under `-t` and in `shell`, only before the terminal is in raw mode; after that, Ctrl-C goes to the remote command), 141, 129 and 143. |
 | `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
 | `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
 | `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. |
