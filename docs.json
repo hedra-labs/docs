@@ -93,7 +93,8 @@
             "group": "SDKs and tools",
             "pages": [
               "pages/developer/v3/sdks",
-              "pages/developer/v3/coding-agents"
+              "pages/developer/v3/coding-agents",
+              "pages/developer/v3/sandbox-cli"
             ]
           },
           {
