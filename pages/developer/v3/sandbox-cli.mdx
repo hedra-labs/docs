@@ -27,7 +27,7 @@ A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GP
 
 ### Sign in with a key that holds the sandbox scopes
 
-The sandbox commands need these key scopes, which a key holds only when it lists them or holds `all`:
+The sandbox commands need these key scopes:
 
 | Scope | What it allows |
 | --- | --- |
@@ -35,9 +35,7 @@ The sandbox commands need these key scopes, which a key holds only when it lists
 | `sandboxes:write` | `create`, `stop`, `token`, `secrets set`, `secrets rm`, `rotate-signing-key` and `port-forward` |
 | `sandboxes:exec` | `exec`, `shell` and `cp` |
 
-So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, and `port-forward` needs `sandboxes:read` and `sandboxes:write`. `secrets set`, `secrets rm` and `rotate-signing-key` also need a workspace owner or admin.
-
-`shell --gpu` creates, opens and stops a sandbox, so it needs all three.
+So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `secrets set`, `secrets rm` and `rotate-signing-key` also need you to be a workspace owner or admin, or the member who pays for the workspace.
 
 Sign in with:
 
@@ -45,9 +43,9 @@ Sign in with:
 hedra-cli auth login
 ```
 
-<Warning>
-**PLACEHOLDER:** whether, at launch, the key `hedra-cli auth login` stores holds the sandbox scopes for an owner or admin. Until it does, mint a key with `sandboxes:read`, `sandboxes:write` and `sandboxes:exec` on the console's [API keys page](https://www.hedra.com/develop/api-keys) and set it in your shell, as below.
-</Warning>
+The key `auth login` stores holds every scope except `all` and `keys:manage`, so it holds the three sandbox scopes whatever your role in the workspace. Running `auth login` again, or `hedra-cli workspaces select`, renews the key you already hold and resets its scopes to that same set.
+
+A key you mint yourself, on the console's [API keys page](https://www.hedra.com/develop/api-keys) or with `hedra-cli keys create`, holds the sandbox scopes when it lists them or holds `all`. Any workspace member can mint a personal key that lists them. Only a workspace owner or admin, or the member who pays for the workspace, can mint a key that holds `all`, or a service key. A key minted before key scopes existed holds `all`.
 
 A key in `HEDRA_API_KEY` takes precedence over the one `auth login` stored, so CI and agents can use a key of their own:
 
