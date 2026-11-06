@@ -35,7 +35,7 @@ The sandbox commands need these key scopes:
 | `sandboxes:write` | `create`, `stop`, `token`, `secrets set`, `secrets rm`, `rotate-signing-key` and `port-forward` |
 | `sandboxes:exec` | `exec`, `shell` and `cp` |
 
-So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `secrets set`, `secrets rm` and `rotate-signing-key` also need you to be a workspace owner or admin, or the member who pays for the workspace.
+So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `secrets set`, `secrets rm` and `rotate-signing-key` also need you to be a workspace owner or admin, or the member who pays for the workspace; a service key cannot run them.
 
 Sign in with:
 
@@ -43,9 +43,9 @@ Sign in with:
 hedra-cli auth login
 ```
 
-The key `auth login` stores holds every scope except `all` and `keys:manage`, so it holds the three sandbox scopes whatever your role in the workspace. Running `auth login` again, or `hedra-cli workspaces select`, renews the key you already hold and resets its scopes to that same set.
+The key `auth login` stores holds every scope except `all` and `keys:manage`, so it holds the three sandbox scopes whatever your role in the workspace. Running `auth login` again, or `hedra-cli workspaces select`, renews the key you already hold, or mints a new one, with that same set of scopes.
 
-A key you mint yourself, on the console's [API keys page](https://www.hedra.com/develop/api-keys) or with `hedra-cli keys create`, holds the sandbox scopes when it lists them or holds `all`. Any workspace member can mint a personal key that lists them. Only a workspace owner or admin, or the member who pays for the workspace, can mint a key that holds `all`, or a service key. A key minted before key scopes existed holds `all`.
+A key you mint yourself holds the sandbox scopes when it lists them or holds `all`. On the console's [API keys page](https://www.hedra.com/develop/api-keys), any workspace member can mint a personal key that lists them. `hedra-cli keys create` needs a key that holds `keys:manage`, which the `auth login` key does not, and can grant only scopes that key holds. Only a workspace owner or admin, or the member who pays for the workspace, can mint a key that holds `all`, or a service key. A key minted before key scopes existed holds `all`.
 
 A key in `HEDRA_API_KEY` takes precedence over the one `auth login` stored, so CI and agents can use a key of their own:
 
@@ -100,7 +100,7 @@ A name is 1 to 32 lowercase letters, digits and hyphens, starting and ending wit
 
 Run `hedra-cli sandbox <command> --help` for every flag. `--dry-run` checks a command's arguments and sends nothing.
 
-API commands follow hedra-cli's usual output: a table on a terminal and JSON when stdout is piped, with `--format`, `--query` and `--quiet` as for every other command. A stream command's stdout is the sandbox's own output, so it writes its own messages and errors to stderr.
+API commands follow hedra-cli's usual output: a table on a terminal and JSON when stdout is piped, with `--format`, `--query` and `--quiet` as for every other command. A stream command's stdout is the sandbox's own output, so it writes its own messages and errors to stderr. A usage error (exit code 3) is the exception: hedra-cli's usual argument checker reports it, in its own format, which is JSON on stdout when stdout is piped.
 
 ## The quickest start: a shell on a new sandbox
 
@@ -202,7 +202,7 @@ hedra-cli sandbox cp train:/work/out ./out
 
 One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way.
 
-- When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created.
+- When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created. A destination ending in `/` must already be a directory.
 - A source ending in `/.` copies the directory's contents rather than the directory.
 - A relative sandbox path is relative to the sandbox's working directory.
 - The image needs `sh` and `tar`.
@@ -246,7 +246,7 @@ The token and `browser_url` are credentials: anyone who has either one reaches t
 
 ## Exit codes
 
-API commands exit with hedra-cli's usual codes: 0 on success, 1 when the API answers with an error (a refused key included), 2 when no credential is found, 3 for a usage error, 4 when the API description cannot be loaded, and 5 when Hedra cannot be reached.
+API commands exit with hedra-cli's usual codes: 0 on success, 1 when the API answers with an error (a refused key included), 2 when no credential is found, 3 for a usage error, 4 when the API description cannot be loaded, and 5 when Hedra cannot be reached, or for another failure of hedra-cli's own.
 
 Stream commands exit with a code for each kind of failure, so a script can tell them apart. `hedra-cli sandbox <command> --help` prints the same table.
 
@@ -260,25 +260,25 @@ Stream commands exit with a code for each kind of failure, so a script can tell 
 | 11 | No such sandbox |
 | 12 | Sandboxes are not enabled for this workspace |
 | 13 | The sandbox is not ready, or it stopped |
-| 14 | No GPU of that model is free |
+| 14 | No GPU of that model is free (named only in `shell --gpu`'s error line, which exits 255) |
 | 15 | The wallet cannot pay |
 | 16 | A limit was reached |
 | 17 | Hedra or the network is unavailable; retry |
 | 18 | The connection to the sandbox was lost |
-| 19 | The request was refused, for instance a bad argument or a taken name |
+| 19 | The request was refused, for instance a bad sandbox name or port |
 | 129 | Hangup: the terminal closed, or SIGHUP |
 | 130 | Interrupted with Ctrl-C |
-| 141 | The output was closed, for instance by `head` |
+| 141 | The output was closed, for instance by `head`: hedra-cli is killed by SIGPIPE, which a shell reports as 141 |
 | 143 | Terminated: SIGTERM, or Ctrl-Break on Windows |
 | 255 | The output could not be written, or hedra-cli crashed; and for `exec`, `shell` and `cp`, any failure of hedra-cli's own |
 
-Each failure prints one line on stderr that starts `hedra-cli: <class> (<code>):` and names the next step, such as:
+Apart from a usage error, each failure prints one line on stderr that starts `hedra-cli: <class> (<code>):` and names the next step, such as:
 
 ```text
 hedra-cli: Not found (11): No sandbox `train`. Run `hedra-cli sandbox ls`.
 ```
 
-With an explicit `--format json`, the line is a JSON object instead, `{"error": {...}}`, whose `error` holds `class`, `exit_code`, `message`, `reason` and `trace_id`.
+With an explicit `--format json`, `jsonl` or `yaml`, the line is a JSON object instead, `{"error": {...}}`, whose `error` holds `class`, `exit_code`, `message`, `reason` and `trace_id`; `reason` and `trace_id` are null when the failure happened before Hedra answered.
 
 How each stream command uses the table:
 
@@ -286,6 +286,6 @@ How each stream command uses the table:
 | --- | --- |
 | `exec`, `shell`, `cp` | The command's own code, or for `cp`, the code of `tar` in the sandbox. Every failure of hedra-cli's own is 255, since the command can exit with any of 0 to 255; the `hedra-cli: <class> (<code>):` line says which failure it was. The exceptions are 3 for a usage error, 130 for Ctrl-C (under `-t` and in `shell`, only before the terminal is in raw mode; after that, Ctrl-C goes to the remote command), 141, 129 and 143. |
 | `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
-| `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
+| `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
 | `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. |
-| `port-forward` | Ctrl-C, which is how a forward ends, exits 0. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed, with a code such as 13 (the sandbox stopped), 10 (the key lost its scope) or 2 (the key was revoked). 129 and 143 for signals. |
+| `port-forward` | Ctrl-C, which is how a forward ends, exits 0. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed, with a code such as 13 (the sandbox stopped), 10 (the key lost its scope) or 2 (the key was revoked). 129 and 143 for signals. |
