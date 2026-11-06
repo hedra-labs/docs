@@ -19,7 +19,7 @@ A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GP
 </Warning>
 
 - **A funded API wallet.** A sandbox's GPU time is paid from the API wallet; see [Billing](/pages/developer/v3/billing).
-- **Sandboxes enabled for your workspace.** Until they are, `create`, `gpus` and `quota` answer that sandboxes are not available.
+- **Sandboxes enabled for your workspace.** Until they are, most API commands, such as `create`, `gpus` and `quota`, answer that sandboxes are not available.
 
 <Warning>
 **PLACEHOLDER:** how a workspace gets sandboxes at launch: whether its first `hedra-cli sandbox create` enables them, or whether it asks Hedra.
@@ -207,7 +207,7 @@ One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a f
 - A relative sandbox path is relative to the sandbox's working directory.
 - The image needs `sh` and `tar`.
 
-A complete copy exits 0. A copy in whose `tar` in the sandbox fails exits with that `tar`'s code. A copy out whose `tar` fails, and a copy either way that left out or refused an entry or lost output, exits 255 and says what is missing. A copy out that fails after writing something leaves the partial copy in place and prints where it is; delete it or copy again.
+A complete copy exits 0. A copy in whose `tar` in the sandbox fails exits with that `tar`'s code; an image without `sh` or `tar` exits 255. A copy out whose `tar` fails, and a copy either way that left out or refused an entry or lost output, exits 255 and says what is missing. A copy out that fails after writing something leaves the partial copy in place and prints where it is; delete it or copy again.
 
 ## Forward a port
 
@@ -225,7 +225,7 @@ The server in the sandbox must listen on `127.0.0.1` or `0.0.0.0`. One bound onl
 **Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection skips the endpoint-token check that protects the sandbox's `url`, so the server in the sandbox is the only check left. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
 </Warning>
 
-`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server or a local client reads slowly, the connection is reset once about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
+`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server or a local client reads slowly, the connection is reset once up to about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
 
 A refused, dropped or reset connection resets only that connection, and the forward keeps listening. The forward stops with an error only when no later connection could succeed: the sandbox stopped, the key lost its scope or was revoked, or the connection to Hedra was refused in a way no retry can fix.
 
@@ -250,7 +250,7 @@ The token and `browser_url` are credentials: anyone who has either one reaches t
 
 API commands exit with hedra-cli's usual codes: 0 on success, 1 when the API answers with an error (a refused key included), 2 when no credential is found, 3 for a usage error, 4 when the API description cannot be loaded, and 5 when Hedra cannot be reached, or for another failure of hedra-cli's own.
 
-Stream commands exit with a code for each kind of failure, so a script can tell them apart. `hedra-cli sandbox <command> --help` prints the same table.
+Stream commands exit with a code for each kind of failure, so a script can tell them apart. `hedra-cli sandbox <command> --help` prints these codes.
 
 | Code | Meaning |
 | --- | --- |
@@ -262,7 +262,7 @@ Stream commands exit with a code for each kind of failure, so a script can tell 
 | 11 | No such sandbox |
 | 12 | Sandboxes are not enabled for this workspace |
 | 13 | The sandbox is not ready, or it stopped |
-| 14 | No GPU of that model is free (named only in `shell --gpu`'s error line, which exits 255) |
+| 14 | No GPU of that model is free (mostly in `shell --gpu`'s error line, which exits 255) |
 | 15 | The wallet cannot pay |
 | 16 | A limit was reached |
 | 17 | Hedra or the network is unavailable; retry |
@@ -289,5 +289,5 @@ How each stream command uses the table:
 | `exec`, `shell`, `cp` | The command's own code; for `cp`, 0 for a complete copy, or the code of a failed `tar` in the sandbox on a copy in. Every failure of hedra-cli's own is 255, since the command can exit with any of 0 to 255; the `hedra-cli: <class> (<code>):` line says which failure it was. The exceptions are 3 for a usage error, 130 for Ctrl-C (under `-t` and in `shell`, only before the terminal is in raw mode; after that, Ctrl-C goes to the remote command), 141, 129 and 143. |
 | `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
 | `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
-| `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. |
+| `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13, or 14 when no GPU was free for it. |
 | `port-forward` | Ctrl-C, which is how a forward ends, exits 0. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed, with a code such as 13 (the sandbox stopped), 10 (the key lost its scope), 2 (the key was revoked) or 19 (a refusal no retry can fix). 129 and 143 for signals. |
