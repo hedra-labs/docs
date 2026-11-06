@@ -222,10 +222,12 @@ hedra-cli sandbox port-forward train 0:8888
 The server in the sandbox must listen on `127.0.0.1` or on every address. One bound only to `::1` or to another address is not reached.
 
 <Warning>
-**On a shared machine, anyone logged in to it can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a forwarded connection skips the endpoint-token check that protects the sandbox's `url`. Forward only on a machine whose other users you trust with the sandbox, and stop the forward when you are done.
+**Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection skips the endpoint-token check that protects the sandbox's `url`, so the server in the sandbox is the only check left. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
 </Warning>
 
-A refused or dropped connection resets only that connection, and the forward keeps listening. The forward stops with an error only when no later connection could succeed: the sandbox stopped, or the key lost its scope or was revoked.
+`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side reads, for instance a download faster than your connection, hedra-cli holds the backlog in memory, and resets the connection once about 8 MiB is waiting for it. When 64 MiB is waiting across every connection, it resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
+
+A refused, dropped or reset connection resets only that connection, and the forward keeps listening. The forward stops with an error only when no later connection could succeed: the sandbox stopped, the key lost its scope or was revoked, or the connection to Hedra was refused in a way no retry can fix.
 
 ## Reach a sandbox's URL
 
@@ -288,4 +290,4 @@ How each stream command uses the table:
 | `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
 | `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
 | `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. |
-| `port-forward` | Ctrl-C, which is how a forward ends, exits 0. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed, with a code such as 13 (the sandbox stopped), 10 (the key lost its scope) or 2 (the key was revoked). 129 and 143 for signals. |
+| `port-forward` | Ctrl-C, which is how a forward ends, exits 0. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed, with a code such as 13 (the sandbox stopped), 10 (the key lost its scope), 2 (the key was revoked) or 19 (a refusal no retry can fix). 129 and 143 for signals. |
