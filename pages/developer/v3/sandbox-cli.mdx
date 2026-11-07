@@ -15,14 +15,14 @@ A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GP
 - **Install hedra-cli** with `npm install --global @hedra/cli`, or see [SDKs and developer tools](/pages/developer/v3/sdks).
 
 <Warning>
-**PLACEHOLDER:** the first hedra-cli version that includes every sandbox command on this page, with the stream commands (`exec`, `shell`, `logs`, `attach`, `cp` and `port-forward`) released for everyone.
+**PLACEHOLDER (fill in before publishing):** the first hedra-cli version that includes every sandbox command on this page, with the stream commands (`exec`, `shell`, `logs`, `attach`, `cp` and `port-forward`) released for everyone.
 </Warning>
 
 - **A funded API wallet.** A sandbox's GPU time is paid from the API wallet; see [Billing](/pages/developer/v3/billing).
 - **Sandboxes enabled for your workspace.** Until they are, `create`, `gpus` and `quota` answer that sandboxes are not available.
 
 <Warning>
-**PLACEHOLDER:** how a workspace gets sandboxes at launch: whether its first `hedra-cli sandbox create` enables them, or whether it asks Hedra.
+**PLACEHOLDER (fill in before publishing):** how a workspace gets sandboxes at launch: whether its first `hedra-cli sandbox create` enables them, or whether it asks Hedra.
 </Warning>
 
 ### Sign in with a key that holds the sandbox scopes
@@ -93,10 +93,12 @@ hedra-cli sandbox logs train
 | `port-forward <sandbox> <local>:<remote>` | Stream | Forward a local port to a port in the sandbox |
 
 <Warning>
-**PLACEHOLDER:** confirm that sandbox secrets reach a sandbox at launch; if they do not, remove the `secrets` row in the command table, and the `secrets` commands in the scope table and in the sentence about workspace owners and admins.
+**PLACEHOLDER (fill in before publishing):** confirm that sandbox secrets reach a sandbox at launch; if they do not, remove the `secrets` row in the command table, and the `secrets` commands in the scope table and in the sentence about workspace owners and admins.
 </Warning>
 
 A name is 1 to 32 lowercase letters, digits and hyphens, starting and ending with a letter or digit, and not `gpus`, `quota`, `secrets` or `signing-key`. With `--ports`, it contains no `--`. It is unique among your creating, active and stopping sandboxes, so a name reaches your live sandbox of that name, or else your newest one. A stream command resolves the name once and keeps the id, so a reconnect never reaches a later sandbox that reuses the name.
+
+Stream commands connect over HTTP/2 to a separate Hedra host, which the API names for each session, so a firewall that allows only `api.hedra.com` blocks them. They use the same proxy and certificate settings as the API commands: `HEDRA_CLI_PROXY`, `HTTPS_PROXY` or `ALL_PROXY`, with `NO_PROXY`, and `HEDRA_CLI_CA_BUNDLE`, `HEDRA_CLI_EXTRA_CA_CERTS` or `SSL_CERT_FILE`.
 
 Run `hedra-cli sandbox <command> --help` for every flag. `--dry-run` checks a command's arguments and sends nothing.
 
@@ -130,7 +132,7 @@ hedra-cli sandbox create \
 ```
 
 - `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance.
-- `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits.
+- `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits, unless `--restart on-failure` or `--restart always` restarts it. The main process's stdin stays open, so a shell or an interpreter run as the command waits for input.
 - `--env` takes a JSON object. Answers return only the keys.
 - `--ttl-seconds` stops the sandbox that many seconds after it is created, from 120 up to 365 days. Without it, the sandbox runs until you stop it, its command exits, or the wallet cannot pay.
 - `--ports '{"port": 8888}'` serves that port at the sandbox's `url`; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
@@ -166,7 +168,7 @@ hedra-cli sandbox exec train -t -- htop
 
 `exec` runs the command after `--` without a shell, relays your stdin to it and its stdout and stderr back, and exits with the command's own exit code. To use shell syntax, run a shell: `-- sh -c 'cd /work && make'`.
 
-- `-t` runs the command on a terminal, with yours in raw mode, for programs such as `htop` or `vim`. It needs a terminal on stdin and stdout.
+- `-t` runs the command on a terminal, with yours in raw mode, for programs such as `htop` or `vim`. It needs a terminal on stdin and stdout, and to run in the foreground, not as a background job.
 - `-n` sends no input: the command sees the end of its input at once.
 - `--env KEY=VALUE` sets a variable for the command; repeat it for more.
 - `--term` sets the remote `TERM` under `-t`; by default it is yours, or `xterm-256color` when the image may not know yours.
@@ -202,24 +204,24 @@ hedra-cli sandbox cp ./data train:/work/data
 hedra-cli sandbox cp train:/work/out ./out
 ```
 
-One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way.
+One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` is a valid sandbox name is a sandbox path, so write a local file named `notes:v2` as `./notes:v2`.
 
 - When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created. A destination ending in `/` must already be a directory.
 - A source ending in `/.` copies the directory's contents rather than the directory.
 - A relative sandbox path is relative to the image's working directory.
 - A symlinked source copies what it links to.
 - The image needs `sh` and `tar`. With GNU tar, hedra-cli also checks that a copy out arrived whole.
-- When your file system ignores case, as macOS's and Windows' do by default, a copy out leaves out with a warning an entry whose name differs only in case from one it already wrote, and then exits 255.
+- When your file system ignores case, as macOS's and Windows' do by default, a copy out leaves out with a warning an entry whose name differs only in case or Unicode normalization from one it already wrote, and then exits 255.
 
 A complete copy exits 0. A copy in whose `tar` in the sandbox fails exits with that `tar`'s code; an image without `sh` or `tar` exits 255. A copy out whose `tar` fails exits 255, and its error line includes `tar in the sandbox exited <code>`. A copy either way that left out or refused an entry or lost output also exits 255 and says what is missing.
 
-A copy out that fails after writing something does not remove what it wrote. Its error line says where it is: `a partial copy was left at <path>` when the copy created the destination or replaced a file there, or `part of the copy was written into <path>, which already existed` when the destination was a directory already there. Delete it, or copy again. The exception is a copy whose every file arrived but whose `tar` exited 1 because a file changed while it read it: it still exits 255, its line says `tar in the sandbox exited 1` and `every entry it sent arrived at <path>`, and it names no partial copy. A copy out that fails before writing anything removes the parent directories it created.
+A copy out that fails after writing something does not remove what it wrote. Its error line says where it is: `part of the copy was written into <path>, which already existed` when the path it wrote to was already a directory, or else `a partial copy was left at <path>`. That path is the destination itself, or `<destination>/<source name>` when the destination is an existing directory; for a `/.` source it is the destination. Delete it, or copy again. The exception, when the image has GNU tar, is a copy whose every file arrived but whose `tar` exited 1 because a file changed while it read it: it still exits 255, its line says `tar in the sandbox exited 1` and `every entry it sent arrived at <path>`, and it names no partial copy. A copy out that fails before writing anything removes the parent directories it created.
 
-Ctrl-C stops a copy and exits 130. A copy out writes nothing more, waits up to 5 seconds for its last write to finish and for the modes of your directories it opened up to be put back (a copy into an existing directory that lacks your read, write or search permission grants it while it writes), and then says where its partial copy is, as above, or removes the parent directories it created when it wrote nothing. A second Ctrl-C ends that wait at once. When the copy has not stopped by then, the line adds `the modes of directories the copy opened up may not have been put back`.
+Ctrl-C stops a copy and exits 130. A copy out writes nothing more, waits up to 5 seconds for its last write to finish and for the modes of your directories it opened up to be put back (on macOS and Linux, a copy that writes into directories an earlier copy left without your read, write or search permission grants that permission while it writes), and then says where its partial copy is, as above, or removes the parent directories it created when it wrote nothing. A second Ctrl-C ends that wait at once. When the copy has not stopped by then, it says `the modes of directories the copy opened up may not have been put back`, after the partial-copy clause when there is one.
 
 On Windows:
 
-- A one-letter name before `:` is a drive, so `c:\data` is a local path; name a sandbox with a one-character name by its `sandbox_` id.
+- A one-letter name before `:` is a drive, so `c:\data` is a local path; name a sandbox with a one-letter name by its `sandbox_` id.
 - In a copy out, a symlink is left out with a warning, and the copy then exits 255.
 - A copy in writes files with mode 0644 and directories 0755, so run a script you copied in with `sh script`, or `chmod +x` it first.
 - In a copy out, an entry whose name Windows cannot hold, such as one containing `\` or `:`, naming a device such as `CON`, or ending in a dot or a space, is left out with a warning, and the copy then exits 255.
@@ -234,7 +236,7 @@ hedra-cli sandbox port-forward train 0:8888
 
 `port-forward` listens on your machine's `127.0.0.1` and `[::1]`, or on the one of them your machine has, and forwards each connection to the port in the sandbox until you press Ctrl-C. Give one port for both sides, or `<local>:<remote>`; a local port of `0` picks a free one, which it prints. Up to 90 connections are open at once; one more waits for one to close.
 
-When your machine has only one of the two addresses, `port-forward` warns `not listening on IPv6 ([::1]): <error>`, or the same for IPv4 (`127.0.0.1`), and listens on the other. It refuses, with exit code 19, a local port it cannot listen on, with `cannot listen on port <port> over IPv4 (127.0.0.1): <error>`, or the same for IPv6 (`[::1]`). On macOS and Windows that includes a port another program listens on at `0.0.0.0` or `[::]`, since that program's own clients would otherwise reach the sandbox.
+When your machine has only one of the two addresses, `port-forward` warns `not listening on IPv6 ([::1]): <error>`, or the same for IPv4 (`127.0.0.1`), and listens on the other. It refuses, with exit code 19, a local port it cannot listen on, with `cannot listen on port <port> over IPv4 (127.0.0.1): <error>`, or the same for IPv6 (`[::1]`). That includes a port another program listens on at `0.0.0.0` or `[::]`, since that program's own clients would otherwise reach the sandbox.
 
 The server in the sandbox must listen on `127.0.0.1` or `0.0.0.0`. One bound only to `::1` or to another address is not reached, and a connection the sandbox closes before sending anything prints `nothing is listening on 127.0.0.1:<port> in the sandbox (a server bound only to ::1 or another address is not reached), or it closed the connection`.
 
@@ -250,7 +252,7 @@ Forwarding 127.0.0.1:8888 and [::1]:8888 to port 8888 in `train`. Any local user
 
 `port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server, such as a large download, or a local client reads slowly, the connection is reset once up to about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
 
-When Hedra ends a connection that fell behind, it ends it `rate_limited`, and hedra-cli prints Hedra's message followed by its own advice, such as:
+When Hedra resets a connection that fell behind, hedra-cli prints Hedra's message followed by its own advice, such as:
 
 ```text
 a forwarded connection was reset: client fell behind the sandbox's output; reconnect. `port-forward` cannot slow the sandbox's server; copy large files with `hedra-cli sandbox cp`.
@@ -288,7 +290,7 @@ The token and `browser_url` are credentials: anyone who has either one reaches t
 
 API commands exit with hedra-cli's usual codes: 0 on success, 1 when the API answers with an error (a refused key included), 2 when no credential is found, 3 for a usage error, 4 when the API description cannot be loaded, and 5 when Hedra cannot be reached, or for another failure of hedra-cli's own.
 
-Stream commands exit with a code for each kind of failure, so a script can tell them apart. `hedra-cli sandbox <command> --help` prints these codes.
+Stream commands exit with a code for each kind of failure, so a script can tell them apart. `hedra-cli sandbox <command> --help` prints these codes; `-h` leaves them out.
 
 | Code | Meaning |
 | --- | --- |
@@ -327,5 +329,5 @@ How each stream command uses the table:
 | `exec`, `shell`, `cp` | The command's own code; for `cp`, 0 for a complete copy, or the code of a failed `tar` in the sandbox on a copy in. Every failure of hedra-cli's own is 255, since the command can exit with any of 0 to 255; the `hedra-cli: <class> (<code>):` line says which failure it was. The exceptions are 3 for a usage error, 130 for Ctrl-C (under `-t` and in `shell`, only before the terminal is in raw mode; after that, Ctrl-C goes to the remote command), 141, 129 and 143. |
 | `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
 | `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
-| `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. One whose GPU never became free prints that and exits 0, after any stored output. |
+| `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. One that failed to start, for any reason such as no free GPU or an image that could not be pulled, prints why and exits 0, after any stored output; check `get` for the outcome. |
 | `port-forward` | Ctrl-C, which is how a forward ends, exits 0, unless the forward had already stopped with an error. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed: 13 (the sandbox is not active), 10 (the key lost its scope), 2 (the key was revoked), or 19 (a 403 naming no scope, or a connection that can never work; see [Forward a port](#forward-a-port)). 129 and 143 for signals. |
