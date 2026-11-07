@@ -114,7 +114,7 @@ hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 
 - `--max-duration` stops the sandbox this long after it is created, such as `90m`, `8h` or `2d`; the default is `24h`.
 - The sandbox also stops on its own about 15 minutes after its last activity, so a sandbox whose CLI crashed or whose laptop went to sleep does not run for the full 24 hours. An open shell counts as activity from its start until it exits. A process left running in the background, such as a `tmux` server or a `nohup` or `&` job, does not.
-- It needs a terminal on stdin and stdout, and refuses before it creates anything when it has none.
+- It needs a terminal on stdin and stdout, and refuses before it creates anything when it has none. On Windows it needs a console: run it in Windows Terminal or a console window, since mintty and Git Bash are not consoles.
 - If the connection drops, the sandbox keeps running. hedra-cli prints how to reopen the shell with `hedra-cli sandbox shell <name>` and how to stop the sandbox. A reopened shell's exit does not stop the sandbox; its idle limit does, or `stop`.
 
 ## Create a sandbox
@@ -124,13 +124,13 @@ hedra-cli sandbox create \
   --name train \
   --gpu "$GPU" \
   --image pytorch/pytorch:latest \
-  --command python --command train.py \
+  --command '["python", "-u", "train.py"]' \
   --env '{"EPOCHS": "3"}' \
   --ttl-seconds 28800
 ```
 
 - `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance.
-- `--command` replaces the image's entrypoint; pass it once per argument. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits.
+- `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits.
 - `--env` takes a JSON object. Answers return only the keys.
 - `--ttl-seconds` stops the sandbox that many seconds after it is created, from 120 up to 365 days. Without it, the sandbox runs until you stop it, its command exits, or the wallet cannot pay.
 - `--ports '{"port": 8888}'` serves that port at the sandbox's `url`; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
@@ -171,7 +171,7 @@ hedra-cli sandbox exec train -t -- htop
 - `--env KEY=VALUE` sets a variable for the command; repeat it for more.
 - `--term` sets the remote `TERM` under `-t`; by default it is yours, or `xterm-256color` when the image may not know yours.
 
-`shell <sandbox>` opens an interactive shell in a running sandbox: the one the image's `SHELL` variable names, else `bash`, else `sh`. Like `-t`, it needs a terminal on stdin and stdout. Its exit does not stop the sandbox.
+`shell <sandbox>` opens an interactive shell in a running sandbox: the one the image's `SHELL` variable names, else `bash`, else `sh`. Like `-t`, it needs a terminal on stdin and stdout, which on Windows means Windows Terminal or a console window, not mintty or Git Bash. Its exit does not stop the sandbox.
 
 ## Read the output
 
@@ -182,6 +182,8 @@ hedra-cli sandbox attach train
 ```
 
 `logs` prints the main process's recent output and exits. While the sandbox runs, the output comes live from the sandbox. Once it has stopped, `logs` reads the stored copy, so it is also the command for reading a stopped sandbox's output. The stored copy keeps only the newest part of a long output, and `logs` says when older output was dropped.
+
+The main process's output is not a terminal, so many programs buffer it and it shows up late. For Python, run `python -u` or set `PYTHONUNBUFFERED=1`, as the `create` example above does.
 
 `logs -f`, and `attach`, which is the same, keep printing new output until you press Ctrl-C. They wait up to 15 minutes for a sandbox that is still starting, reconnect after a dropped connection, and when the sandbox stops, print the rest from the stored copy and exit.
 
@@ -204,13 +206,23 @@ One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a f
 
 - When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created. A destination ending in `/` must already be a directory.
 - A source ending in `/.` copies the directory's contents rather than the directory.
-- A relative sandbox path is relative to the sandbox's working directory.
+- A relative sandbox path is relative to the image's working directory.
 - A symlinked source copies what it links to.
 - The image needs `sh` and `tar`. With GNU tar, hedra-cli also checks that a copy out arrived whole.
+- When your file system ignores case, as macOS's and Windows' do by default, a copy out leaves out with a warning an entry whose name differs only in case from one it already wrote, and then exits 255.
 
 A complete copy exits 0. A copy in whose `tar` in the sandbox fails exits with that `tar`'s code; an image without `sh` or `tar` exits 255. A copy out whose `tar` fails exits 255, and its error line includes `tar in the sandbox exited <code>`. A copy either way that left out or refused an entry or lost output also exits 255 and says what is missing.
 
-A copy out that fails after writing something does not remove what it wrote. Its error line says where it is: `a partial copy was left at <path>` when the copy created the destination, or `part of the copy was written into <path>, which already existed` when the destination was already there. Delete it, or copy again. The exception is a copy whose every file arrived whole but whose `tar` exited 1 because a file changed while it read it: it still exits 255, and its line says the copy is whole. A copy out that fails before writing anything removes the parent directories it created.
+A copy out that fails after writing something does not remove what it wrote. Its error line says where it is: `a partial copy was left at <path>` when the copy created the destination or replaced a file there, or `part of the copy was written into <path>, which already existed` when the destination was a directory already there. Delete it, or copy again. The exception is a copy whose every file arrived but whose `tar` exited 1 because a file changed while it read it: it still exits 255, its line says `tar in the sandbox exited 1` and `every entry it sent arrived at <path>`, and it names no partial copy. A copy out that fails before writing anything removes the parent directories it created.
+
+Ctrl-C stops a copy and exits 130. A copy out writes nothing more, waits up to 5 seconds for its last write to finish and for the modes of your directories it opened up to be put back (a copy into an existing directory that lacks your read, write or search permission grants it while it writes), and then says where its partial copy is, as above, or removes the parent directories it created when it wrote nothing. A second Ctrl-C ends that wait at once. When the copy has not stopped by then, the line adds `the modes of directories the copy opened up may not have been put back`.
+
+On Windows:
+
+- A one-letter name before `:` is a drive, so `c:\data` is a local path; name a sandbox with a one-character name by its `sandbox_` id.
+- In a copy out, a symlink is left out with a warning, and the copy then exits 255.
+- A copy in writes files with mode 0644 and directories 0755, so run a script you copied in with `sh script`, or `chmod +x` it first.
+- In a copy out, an entry whose name Windows cannot hold, such as one containing `\` or `:`, naming a device such as `CON`, or ending in a dot or a space, is left out with a warning, and the copy then exits 255.
 
 ## Forward a port
 
@@ -222,7 +234,9 @@ hedra-cli sandbox port-forward train 0:8888
 
 `port-forward` listens on your machine's `127.0.0.1` and `[::1]`, or on the one of them your machine has, and forwards each connection to the port in the sandbox until you press Ctrl-C. Give one port for both sides, or `<local>:<remote>`; a local port of `0` picks a free one, which it prints. Up to 90 connections are open at once; one more waits for one to close.
 
-The server in the sandbox must listen on `127.0.0.1` or `0.0.0.0`. One bound only to `::1` or to another address is not reached.
+When your machine has only one of the two addresses, `port-forward` warns `not listening on IPv6 ([::1]): <error>`, or the same for IPv4 (`127.0.0.1`), and listens on the other. It refuses, with exit code 19, a local port it cannot listen on, with `cannot listen on port <port> over IPv4 (127.0.0.1): <error>`, or the same for IPv6 (`[::1]`). On macOS and Windows that includes a port another program listens on at `0.0.0.0` or `[::]`, since that program's own clients would otherwise reach the sandbox.
+
+The server in the sandbox must listen on `127.0.0.1` or `0.0.0.0`. One bound only to `::1` or to another address is not reached, and a connection the sandbox closes before sending anything prints `nothing is listening on 127.0.0.1:<port> in the sandbox (a server bound only to ::1 or another address is not reached), or it closed the connection`.
 
 Once it is listening, `port-forward` prints this line on stderr:
 
@@ -234,14 +248,24 @@ Forwarding 127.0.0.1:8888 and [::1]:8888 to port 8888 in `train`. Any local user
 **Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection skips the endpoint-token check that protects the sandbox's `url`, so the server in the sandbox is the only check left. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
 </Warning>
 
-`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server, such as a large download, or a local client reads slowly, the connection is reset once up to about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. Hedra ends such a connection `rate_limited`, and hedra-cli's line for it says to copy large files with `cp`. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
+`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server, such as a large download, or a local client reads slowly, the connection is reset once up to about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
 
-A refused, dropped or reset connection resets only that connection, and the forward keeps listening. The forward stops with an error only when no later connection could succeed:
+When Hedra ends a connection that fell behind, it ends it `rate_limited`, and hedra-cli prints Hedra's message followed by its own advice, such as:
+
+```text
+a forwarded connection was reset: client fell behind the sandbox's output; reconnect. `port-forward` cannot slow the sandbox's server; copy large files with `hedra-cli sandbox cp`.
+```
+
+When hedra-cli resets one itself, it prints `the forwarded connection fell behind and was reset`.
+
+A refused, dropped or reset connection resets only that connection, and the forward keeps listening. When your workspace is at its limit of open sandbox sessions, each forwarded connection counts as one, and the forward prints once `The workspace is at its limit of open sandbox sessions; connections are refused until some close.` The forward stops with an error only when no later connection could succeed:
 
 - the sandbox is not active, or its first instance stopped (exit code 13); start a forward once the sandbox is ready;
 - the key lost its scope (10), or was revoked (2);
 - Hedra refused the key with a 403 that names no scope (19);
 - the connection to Hedra can never work (19): a proxy answered its `CONNECT` with a status other than 2xx, 5xx, 408 or 429, Hedra's certificate is not trusted by your machine, the server at the other end does not speak HTTP/2, or the proxy or connection settings are invalid.
+
+It then stops accepting connections, prints the error line, and exits with that code once its open connections end. A Ctrl-C while they finish closes them at once, and the exit code is still the error's.
 
 ## Reach a sandbox's URL
 
@@ -304,4 +328,4 @@ How each stream command uses the table:
 | `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
 | `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
 | `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. One whose GPU never became free prints that and exits 0, after any stored output. |
-| `port-forward` | Ctrl-C, which is how a forward ends, exits 0. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed: 13 (the sandbox is not active), 10 (the key lost its scope), 2 (the key was revoked), or 19 (a 403 naming no scope, or a connection that can never work; see [Forward a port](#forward-a-port)). 129 and 143 for signals. |
+| `port-forward` | Ctrl-C, which is how a forward ends, exits 0, unless the forward had already stopped with an error. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11 or 17. While it runs, it stops only when no later connection could succeed: 13 (the sandbox is not active), 10 (the key lost its scope), 2 (the key was revoked), or 19 (a 403 naming no scope, or a connection that can never work; see [Forward a port](#forward-a-port)). 129 and 143 for signals. |
