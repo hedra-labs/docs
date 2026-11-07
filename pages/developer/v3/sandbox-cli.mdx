@@ -100,7 +100,7 @@ A name is 1 to 32 lowercase letters, digits and hyphens, starting and ending wit
 
 Stream commands connect over HTTP/2 to a separate Hedra host, which the API names for each session, so a firewall that allows only `api.hedra.com` blocks them. They use the same proxy and certificate settings as the API commands: `HEDRA_CLI_PROXY`, `HTTPS_PROXY` or `ALL_PROXY`, with `NO_PROXY`, and `HEDRA_CLI_CA_BUNDLE`, `HEDRA_CLI_EXTRA_CA_CERTS` or `SSL_CERT_FILE`.
 
-Run `hedra-cli sandbox <command> --help` for every flag. `--dry-run` checks a command's arguments and sends nothing.
+Run `hedra-cli sandbox <command> --help` for every flag. `--dry-run` checks a command's arguments locally and sends nothing, so a value only Hedra checks, such as a GPU count over 99, passes it.
 
 API commands follow hedra-cli's usual output: a table on a terminal and JSON when stdout is piped, with `--format`, `--query` and `--quiet` as for every other command. A stream command's stdout is the sandbox's own output, so it writes its own messages and errors to stderr. A usage error (exit code 3) is the exception: hedra-cli's usual argument checker reports it, in its own format, which is JSON on stdout when stdout is piped.
 
@@ -166,7 +166,7 @@ echo hello | hedra-cli sandbox exec train -- cat
 hedra-cli sandbox exec train -t -- htop
 ```
 
-`exec` runs the command after `--` without a shell, relays your stdin to it and its stdout and stderr back, and exits with the command's own exit code. To use shell syntax, run a shell: `-- sh -c 'cd /work && make'`. A command that cannot start, such as one the image does not have, prints `[hedra] the command could not start:` and the reason, and exits 2.
+`exec` runs the command after `--` without a shell, relays your stdin to it and its stdout and stderr back, and exits with the command's own exit code. To use shell syntax, run a shell: `-- sh -c 'cd /work && make'`. A command that cannot start, such as one the image does not have, prints `[hedra] the command could not start:` and the reason, and exits 2, which a script cannot tell from the command itself exiting 2.
 
 - `-t` runs the command on a terminal, with yours in raw mode, for programs such as `htop` or `vim`. It needs a terminal on stdin and stdout, and to run in the foreground, not as a background job.
 - `-n` sends no input: the command sees the end of its input at once.
@@ -185,7 +185,7 @@ hedra-cli sandbox attach train
 
 `logs` prints the main process's recent output and exits. While the sandbox runs, the output comes live from the sandbox. Once it has stopped, `logs` reads the stored copy, so it is also the command for reading a stopped sandbox's output. The stored copy keeps only the newest part of a long output, and `logs` says when older output was dropped.
 
-While the sandbox runs, `logs` can fail with `Connection lost (18)` and `client fell behind the sandbox's output` when its recent output is larger than your connection takes in before Hedra's queue fills, such as several MiB written in a burst. Read that output from the stored copy with `saved-logs` instead.
+While the sandbox runs, `logs` can fail with `Connection lost (18)` and `client fell behind the sandbox's output` when the main process has written a large burst of output, such as tens of MiB at once, even over an ordinary connection. `logs -f` keeps going in that case, and `saved-logs` reads the stored copy, which holds only the newest part.
 
 The main process's output is not a terminal, so many programs buffer it and it shows up late. For Python, run `python -u` or set `PYTHONUNBUFFERED=1`, as the `create` example above does.
 
@@ -206,7 +206,7 @@ hedra-cli sandbox cp ./data train:/work/data
 hedra-cli sandbox cp train:/work/out ./out
 ```
 
-One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` is a valid sandbox name or a `sandbox_` id is a sandbox path, whether or not you have a sandbox of that name, so write a local file named `notes:v2` as `./notes:v2`.
+One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` has the form of a sandbox name or a `sandbox_` id is a sandbox path, whether or not you have a sandbox of that name, so write a local file named `notes:v2` as `./notes:v2`.
 
 - When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created. A destination ending in `/` must already be a directory.
 - A source ending in `/.` copies the directory's contents rather than the directory.
