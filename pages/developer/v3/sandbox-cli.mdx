@@ -116,7 +116,7 @@ hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 
 - `--max-duration` stops the sandbox this long after it is created, such as `90m`, `8h` or `2d`; the default is `24h`.
 - The sandbox also stops on its own about 15 minutes after its last activity, so a sandbox whose CLI crashed or whose laptop went to sleep does not run for the full 24 hours. An open shell counts as activity from its start until it exits. A process left running in the background, such as a `tmux` server or a `nohup` or `&` job, does not.
-- It needs a terminal on stdin and stdout, and refuses before it creates anything when it has none. On Windows it needs a console: run it in Windows Terminal or a console window, since mintty and Git Bash are not consoles.
+- It needs a terminal on stdin and stdout, in the foreground, and refuses before it creates anything when it has none. On Windows it needs a console: run it in Windows Terminal or a console window, since mintty and Git Bash are not consoles.
 - If the connection drops, the sandbox keeps running. hedra-cli prints how to reopen the shell with `hedra-cli sandbox shell <name>` and how to stop the sandbox. A reopened shell's exit does not stop the sandbox; its idle limit does, or `stop`.
 
 ## Create a sandbox
@@ -204,18 +204,18 @@ hedra-cli sandbox cp ./data train:/work/data
 hedra-cli sandbox cp train:/work/out ./out
 ```
 
-One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` is a valid sandbox name is a sandbox path, so write a local file named `notes:v2` as `./notes:v2`.
+One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` is a sandbox name or a `sandbox_` id is a sandbox path, so write a local file named `notes:v2` as `./notes:v2`.
 
 - When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created. A destination ending in `/` must already be a directory.
 - A source ending in `/.` copies the directory's contents rather than the directory.
 - A relative sandbox path is relative to the image's working directory.
 - A symlinked source copies what it links to.
 - The image needs `sh` and `tar`. With GNU tar, hedra-cli also checks that a copy out arrived whole.
-- When your file system ignores case, as macOS's and Windows' do by default, a copy out leaves out with a warning an entry whose name differs only in case or Unicode normalization from one it already wrote, and then exits 255.
+- When your file system treats two names as the same because they differ only in case, as macOS and Windows do by default, or in Unicode normalization, as macOS does, a copy out leaves out with a warning the second entry, and then exits 255.
 
 A complete copy exits 0. A copy in whose `tar` in the sandbox fails exits with that `tar`'s code; an image without `sh` or `tar` exits 255. A copy out whose `tar` fails exits 255, and its error line includes `tar in the sandbox exited <code>`. A copy either way that left out or refused an entry or lost output also exits 255 and says what is missing.
 
-A copy out that fails after writing something does not remove what it wrote. Its error line says where it is: `part of the copy was written into <path>, which already existed` when the path it wrote to was already a directory, or else `a partial copy was left at <path>`. That path is the destination itself, or `<destination>/<source name>` when the destination is an existing directory; for a `/.` source it is the destination. Delete it, or copy again. The exception, when the image has GNU tar, is a copy whose every file arrived but whose `tar` exited 1 because a file changed while it read it: it still exits 255, its line says `tar in the sandbox exited 1` and `every entry it sent arrived at <path>`, and it names no partial copy. A copy out that fails before writing anything removes the parent directories it created.
+A copy out that fails after writing something does not remove what it wrote. Its error line says where it is, in a sentence or clause that may start with a capital: `part of the copy was written into <path>, which already existed` when the path it wrote to was already a directory, or else `a partial copy was left at <path>`. That path is the destination itself, or `<destination>/<source name>` when the destination is an existing directory; for a `/.` source it is the destination. Delete it, or copy again. The exception, when the image has GNU tar, is a copy whose every file arrived but whose `tar` exited 1 because a file changed while it read it: it still exits 255, its line says `tar in the sandbox exited 1` and `every entry it sent arrived at <path>`, and it names no partial copy. A copy out that fails before writing anything removes the parent directories it created.
 
 Ctrl-C stops a copy and exits 130. A copy out writes nothing more, waits up to 5 seconds for its last write to finish and for the modes of your directories it opened up to be put back (on macOS and Linux, a copy that writes into directories an earlier copy left without your read, write or search permission grants that permission while it writes), and then says where its partial copy is, as above, or removes the parent directories it created when it wrote nothing. A second Ctrl-C ends that wait at once. When the copy has not stopped by then, it says `the modes of directories the copy opened up may not have been put back`, after the partial-copy clause when there is one.
 
