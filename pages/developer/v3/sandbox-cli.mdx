@@ -155,7 +155,7 @@ hedra-cli sandbox get --sandbox train
 hedra-cli sandbox stop --sandbox train
 ```
 
-`get` shows each instance's status and, for one that failed, its `failure_reason`, and the sandbox's `end_reason` once it has stopped. `stop` answers with the sandbox in `stopping` and returns; Hedra records it `ended` usually a minute or two later, once every instance has stopped. Billing ends at the stop request.
+`get` shows each instance's status and, for one that failed, its `failure_reason`, and the sandbox's `end_reason` once it has stopped. `stop` answers with the sandbox in `stopping` and returns; Hedra records it `ended` once every instance has stopped, usually within a minute or two. Billing ends at the stop request.
 
 ## Run commands
 
@@ -166,7 +166,7 @@ echo hello | hedra-cli sandbox exec train -- cat
 hedra-cli sandbox exec train -t -- htop
 ```
 
-`exec` runs the command after `--` without a shell, relays your stdin to it and its stdout and stderr back, and exits with the command's own exit code. To use shell syntax, run a shell: `-- sh -c 'cd /work && make'`.
+`exec` runs the command after `--` without a shell, relays your stdin to it and its stdout and stderr back, and exits with the command's own exit code. To use shell syntax, run a shell: `-- sh -c 'cd /work && make'`. A command that cannot start, such as one the image does not have, prints `[hedra] the command could not start:` and the reason, and exits 2.
 
 - `-t` runs the command on a terminal, with yours in raw mode, for programs such as `htop` or `vim`. It needs a terminal on stdin and stdout, and to run in the foreground, not as a background job.
 - `-n` sends no input: the command sees the end of its input at once.
@@ -184,6 +184,8 @@ hedra-cli sandbox attach train
 ```
 
 `logs` prints the main process's recent output and exits. While the sandbox runs, the output comes live from the sandbox. Once it has stopped, `logs` reads the stored copy, so it is also the command for reading a stopped sandbox's output. The stored copy keeps only the newest part of a long output, and `logs` says when older output was dropped.
+
+While the sandbox runs, `logs` can fail with `Connection lost (18)` and `client fell behind the sandbox's output` when its recent output is larger than your connection takes in before Hedra's queue fills, such as several MiB written in a burst. Read that output from the stored copy with `saved-logs` instead.
 
 The main process's output is not a terminal, so many programs buffer it and it shows up late. For Python, run `python -u` or set `PYTHONUNBUFFERED=1`, as the `create` example above does.
 
@@ -204,7 +206,7 @@ hedra-cli sandbox cp ./data train:/work/data
 hedra-cli sandbox cp train:/work/out ./out
 ```
 
-One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` is a sandbox name or a `sandbox_` id is a sandbox path, so write a local file named `notes:v2` as `./notes:v2`.
+One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` is a valid sandbox name or a `sandbox_` id is a sandbox path, whether or not you have a sandbox of that name, so write a local file named `notes:v2` as `./notes:v2`.
 
 - When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created. A destination ending in `/` must already be a directory.
 - A source ending in `/.` copies the directory's contents rather than the directory.
@@ -262,7 +264,7 @@ When hedra-cli resets one itself, it prints `the forwarded connection fell behin
 
 A refused, dropped or reset connection resets only that connection, and the forward keeps listening. When your workspace is at its limit of open sandbox sessions, each forwarded connection counts as one, and the forward prints once `The workspace is at its limit of open sandbox sessions; connections are refused until some close.` The forward stops with an error only when no later connection could succeed:
 
-- the sandbox is not active, or its first instance stopped (exit code 13); start a forward once the sandbox is ready;
+- the sandbox is not active, or its first instance stopped (exit code 13); start a forward once the sandbox is ready. A forward started on a sandbox that is not active still listens and prints its start line, then stops with exit code 13 when the first connection arrives;
 - the key lost its scope (10), or was revoked (2);
 - Hedra refused the key with a 403 that names no scope (19);
 - the connection to Hedra can never work (19): a proxy answered its `CONNECT` with a status other than 2xx, 5xx, 408 or 429, Hedra's certificate is not trusted by your machine, the server at the other end does not speak HTTP/2, or the proxy or connection settings are invalid.
