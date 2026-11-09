@@ -248,7 +248,13 @@ A forward on a sandbox that is stopping, has ended or failed, or whose first ins
 hedra-cli: Not ready or stopped (13): `train`'s command already exited. Run `hedra-cli sandbox logs train` for its output.
 ```
 
-A forward on a sandbox that is still being created, whose first instance has not started yet, or that is still running although your API wallet can no longer pay for it is not refused: it listens and prints its start line, but a connection may then stop it with exit code 13. When the wallet is the cause, the code is still 13, not 15. A sandbox that has already stopped because the wallet could not pay is refused up front, like any stopped sandbox. Start a forward once the sandbox is running, and keep the wallet funded while it runs.
+A forward on a sandbox that is still being created or whose first instance has not started yet is not refused: it listens and prints its start line, but a connection may then stop it with exit code 13. A sandbox that is still running although your API wallet could not pay for it is not refused either, and forwards as usual until it stops. A connection after it stops ends the forward with exit code 13, not 15, and a line such as:
+
+```text
+hedra-cli: Not ready or stopped (13): `train` is stopping (unpaid). Add funds to the workspace, then create another; `hedra-cli sandbox ls` lists the running ones.
+```
+
+A sandbox that has already stopped because the wallet could not pay is refused up front with the same next step, like any stopped sandbox. Start a forward once the sandbox is running, and keep the wallet funded while it runs.
 
 Once it is listening, `port-forward` prints this line on stderr:
 
@@ -272,7 +278,7 @@ When hedra-cli resets one itself, it prints `the forwarded connection fell behin
 
 A refused, dropped or reset connection resets only that connection, and the forward keeps listening. When your workspace is at its limit of open sandbox sessions, each forwarded connection counts as one, and the forward prints once `The workspace is at its limit of open sandbox sessions; connections are refused until some close.` The forward stops with an error only when a connection fails in a way hedra-cli treats as final:
 
-- the sandbox is not ready or has stopped (exit code 13): it stopped, its first instance stopped or failed, or Hedra refused a connection because the sandbox was still being created, its first instance had not started, or your API wallet could not pay for it;
+- the sandbox is not ready or has stopped (exit code 13): it stopped (for instance because your API wallet could not pay for it), its first instance stopped or failed, or Hedra refused a connection because the sandbox was still being created or its first instance had not started;
 - the key lost its scope (10), or was revoked (2);
 - Hedra refused the key with a 403 that names no scope (19);
 - the connection to Hedra can never work (19): a proxy answered its `CONNECT` with a status other than 2xx, 5xx, 408 or 429, Hedra's certificate is not trusted by your machine, the server at the other end does not speak HTTP/2, or the proxy or connection settings are invalid.
@@ -340,4 +346,4 @@ How each stream command uses the table:
 | `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
 | `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
 | `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. One that failed to start, for any reason such as no free GPU or an image that could not be pulled, prints why and exits 0, after any stored output; check `get` for the outcome. |
-| `port-forward` | Ctrl-C, which is how a forward ends, exits 0, unless the forward had already stopped with an error. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11, 13 or 17. While it runs, it stops only when a connection fails in a way hedra-cli treats as final: 13 (the sandbox is not ready or has stopped, including one still being created or one your API wallet cannot pay for), 10 (the key lost its scope), 2 (the key was revoked), or 19 (a 403 naming no scope, or a connection that can never work; see [Forward a port](#forward-a-port)). 129 and 143 for signals. |
+| `port-forward` | Ctrl-C, which is how a forward ends, exits 0, unless the forward had already stopped with an error. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11, 13 or 17. While it runs, it stops only when a connection fails in a way hedra-cli treats as final: 13 (the sandbox is not ready or has stopped, including one still being created or one stopped because your API wallet could not pay for it), 10 (the key lost its scope), 2 (the key was revoked), or 19 (a 403 naming no scope, or a connection that can never work; see [Forward a port](#forward-a-port)). 129 and 143 for signals. |
