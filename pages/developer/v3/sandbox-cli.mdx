@@ -12,18 +12,8 @@ A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GP
 
 ## Before you start
 
-- **Install hedra-cli** with `npm install --global @hedra/cli`, or see [SDKs and developer tools](/pages/developer/v3/sdks).
-
-<Warning>
-**PLACEHOLDER (fill in before publishing):** the first hedra-cli version that includes every sandbox command on this page, with the stream commands (`exec`, `shell`, `logs`, `attach`, `cp` and `port-forward`) released for everyone.
-</Warning>
-
+- **Install hedra-cli**, or update an existing install, with `npm install --global @hedra/cli@latest`, or see [SDKs and developer tools](/pages/developer/v3/sdks).
 - **A funded API wallet.** A sandbox's GPU time is paid from the API wallet; see [Billing](/pages/developer/v3/billing).
-- **Sandboxes enabled for your workspace.** Until they are, `create`, `gpus` and `quota` answer that sandboxes are not available.
-
-<Warning>
-**PLACEHOLDER (fill in before publishing):** how a workspace gets sandboxes at launch: whether its first `hedra-cli sandbox create` enables them, or whether it asks Hedra.
-</Warning>
 
 ### Sign in with a key that holds the sandbox scopes
 
@@ -92,9 +82,6 @@ hedra-cli sandbox logs train
 | `cp <source> <destination>` | Stream | Copy files and directories in or out |
 | `port-forward <sandbox> <local>:<remote>` | Stream | Forward a local port to a port in the sandbox |
 
-<Warning>
-**PLACEHOLDER (fill in before publishing):** confirm that sandbox secrets reach a sandbox at launch; if they do not, remove the `secrets` row in the command table, and the `secrets` commands in the scope table and in the sentence about workspace owners and admins.
-</Warning>
 
 A name is 1 to 32 lowercase letters, digits and hyphens, starting and ending with a letter or digit, and not `gpus`, `quota`, `secrets` or `signing-key`. With `--ports`, it contains no `--`. It is unique among your creating, active and stopping sandboxes, so a name reaches your live sandbox of that name, or else your newest one. A stream command resolves the name once and keeps the id, so a reconnect never reaches a later sandbox that reuses the name.
 
@@ -111,6 +98,8 @@ hedra-cli sandbox gpus
 export GPU=<model>:1
 hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 ```
+
+Before your workspace's first `create` or `shell --gpu`, `gpus` and `quota` answer that sandboxes are not available; that first create turns sandboxes on for the workspace.
 
 `shell --gpu` creates a sandbox named `shell-` and six random characters, waits until it is ready, opens a shell in it, and stops it when you exit the shell. Billing ends at the stop request. While it waits, it prints its progress on stderr, and it warns first when no GPU of that model is free (the sandbox may then wait up to 15 minutes for one) or when your workspace's GPU quota is too small.
 
