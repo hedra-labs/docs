@@ -93,13 +93,13 @@ API commands follow hedra-cli's usual output: a table on a terminal and JSON whe
 
 ## The quickest start: a shell on a new sandbox
 
+If your workspace has never created a sandbox, `gpus` answers that sandboxes are not available, because the first `create` or `shell --gpu` is what turns them on. Skip `gpus` and set `GPU` to a model from the list at the top of this page.
+
 ```bash
 hedra-cli sandbox gpus
 export GPU=<model>:1
 hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 ```
-
-Before your workspace's first `create` or `shell --gpu`, `gpus` and `quota` answer that sandboxes are not available; that first create turns sandboxes on for the workspace.
 
 `shell --gpu` creates a sandbox named `shell-` and six random characters, waits until it is ready, opens a shell in it, and stops it when you exit the shell. Billing ends at the stop request. While it waits, it prints its progress on stderr, and it warns first when no GPU of that model is free (the sandbox may then wait up to 15 minutes for one) or when your workspace's GPU quota is too small.
 
