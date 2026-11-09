@@ -6,9 +6,11 @@ sidebarTitle: "Sandboxes from the CLI"
 
 A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GPU-hour from your API wallet. `hedra-cli sandbox` creates and stops sandboxes and opens shells, commands, output streams, file copies and port forwards in them.
 
-<Warning>
-**PLACEHOLDER (fill in before publishing):** the GPU models offered at launch and their prices. Until then, every example below uses `$GPU` and never names a model. `hedra-cli sandbox gpus` lists the models your workspace can run, each with its memory, its price per GPU-hour after your workspace's discount, and whether one is free right now.
-</Warning>
+| GPU | `--gpu` | Memory | Price per GPU-hour |
+| --- | --- | --- | --- |
+| NVIDIA B300 | `b300:1` to `b300:4`, within your workspace's GPU quota | 270 GB per GPU | $8.25 |
+
+`hedra-cli sandbox gpus` lists the models your workspace can run, each with its memory, its price per GPU-hour after your workspace's discount, and whether one is free right now. The examples below set `GPU` to one of them, such as `b300:1`.
 
 ## Before you start
 
@@ -93,11 +95,11 @@ API commands follow hedra-cli's usual output: a table on a terminal and JSON whe
 
 ## The quickest start: a shell on a new sandbox
 
-If your workspace has never created a sandbox, `gpus` answers that sandboxes are not available, because the first `create` or `shell --gpu` is what turns them on. Skip `gpus` and set `GPU` to a model from the list at the top of this page.
+If your workspace has never created a sandbox, `gpus` answers that sandboxes are not available, because the first `create` or `shell --gpu` is what turns them on. Skip `gpus` and set `GPU` to a model from the table at the top of this page.
 
 ```bash
 hedra-cli sandbox gpus
-export GPU=<model>:1
+export GPU=b300:1
 hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 ```
 
