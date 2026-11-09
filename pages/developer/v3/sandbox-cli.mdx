@@ -146,6 +146,39 @@ hedra-cli sandbox stop --sandbox train
 
 `get` shows each instance's status and, for one that failed, its `failure_reason`, and the sandbox's `end_reason` once it has stopped. `stop` answers with the sandbox in `stopping` and returns; Hedra records it `ended` once every instance has stopped, usually within a minute or two. Billing ends at the stop request.
 
+## Pass secrets to a sandbox
+
+Store a value such as an access token once as a workspace secret, then name it when you create a sandbox. Only a workspace owner or admin, or the member who pays for the workspace, can set or delete a secret; a service key cannot.
+
+Pipe the request body on stdin with `--json -`, so the value stays out of your shell history and the process list. This form needs `jq`, and reads the value from `HF_TOKEN`, which must be exported:
+
+```bash
+jq -n '{name: "HF_TOKEN", value: env.HF_TOKEN}' | hedra-cli sandbox secrets set --json -
+```
+
+`--name HF_TOKEN --value "$HF_TOKEN"` works too, but the value then appears in the process list while the command runs.
+
+- A name is uppercase letters, digits and underscores, does not start with a digit, has at most 63 characters, and never starts `SANDBOX_`, which the sandbox reserves. It is also the name of the environment variable the sandbox receives.
+- A value is 1 byte to 16 KiB of UTF-8, and is never returned.
+- Setting a name your workspace already holds replaces its value.
+
+Name up to 32 secrets with `--secrets` on `create`. Every instance receives each one as an environment variable of the same name:
+
+```bash
+hedra-cli sandbox create --name hf --gpu "$GPU" --image pytorch/pytorch:latest \
+  --idle true --secrets '["HF_TOKEN"]'
+hedra-cli sandbox exec hf -- sh -c 'test -n "$HF_TOKEN" && echo set'
+```
+
+The `exec` line checks that the variable is set without printing it. `shell --gpu` has no secrets flag: create the sandbox with `--secrets`, then open it with `shell <sandbox>`.
+
+```bash
+hedra-cli sandbox secrets ls
+hedra-cli sandbox secrets rm --name HF_TOKEN
+```
+
+`secrets ls` lists each secret's name and when it was created, never its value.
+
 ## Run commands
 
 ```bash
