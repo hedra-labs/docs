@@ -146,7 +146,7 @@ hedra-cli sandbox get --sandbox train
 hedra-cli sandbox stop --sandbox train
 ```
 
-`get` shows each instance's status and, for one that failed, its `failure_reason`, and the sandbox's `end_reason` once it has stopped. `stop` answers with the sandbox in `stopping` and returns; Hedra records it `ended` once every instance has stopped, usually within a minute or two. Billing ends at the stop request.
+`get` shows each instance's status and, for one that failed, its `failure_reason`, and the sandbox's `end_reason` once it has stopped. `stop` answers with the sandbox in `stopping` and returns; Hedra records it `ended` once every instance has stopped, usually within a minute or two. Billing ends at the stop request. Its GPUs count against your workspace's quota until its instances have stopped, so at full quota a `create` sent straight after a `stop` can be refused for quota for a few seconds; retry it.
 
 ## Pass secrets to a sandbox
 
