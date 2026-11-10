@@ -105,10 +105,10 @@ hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 
 `shell --gpu` creates a sandbox named `shell-` and six random characters, waits until it is ready, opens a shell in it, and stops it when you exit the shell. Billing ends at the stop request. While it waits, it prints its progress on stderr, and it warns first when no GPU of that model is free (the sandbox may then wait up to 15 minutes for one) or when your workspace's GPU quota is too small.
 
-- `--max-duration` stops the sandbox this long after it is created, such as `90m`, `8h` or `2d`; the default is `24h`.
-- The sandbox also stops on its own about 15 minutes after its last activity, so a sandbox whose CLI crashed or whose laptop went to sleep does not run for the full 24 hours. An open shell counts as activity from its start until it exits. A process left running in the background, such as a `tmux` server or a `nohup` or `&` job, does not.
+- `--max-duration` stops the sandbox this long after it is created, from 2 minutes to 24 hours, such as `90m` or `8h`; the default is `24h`.
+- The sandbox also stops on its own about 15 minutes after its last activity, so a sandbox whose CLI crashed or whose laptop went to sleep does not run for its full `--max-duration`. An open shell counts as activity from its start until it exits. A process left running in the background, such as a `tmux` server or a `nohup` or `&` job, does not.
 - It needs a terminal on stdin and stdout, in the foreground, and refuses before it creates anything when it has none. On Windows it needs a console: run it in Windows Terminal or a console window, since mintty and Git Bash are not consoles.
-- If the connection drops, the sandbox keeps running. hedra-cli prints how to reopen the shell with `hedra-cli sandbox shell <name>` and how to stop the sandbox. A reopened shell's exit does not stop the sandbox; its idle limit does, or `stop`.
+- If the connection drops, the sandbox keeps running. hedra-cli prints how to reopen the shell with `hedra-cli sandbox shell <name>` and how to stop the sandbox. A reopened shell's exit does not stop the sandbox; its idle limit or `--max-duration` does, or `stop`.
 
 ## Create a sandbox
 
@@ -125,14 +125,14 @@ hedra-cli sandbox create \
 - `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance.
 - `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits, unless `--restart on-failure` or `--restart always` restarts it. The main process's stdin stays open, so a shell or an interpreter run as the command waits for input.
 - `--env` takes a JSON object. Answers return only the keys.
-- `--ttl-seconds` stops the sandbox that many seconds after it is created, from 120 up to 365 days. Without it, the sandbox runs until you stop it, its command exits, or the wallet cannot pay.
+- `--ttl-seconds` is required: it stops the sandbox that many seconds after it is created, from 120 to 86,400 (24 hours). The sandbox stops sooner if you stop it, its command exits, or the wallet cannot pay. Longer reservations require a sales contract with Hedra; contact [sales@hedra.com](mailto:sales@hedra.com).
 - `--ports '{"port": 8888}'` serves that port at the sandbox's `url`; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
 
-For a sandbox you work in interactively, with no main process, pass `--idle true`. Add `--idle-ttl-seconds` to stop it once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
+For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its `--ttl-seconds` ends, or the wallet cannot pay. Add `--idle-ttl-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
 
 ```bash
 hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:latest \
-  --idle true --idle-ttl-seconds 1800
+  --ttl-seconds 28800 --idle true --idle-ttl-seconds 1800
 ```
 
 The command returns once the sandbox is created. Its instances may still be starting: check with `get`.
@@ -168,7 +168,7 @@ Name up to 32 secrets with `--secrets` on `create`. Every instance receives each
 
 ```bash
 hedra-cli sandbox create --name hf --gpu "$GPU" --image pytorch/pytorch:latest \
-  --idle true --secrets '["HF_TOKEN"]'
+  --ttl-seconds 3600 --idle true --secrets '["HF_TOKEN"]'
 hedra-cli sandbox exec hf -- sh -c 'test -n "$HF_TOKEN" && echo set'
 ```
 
