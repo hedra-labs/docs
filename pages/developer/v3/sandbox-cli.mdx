@@ -1,0 +1,375 @@
+---
+title: "Run GPU sandboxes from hedra-cli"
+description: "Create a GPU sandbox, open a shell in it, run commands, read its output, copy files and forward ports with hedra-cli, and handle each command's exit codes in scripts."
+sidebarTitle: "Sandboxes from the CLI"
+---
+
+A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GPU-hour from your API wallet. `hedra-cli sandbox` creates and stops sandboxes and opens shells, commands, output streams, file copies and port forwards in them.
+
+| GPU | `--gpu` | Memory | Price per GPU-hour |
+| --- | --- | --- | --- |
+| NVIDIA B300 | `b300:1` to `b300:4`, within your workspace's GPU quota | 270 GB per GPU | $8.25 |
+
+`hedra-cli sandbox gpus` lists the models your workspace can run, each with its memory, its price per GPU-hour after your workspace's discount, and whether one is free right now. The examples below set `GPU` to one of them, such as `b300:1`.
+
+## Before you start
+
+- **Install hedra-cli**, or update an existing install, with `npm install --global @hedra/cli@latest`, or see [SDKs and developer tools](/pages/developer/v3/sdks).
+- **A funded API wallet.** A sandbox's GPU time is paid from the API wallet; see [Billing](/pages/developer/v3/billing).
+
+### Sign in with a key that holds the sandbox scopes
+
+The sandbox commands need these key scopes:
+
+| Scope | What it allows |
+| --- | --- |
+| `sandboxes:read` | Every stream command, and `ls`, `get`, `gpus`, `quota`, `events`, `saved-logs` and `secrets ls` |
+| `sandboxes:write` | `create`, `stop`, `token`, `secrets set`, `secrets rm`, `rotate-signing-key` and `port-forward` |
+| `sandboxes:exec` | `exec`, `shell` and `cp` |
+
+So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `secrets set`, `secrets rm` and `rotate-signing-key` also need you to be a workspace owner or admin, or the member who pays for the workspace; a service key cannot run them.
+
+Sign in with:
+
+```bash
+hedra-cli auth login
+```
+
+The key `auth login` stores holds every scope except `all` and `keys:manage`, so it holds the three sandbox scopes whatever your role in the workspace. Running `auth login` again, or `hedra-cli workspaces select`, renews the key you already hold, or mints a new one, with that same set of scopes.
+
+A key you mint yourself holds the sandbox scopes when it lists them or holds `all`. On the console's [API keys page](https://www.hedra.com/develop/api-keys), any workspace member can mint a personal key that lists them. `hedra-cli keys create` needs a key that holds `keys:manage`, which the `auth login` key does not, and can grant only scopes that key holds. Only a workspace owner or admin, or the member who pays for the workspace, can mint a key that holds `all`, or a service key. A key minted before key scopes existed holds `all`.
+
+A key in `HEDRA_API_KEY` takes precedence over the one `auth login` stored, so CI and agents can use a key of their own:
+
+```bash
+export HEDRA_API_KEY="<key_id>:<secret>"
+```
+
+`hedra-cli auth status` shows which credential the CLI is using. When a key lacks a scope, the command's error names the missing scope.
+
+## Two kinds of sandbox command
+
+The `sandbox` group has two kinds of command, which take the sandbox in different ways.
+
+**API commands** map one-to-one onto the [v3 sandbox API](https://api.hedra.com/v3/openapi.json) and take the sandbox as `--sandbox`, either its name or its `sandbox_` id:
+
+```bash
+hedra-cli sandbox stop --sandbox train
+```
+
+**Stream commands** hold a connection open to the sandbox and take it as the first argument:
+
+```bash
+hedra-cli sandbox logs train
+```
+
+| Command | Kind | What it does |
+| --- | --- | --- |
+| `gpus` | API | List the GPU models your workspace can run |
+| `quota` | API | Show how many more GPUs your workspace's sandboxes can hold |
+| `create --name <name> --gpu <model>:<count> --image <ref>` | API | Create a sandbox |
+| `ls` | API | List your creating, active and stopping sandboxes; `--all true` adds ended and failed ones |
+| `get --sandbox <sandbox>` | API | One sandbox, with its instances and its charge so far |
+| `stop --sandbox <sandbox>` | API | Stop a sandbox |
+| `token --sandbox <sandbox>` | API | Mint a token for the sandbox's URL |
+| `saved-logs --sandbox <sandbox>` | API | The stored copy of an instance's output, as a JSON object |
+| `events --sandbox <sandbox>` | API | An instance's events |
+| `secrets ls`, `secrets set`, `secrets rm` | API | Manage the workspace's sandbox secrets |
+| `rotate-signing-key` | API | Revoke every session and endpoint token of the workspace's sandboxes within 30 seconds; open shells, streams and forwarded connections keep running |
+| `exec <sandbox> -- <command>…` | Stream | Run a command and relay its input, output and exit code |
+| `shell <sandbox>` | Stream | Open an interactive shell |
+| `shell --gpu <model>:<count> --image <ref>` | Stream | Create a sandbox, open a shell in it, and stop it when the shell ends |
+| `logs <sandbox>` | Stream | Print the main process's output; `-f` keeps following it |
+| `attach <sandbox>` | Stream | The same as `logs -f` |
+| `cp <source> <destination>` | Stream | Copy files and directories in or out |
+| `port-forward <sandbox> <local>:<remote>` | Stream | Forward a local port to a port in the sandbox |
+
+
+A name is 1 to 32 lowercase letters, digits and hyphens, starting and ending with a letter or digit, and not `gpus`, `quota`, `secrets` or `signing-key`. With `--ports`, it contains no `--`. It is unique among your creating, active and stopping sandboxes, so a name reaches your live sandbox of that name, or else your newest one. A stream command resolves the name once and keeps the id, so a reconnect never reaches a later sandbox that reuses the name.
+
+Stream commands connect over HTTP/2 to a separate Hedra host, which the API names for each session, so a firewall that allows only `api.hedra.com` blocks them. They use the same proxy and certificate settings as the API commands: `HEDRA_CLI_PROXY`, `HTTPS_PROXY` or `ALL_PROXY`, with `NO_PROXY`, and `HEDRA_CLI_CA_BUNDLE`, `HEDRA_CLI_EXTRA_CA_CERTS` or `SSL_CERT_FILE`.
+
+Run `hedra-cli sandbox <command> --help` for every flag. `--dry-run` checks a command's arguments locally and sends nothing, so a value only Hedra checks, such as a GPU count over 99, passes it.
+
+API commands follow hedra-cli's usual output: a table on a terminal and JSON when stdout is piped, with `--format`, `--query` and `--quiet` as for every other command. A stream command's stdout is the sandbox's own output, so it writes its own messages and errors to stderr. A usage error (exit code 3) is the exception: hedra-cli's usual argument checker reports it, in its own format, which is JSON on stdout when stdout is piped.
+
+## The quickest start: a shell on a new sandbox
+
+If your workspace has never created a sandbox, `gpus` answers that sandboxes are not available, because the first `create` or `shell --gpu` is what turns them on. Skip `gpus` and set `GPU` to a model from the table at the top of this page.
+
+```bash
+hedra-cli sandbox gpus
+export GPU=b300:1
+hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
+```
+
+`shell --gpu` creates a sandbox named `shell-` and six random characters, waits until it is ready, opens a shell in it, and stops it when you exit the shell. Billing ends at the stop request. While it waits, it prints its progress on stderr, and it warns first when no GPU of that model is free (the sandbox may then wait up to 15 minutes for one) or when your workspace's GPU quota is too small.
+
+- `--max-duration` stops the sandbox this long after it is created, from 2 minutes to 24 hours, such as `90m` or `8h`; the default is `24h`.
+- The sandbox also stops on its own about 15 minutes after its last activity, so a sandbox whose CLI crashed or whose laptop went to sleep does not run for its full `--max-duration`. An open shell counts as activity from its start until it exits. A process left running in the background, such as a `tmux` server or a `nohup` or `&` job, does not.
+- It needs a terminal on stdin and stdout, in the foreground, and refuses before it creates anything when it has none. On Windows it needs a console: run it in Windows Terminal or a console window, since mintty and Git Bash are not consoles.
+- If the connection drops, the sandbox keeps running. hedra-cli prints how to reopen the shell with `hedra-cli sandbox shell <name>` and how to stop the sandbox. A reopened shell's exit does not stop the sandbox; its idle limit or `--max-duration` does, or `stop`.
+
+## Create a sandbox
+
+```bash
+hedra-cli sandbox create \
+  --name train \
+  --gpu "$GPU" \
+  --image pytorch/pytorch:latest \
+  --command '["python", "-u", "train.py"]' \
+  --env '{"EPOCHS": "3"}' \
+  --ttl-seconds 28800
+```
+
+- `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance.
+- `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits, unless `--restart on-failure` or `--restart always` restarts it. The main process's stdin stays open, so a shell or an interpreter run as the command waits for input.
+- `--env` takes a JSON object. Answers return only the keys.
+- `--ttl-seconds` is required: it stops the sandbox that many seconds after it is created, from 120 to 86,400 (24 hours). The sandbox stops sooner if you stop it, its command exits, or the wallet cannot pay. Longer reservations require a sales contract with Hedra; contact [sales@hedra.com](mailto:sales@hedra.com).
+- `--ports '{"port": 8888}'` serves that port at the sandbox's `url`; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
+
+For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its `--ttl-seconds` ends, or the wallet cannot pay. Add `--idle-ttl-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
+
+```bash
+hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:latest \
+  --ttl-seconds 28800 --idle true --idle-ttl-seconds 1800
+```
+
+The command returns once the sandbox is created. Its instances may still be starting: check with `get`.
+
+## List, inspect and stop
+
+```bash
+hedra-cli sandbox ls
+hedra-cli sandbox ls --all true
+hedra-cli sandbox get --sandbox train
+hedra-cli sandbox stop --sandbox train
+```
+
+`get` shows each instance's status and, for one that failed, its `failure_reason`, and the sandbox's `end_reason` once it has stopped. `stop` answers with the sandbox in `stopping` and returns; Hedra records it `ended` once every instance has stopped, usually within a minute or two. Billing ends at the stop request. Its GPUs count against your workspace's quota until its instances have stopped, so at full quota a `create` sent straight after a `stop` can be refused for quota for a few seconds; retry it.
+
+## Pass secrets to a sandbox
+
+Store a value such as an access token once as a workspace secret, then name it when you create a sandbox. Only a workspace owner or admin, or the member who pays for the workspace, can set or delete a secret; a service key cannot.
+
+Pipe the request body on stdin with `--json -`, so the value stays out of your shell history and the process list. This form needs `jq`, and reads the value from `HF_TOKEN`, which must be exported:
+
+```bash
+jq -n '{name: "HF_TOKEN", value: env.HF_TOKEN}' | hedra-cli sandbox secrets set --json -
+```
+
+`--name HF_TOKEN --value "$HF_TOKEN"` works too, but the value then appears in the process list while the command runs.
+
+- A name is uppercase letters, digits and underscores, does not start with a digit, has at most 63 characters, and never starts `SANDBOX_`, which the sandbox reserves. It is also the name of the environment variable the sandbox receives.
+- A value is 1 byte to 16 KiB of UTF-8, and is never returned.
+- Setting a name your workspace already holds replaces its value.
+
+Name up to 32 secrets with `--secrets` on `create`. Every instance receives each one as an environment variable of the same name:
+
+```bash
+hedra-cli sandbox create --name hf --gpu "$GPU" --image pytorch/pytorch:latest \
+  --ttl-seconds 3600 --idle true --secrets '["HF_TOKEN"]'
+hedra-cli sandbox exec hf -- sh -c 'test -n "$HF_TOKEN" && echo set'
+```
+
+The `exec` line checks that the variable is set without printing it. `shell --gpu` has no secrets flag: create the sandbox with `--secrets`, then open it with `shell <sandbox>`.
+
+```bash
+hedra-cli sandbox secrets ls
+hedra-cli sandbox secrets rm --name HF_TOKEN
+```
+
+`secrets ls` lists each secret's name and when it was created, never its value.
+
+## Run commands
+
+```bash
+hedra-cli sandbox exec train -- nvidia-smi
+hedra-cli sandbox exec train --env STEP=2 -- python eval.py
+echo hello | hedra-cli sandbox exec train -- cat
+hedra-cli sandbox exec train -t -- htop
+```
+
+`exec` runs the command after `--` without a shell, relays your stdin to it and its stdout and stderr back, and exits with the command's own exit code. To use shell syntax, run a shell: `-- sh -c 'cd /work && make'`. A command that cannot start, such as one the image does not have, prints `[hedra] the command could not start:` and the reason, and exits 2, which a script cannot tell from the command itself exiting 2.
+
+- `-t` runs the command on a terminal, with yours in raw mode, for programs such as `htop` or `vim`. It needs a terminal on stdin and stdout, and to run in the foreground, not as a background job.
+- `-n` sends no input: the command sees the end of its input at once.
+- `--env KEY=VALUE` sets a variable for the command; repeat it for more.
+- `--term` sets the remote `TERM` under `-t`; by default it is yours, or `xterm-256color` when the image may not know yours.
+
+`shell <sandbox>` opens an interactive shell in a running sandbox: the one the image's `SHELL` variable names, else `bash`, else `sh`. Like `-t`, it needs a terminal on stdin and stdout, which on Windows means Windows Terminal or a console window, not mintty or Git Bash. Its exit does not stop the sandbox.
+
+## Read the output
+
+```bash
+hedra-cli sandbox logs train
+hedra-cli sandbox logs -f train
+hedra-cli sandbox attach train
+```
+
+`logs` prints the main process's recent output and exits. While the sandbox runs, the output comes live from the sandbox. Once it has stopped, `logs` reads the stored copy, so it is also the command for reading a stopped sandbox's output. The stored copy keeps only the newest part of a long output, and `logs` says when older output was dropped.
+
+While the sandbox runs, the live read can end early when the main process has written a large burst of output, such as tens of MiB at once, even over an ordinary connection. `logs` then reconnects, a moment apart, starting after the last output it printed, until it has caught up with the recent output, and exits 0. A live read holds only the recent output, so output written while `logs` was behind can be gone by the time it reconnects, and nothing marks the gap: after any reconnect, `logs` says on stderr that output may be missing, unless no reconnect printed anything and it then prints the rest from the stored copy, as described next. Only when it cannot reconnect, when the read keeps ending with nothing new printed, or after 20 reconnects or a minute of them, as when the sandbox keeps writing faster than your connection carries, does `logs` say so on stderr and print the rest from the stored copy, starting after the last output it printed. The output can then be incomplete, and `logs` says so: the stored copy can lack the newest lines, even minutes after they were written, and when it no longer holds the line after the last one printed live, the output in between is missing. If the stored copy cannot be read, `logs` exits with the code for that failure.
+
+The main process's output is not a terminal, so many programs buffer it and it shows up late. For Python, run `python -u` or set `PYTHONUNBUFFERED=1`, as the `create` example above does.
+
+`logs -f`, and `attach`, which is the same, keep printing new output until you press Ctrl-C. They wait up to 15 minutes for a sandbox that is still starting, reconnect after a dropped connection, and when the sandbox stops, print the rest from the stored copy and exit.
+
+`logs` and `attach` read the first instance (replica 0).
+
+`saved-logs` is an API command and answers JSON, not the output as text: an object with the output in `content` and `truncated` set when older output was cut. Use it to read another replica's stored output with `--replica`, or output since a time with `--since`:
+
+```bash
+hedra-cli sandbox saved-logs --sandbox train --replica 1 --format json | jq -r .content
+```
+
+## Copy files
+
+```bash
+hedra-cli sandbox cp ./data train:/work/data
+hedra-cli sandbox cp train:/work/out ./out
+```
+
+One side of `cp` is `<sandbox>:<path>` and the other a local path. It copies a file or a whole directory either way. An argument whose part before the first `:` has the form of a sandbox name or a `sandbox_` id is a sandbox path, whether or not you have a sandbox of that name, so write a local file named `notes:v2` as `./notes:v2`.
+
+- When the destination is an existing directory, the source lands inside it under its own name. Otherwise the source takes the destination's name, and its missing parent directories are created. A destination ending in `/` must already be a directory.
+- A source ending in `/.` copies the directory's contents rather than the directory.
+- A relative sandbox path is relative to the image's working directory.
+- A symlinked source copies what it links to.
+- The image needs `sh` and `tar`. With GNU tar, hedra-cli also checks that a copy out arrived whole.
+- When your file system treats two names as the same because they differ only in case, as macOS and Windows do by default, or in Unicode normalization, as macOS does, a copy out leaves out with a warning the second entry, and then exits 255.
+
+A complete copy exits 0. A copy in whose `tar` in the sandbox fails exits with that `tar`'s code; an image without `sh` or `tar` exits 255. A copy out whose `tar` fails exits 255, and its error line includes `tar in the sandbox exited <code>`. A copy either way that left out or refused an entry or lost output also exits 255 and says what is missing.
+
+A copy out that fails after writing something does not remove what it wrote. Its error line says where it is, in a sentence or clause that may start with a capital: `part of the copy was written into <path>, which already existed` when the path it wrote to was already a directory, or else `a partial copy was left at <path>`. That path is the destination itself, or `<destination>/<source name>` when the destination is an existing directory; for a `/.` source it is the destination. Delete it, or copy again. The exception, when the image has GNU tar, is a copy whose every file arrived but whose `tar` exited 1 because a file changed while it read it: it still exits 255, its line says `tar in the sandbox exited 1` and `every entry it sent arrived at <path>`, and it names no partial copy. A copy out that fails before writing anything removes the parent directories it created.
+
+Ctrl-C stops a copy and exits 130. A copy out writes nothing more, waits up to 5 seconds for its last write to finish and for the modes of your directories it opened up to be put back (on macOS and Linux, a copy that writes into directories an earlier copy left without your read, write or search permission grants that permission while it writes), and then says where its partial copy is, as above, or removes the parent directories it created when it wrote nothing. A second Ctrl-C ends that wait at once. When the copy has not stopped by then, it says `the modes of directories the copy opened up may not have been put back`, after the partial-copy clause when there is one.
+
+On Windows:
+
+- A one-letter name before `:` is a drive, so `c:\data` is a local path; name a sandbox with a one-letter name by its `sandbox_` id.
+- In a copy out, a symlink is left out with a warning, and the copy then exits 255.
+- A copy in writes files with mode 0644 and directories 0755, so run a script you copied in with `sh script`, or `chmod +x` it first.
+- In a copy out, an entry whose name Windows cannot hold, such as one containing `\` or `:`, naming a device such as `CON`, or ending in a dot or a space, is left out with a warning, and the copy then exits 255.
+
+## Forward a port
+
+```bash
+hedra-cli sandbox port-forward train 8888
+hedra-cli sandbox port-forward train 9000:8888
+hedra-cli sandbox port-forward train 0:8888
+```
+
+`port-forward` listens on your machine's `127.0.0.1` and `[::1]`, or on the one of them your machine has, and forwards each connection to the port in the sandbox until you press Ctrl-C. Give one port for both sides, or `<local>:<remote>`; a local port of `0` picks a free one, which it prints. Up to 90 connections are open at once; one more waits for one to close.
+
+When your machine has only one of the two addresses, `port-forward` warns `not listening on IPv6 ([::1]): <error>`, or the same for IPv4 (`127.0.0.1`), and listens on the other. It refuses, with exit code 19, a local port it cannot listen on, with `cannot listen on port <port> over IPv4 (127.0.0.1): <error>`, or the same for IPv6 (`[::1]`). That includes a port another program listens on at `0.0.0.0` or `[::]`, since that program's own clients would otherwise reach the sandbox.
+
+The server in the sandbox must listen on `127.0.0.1` or `0.0.0.0`. One bound only to `::1` or to another address is not reached, and a connection the sandbox closes before sending anything prints `nothing is listening on 127.0.0.1:<port> in the sandbox (a server bound only to ::1 or another address is not reached), or it closed the connection`.
+
+A forward on a sandbox that is stopping, has ended or failed, or whose first instance has stopped or failed does not start: it exits 13 before it prints its start line (`Forwarding …`, shown below), with an error line that names the next step, such as:
+
+```text
+hedra-cli: Not ready or stopped (13): `train`'s instance stopped. Run `hedra-cli sandbox logs sandbox_<id>` for its output.
+```
+
+The next step names the sandbox by its `sandbox_` id, since once a sandbox ends its name can belong to a new one. It points to adding funds when the sandbox stopped because your API wallet could not pay, otherwise to `logs` when the first instance started, whatever stopped it, to `hedra-cli sandbox gpus` when no GPU of the sandbox's model was free, and otherwise to creating another sandbox.
+
+A forward on a sandbox that is still being created, or whose first instance has not started yet, waits up to 15 minutes for it to run before it prints its start line, printing its progress on stderr. A connection made during the wait is closed at once rather than queued, so only the start line means the port forwards. If the sandbox stops or its first instance fails while the forward waits, the forward exits 13 before its start line with the next step, as above; one still starting after 15 minutes also exits 13. A sandbox that is still running although your API wallet could not pay for it is not refused, and forwards as usual until it stops. A connection after it stops ends the forward with exit code 13, not 15, and a line such as:
+
+```text
+hedra-cli: Not ready or stopped (13): `train` is stopping (unpaid). Add funds to the workspace, then create another; `hedra-cli sandbox ls` lists the running ones.
+```
+
+A sandbox that has already stopped because the wallet could not pay is refused up front with the same next step, like any stopped sandbox. Keep the wallet funded while a forward runs.
+
+Once it is listening, `port-forward` prints this line on stderr:
+
+```text
+Forwarding 127.0.0.1:8888 and [::1]:8888 to port 8888 in `train`. Any local user can connect to it, and so can web pages in your browser, and it skips the sandbox's endpoint token; forward only servers that have their own auth.
+```
+
+<Warning>
+**Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection skips the endpoint-token check that protects the sandbox's `url`, so the server in the sandbox is the only check left. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
+</Warning>
+
+`port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server, such as a large download, or a local client reads slowly, the connection is reset once up to about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
+
+When Hedra resets a connection that fell behind, hedra-cli prints Hedra's message followed by its own advice, such as:
+
+```text
+a forwarded connection was reset: client fell behind the sandbox's output; reconnect. `port-forward` cannot slow the sandbox's server; copy large files with `hedra-cli sandbox cp`.
+```
+
+When hedra-cli resets one itself, it prints `the forwarded connection fell behind and was reset`.
+
+A refused, dropped or reset connection resets only that connection, and the forward keeps listening. When your workspace is at its limit of open sandbox sessions, each forwarded connection counts as one, and the forward prints once `The workspace is at its limit of open sandbox sessions; connections are refused until some close.` The forward stops with an error only when a connection fails in a way hedra-cli treats as final:
+
+- the sandbox is not ready or has stopped (exit code 13): it stopped (for instance because your API wallet could not pay for it), its first instance stopped or failed, or Hedra refused a connection because the sandbox was not ready;
+- the key lost its scope (10), or was revoked (2);
+- Hedra refused the key with a 403 that names no scope (19);
+- the connection to Hedra can never work (19): a proxy answered its `CONNECT` with a status other than 2xx, 5xx, 408 or 429, Hedra's certificate is not trusted by your machine, the server at the other end does not speak HTTP/2, or the proxy or connection settings are invalid.
+
+It then stops accepting connections, prints the error line, and exits with that code once its open connections end. A Ctrl-C while they finish closes them at once, and the exit code is still the error's.
+
+## Reach a sandbox's URL
+
+A sandbox created with `--ports` serves that port at its `url`, which needs a token. `token` mints one:
+
+```bash
+hedra-cli sandbox token --sandbox train
+```
+
+It answers:
+
+- `token`, sent as `Authorization: Bearer <token>` to `url`;
+- `url`;
+- `browser_url`, a link that opens `url` in a browser and keeps that browser signed in to the sandbox;
+- `expires_at`: the end of the sandbox's `--ttl-seconds`, or 30 days after the mint, whichever is earlier.
+
+The token and `browser_url` are credentials: anyone who has either one reaches the sandbox until it expires. `rotate-signing-key` revokes every token and session of your workspace's sandboxes within 30 seconds. A shell, stream, forwarded connection or request already open keeps running, and hedra-cli commands mint new sessions with your API key.
+
+## Exit codes
+
+API commands exit with hedra-cli's usual codes: 0 on success, 1 when the API answers with an error (a refused key included), 2 when no credential is found, 3 for a usage error, 4 when the API description cannot be loaded, and 5 when Hedra cannot be reached, or for another failure of hedra-cli's own.
+
+Stream commands exit with a code for each kind of failure, so a script can tell them apart. `hedra-cli sandbox <command> --help` prints these codes; `-h` leaves them out.
+
+| Code | Meaning |
+| --- | --- |
+| 0 | Success. `exec`, `shell` and `cp` exit with the command's own code instead |
+| 1 | Hedra returned an error |
+| 2 | Not signed in, or the key was refused |
+| 3 | Usage error: a flag or argument the command does not accept, or a missing one |
+| 10 | The key lacks a sandbox scope |
+| 11 | No such sandbox |
+| 12 | Sandboxes are not enabled for this workspace |
+| 13 | The sandbox is not ready, or it stopped |
+| 14 | No GPU of that model is free. It appears in `shell --gpu`'s error line, which exits 255 |
+| 15 | The wallet cannot pay |
+| 16 | A limit was reached |
+| 17 | Hedra or the network is unavailable; retry |
+| 18 | The connection to the sandbox was lost |
+| 19 | The request was refused, for instance a bad sandbox name or port |
+| 129 | Hangup: the terminal closed, or SIGHUP |
+| 130 | Interrupted with Ctrl-C |
+| 141 | The output was closed, for instance by `head`: hedra-cli is killed by SIGPIPE, which a shell reports as 141 |
+| 143 | Terminated: SIGTERM, or Ctrl-Break on Windows |
+| 255 | The output could not be written, or hedra-cli crashed; and for `exec`, `shell` and `cp`, any failure of hedra-cli's own |
+
+Apart from a usage error or a signal, each failure prints one line on stderr that starts `hedra-cli: <class> (<code>):` and names the next step, such as:
+
+```text
+hedra-cli: Not found (11): No sandbox `train`. Run `hedra-cli sandbox ls`.
+```
+
+With an explicit `--format json`, `jsonl` or `yaml`, the line is a JSON object instead, `{"error": {...}}`, whose `error` holds `class`, `exit_code`, `message`, `reason` and `trace_id`; `reason` and `trace_id` are null when Hedra gave none, such as for a failure before Hedra answered; a failure on the sandbox's stream has a `reason` but no `trace_id`.
+
+How each stream command uses the table:
+
+| Command | Exit codes |
+| --- | --- |
+| `exec`, `shell`, `cp` | The command's own code; for `cp`, 0 for a complete copy, or the code of a failed `tar` in the sandbox on a copy in. Every failure of hedra-cli's own is 255, since the command can exit with any of 0 to 255; the `hedra-cli: <class> (<code>):` line says which failure it was. The exceptions are 3 for a usage error, 130 for Ctrl-C (under `-t` and in `shell`, only before the terminal is in raw mode; after that, Ctrl-C goes to the remote command), 141, 129 and 143. |
+| `shell --gpu` | As `shell`. It also exits 255 whenever the sandbox it created may still be running, for instance when the stop could not be confirmed or a second Ctrl-C abandoned the create, and prints the sandbox's name and the command that stops it. |
+| `logs` | 0 once the output is printed, including when there is none yet. 130 on Ctrl-C. Otherwise the code for the failure: 1, 2, 3, 10, 11, 12, 13, 16, 17, 18 or 19, or 129, 141, 143 or 255. |
+| `logs -f`, `attach` | As `logs`, except that Ctrl-C, which is how a follow ends, exits 0, and a dropped connection reconnects instead of exiting. A sandbox still starting after 15 minutes exits 13. One that failed to start, for any reason such as no free GPU or an image that could not be pulled, prints why, with the next step when there is one, and exits 0, after any stored output; check `get` for the outcome. |
+| `port-forward` | Ctrl-C, which is how a forward ends, exits 0, unless the forward had already stopped with an error. 3 for a usage error. 19 for a bad port or a local port it cannot listen on. Before the forward starts, the code for the failure, such as 2, 11, 13, 17 or 19, including 13 for a sandbox that stops or is still starting after 15 minutes while the forward waits. While it runs, it stops only when a connection fails in a way hedra-cli treats as final: 13 (the sandbox is not ready or has stopped, including one stopped because your API wallet could not pay for it), 10 (the key lost its scope), 2 (the key was revoked), or 19 (a 403 naming no scope, or a connection that can never work; see [Forward a port](#forward-a-port)). 129 and 143 for signals. |
