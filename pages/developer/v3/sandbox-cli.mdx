@@ -9,8 +9,12 @@ A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GP
 | GPU | `--gpu` | Memory | Price per GPU-hour |
 | --- | --- | --- | --- |
 | NVIDIA B300 | `b300:1` to `b300:4`, within your workspace's GPU quota | 270 GB per GPU | $8.25 |
+| NVIDIA RTX PRO 6000 | `rtxpro6000:1` | 96 GB | $2.49 |
+| NVIDIA RTX 4090 | `rtx4090:1` | 24 GB | $0.89 |
 
 `hedra-cli sandbox gpus` lists the models your workspace can run, each with its memory, its price per GPU-hour after your workspace's discount, and whether one is free right now. The examples below set `GPU` to one of them, such as `b300:1`.
+
+The B300 and the RTX PRO 6000 need an image built for their architecture, such as the CUDA 13 build `pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime` in the examples below. `pytorch/pytorch:latest` currently points to an older build, whose PyTorch finds these GPUs but warns that it cannot run on them.
 
 ## Before you start
 
@@ -23,11 +27,11 @@ The sandbox commands need these key scopes:
 
 | Scope | What it allows |
 | --- | --- |
-| `sandboxes:read` | Every stream command, and `ls`, `get`, `gpus`, `quota`, `events`, `saved-logs` and `secrets ls` |
-| `sandboxes:write` | `create`, `stop`, `token`, `secrets set`, `secrets rm`, `rotate-signing-key` and `port-forward` |
+| `sandboxes:read` | Every stream command, and `ls`, `get`, `gpus`, `quota`, `events` and `saved-logs` |
+| `sandboxes:write` | `create`, `stop`, `token`, `rotate-signing-key` and `port-forward` |
 | `sandboxes:exec` | `exec`, `shell` and `cp` |
 
-So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `secrets set`, `secrets rm` and `rotate-signing-key` also need you to be a workspace owner or admin, or the member who pays for the workspace; a service key cannot run them.
+So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `rotate-signing-key` also needs you to be a workspace owner or admin, or the member who pays for the workspace; a service key cannot run it.
 
 Sign in with:
 
@@ -74,7 +78,6 @@ hedra-cli sandbox logs train
 | `token --sandbox <sandbox>` | API | Mint a token for the sandbox's URL |
 | `saved-logs --sandbox <sandbox>` | API | The stored copy of an instance's output, as a JSON object |
 | `events --sandbox <sandbox>` | API | An instance's events |
-| `secrets ls`, `secrets set`, `secrets rm` | API | Manage the workspace's sandbox secrets |
 | `rotate-signing-key` | API | Revoke every session and endpoint token of the workspace's sandboxes within 30 seconds; open shells, streams and forwarded connections keep running |
 | `exec <sandbox> -- <command>…` | Stream | Run a command and relay its input, output and exit code |
 | `shell <sandbox>` | Stream | Open an interactive shell |
@@ -95,12 +98,12 @@ API commands follow hedra-cli's usual output: a table on a terminal and JSON whe
 
 ## The quickest start: a shell on a new sandbox
 
-If your workspace has never created a sandbox, `gpus` answers that sandboxes are not available, because the first `create` or `shell --gpu` is what turns them on. Skip `gpus` and set `GPU` to a model from the table at the top of this page.
+Pick a model from `gpus` and set `GPU` to it:
 
 ```bash
 hedra-cli sandbox gpus
 export GPU=b300:1
-hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
+hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime
 ```
 
 `shell --gpu` creates a sandbox named `shell-` and six random characters, waits until it is ready, opens a shell in it, and stops it when you exit the shell. Billing ends at the stop request. While it waits, it prints its progress on stderr, and it warns first when no GPU of that model is free (the sandbox may then wait up to 15 minutes for one) or when your workspace's GPU quota is too small.
@@ -116,13 +119,13 @@ hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 hedra-cli sandbox create \
   --name train \
   --gpu "$GPU" \
-  --image pytorch/pytorch:latest \
+  --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
   --command '["python", "-u", "train.py"]' \
   --env '{"EPOCHS": "3"}' \
   --ttl-seconds 28800
 ```
 
-- `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance.
+- `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance; the table at the top of this page lists the counts each model allows.
 - `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits, unless `--restart on-failure` or `--restart always` restarts it. The main process's stdin stays open, so a shell or an interpreter run as the command waits for input.
 - `--env` takes a JSON object. Answers return only the keys.
 - `--ttl-seconds` is required: it stops the sandbox that many seconds after it is created, from 120 to 86,400 (24 hours). The sandbox stops sooner if you stop it, its command exits, or the wallet cannot pay. Longer reservations require a sales contract with Hedra; contact [sales@hedra.com](mailto:sales@hedra.com).
@@ -131,7 +134,7 @@ hedra-cli sandbox create \
 For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its `--ttl-seconds` ends, or the wallet cannot pay. Add `--idle-ttl-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
 
 ```bash
-hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:latest \
+hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
   --ttl-seconds 28800 --idle true --idle-ttl-seconds 1800
 ```
 
@@ -150,36 +153,7 @@ hedra-cli sandbox stop --sandbox train
 
 ## Pass secrets to a sandbox
 
-Store a value such as an access token once as a workspace secret, then name it when you create a sandbox. Only a workspace owner or admin, or the member who pays for the workspace, can set or delete a secret; a service key cannot.
-
-Pipe the request body on stdin with `--json -`, so the value stays out of your shell history and the process list. This form needs `jq`, and reads the value from `HF_TOKEN`, which must be exported:
-
-```bash
-jq -n '{name: "HF_TOKEN", value: env.HF_TOKEN}' | hedra-cli sandbox secrets set --json -
-```
-
-`--name HF_TOKEN --value "$HF_TOKEN"` works too, but the value then appears in the process list while the command runs.
-
-- A name is uppercase letters, digits and underscores, does not start with a digit, has at most 63 characters, and never starts `SANDBOX_`, which the sandbox reserves. It is also the name of the environment variable the sandbox receives.
-- A value is 1 byte to 16 KiB of UTF-8, and is never returned.
-- Setting a name your workspace already holds replaces its value.
-
-Name up to 32 secrets with `--secrets` on `create`. Every instance receives each one as an environment variable of the same name:
-
-```bash
-hedra-cli sandbox create --name hf --gpu "$GPU" --image pytorch/pytorch:latest \
-  --ttl-seconds 3600 --idle true --secrets '["HF_TOKEN"]'
-hedra-cli sandbox exec hf -- sh -c 'test -n "$HF_TOKEN" && echo set'
-```
-
-The `exec` line checks that the variable is set without printing it. `shell --gpu` has no secrets flag: create the sandbox with `--secrets`, then open it with `shell <sandbox>`.
-
-```bash
-hedra-cli sandbox secrets ls
-hedra-cli sandbox secrets rm --name HF_TOKEN
-```
-
-`secrets ls` lists each secret's name and when it was created, never its value.
+Workspace secrets store a value such as an access token once and pass it to a sandbox as an environment variable, without putting the value in your command line or the sandbox's settings. They are not yet enabled for self-serve workspaces. To use them, contact [sales@hedra.com](mailto:sales@hedra.com).
 
 ## Run commands
 
