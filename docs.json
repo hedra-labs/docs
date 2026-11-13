@@ -94,7 +94,8 @@
             "pages": [
               "pages/developer/v3/sdks",
               "pages/developer/v3/coding-agents",
-              "pages/developer/v3/sandbox-cli"
+              "pages/developer/v3/sandbox-cli",
+              "pages/developer/v3/environment-variables"
             ]
           },
           {
