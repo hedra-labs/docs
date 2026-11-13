@@ -1,0 +1,208 @@
+---
+title: "Sandbox environment variables"
+description: "Save Config and Secret variables once per workspace, reference them by name in any sandbox's env, map them to the names your code expects, and see when each sandbox reads them."
+sidebarTitle: "Sandbox environment variables"
+---
+
+Workspace environment variables hold a value once and pass it to any sandbox that references it. A sandbox receives only the variables its `env` references. Each variable has one of two types, chosen when you save it:
+
+| Type | For | Who can read the value back |
+| --- | --- | --- |
+| **Config** | Non-sensitive settings, such as a model ID, a URL or a log level | Any workspace member. The value can also appear in the sandbox's container spec. |
+| **Secret** | Credentials, such as API keys and access tokens | No one. The value is encrypted, write-only and never returned. |
+
+Put credentials in a Secret, never in a Config. Nothing stops you from saving a token as a Config, and any member of your workspace can then read it.
+
+<Note>
+Secret variables are not yet enabled for self-serve workspaces. To use them, contact [sales@hedra.com](mailto:sales@hedra.com).
+</Note>
+
+## Manage variables
+
+Manage variables on the **Variables** tab of the console's [Sandboxes page](https://www.hedra.com/develop/sandboxes), or with the API.
+
+Any workspace member can list variables and read a Config's value. Only a workspace owner or admin, or the member who pays for the workspace, can save or delete one; a service key cannot. The list and get calls need the `sandboxes:read` scope, and save and delete need `sandboxes:write`.
+
+### Save a variable
+
+`POST /v3/sandboxes/environment-variables` saves a variable, or replaces the value of one your workspace already holds as the same type. It answers `201` for a new name and `200` for a replaced value.
+
+```bash
+# A Config
+curl -X POST https://api.hedra.com/v3/sandboxes/environment-variables \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "MODEL_ID", "type": "config", "value": "llama-3.1-8b"}'
+
+# A Secret
+curl -X POST https://api.hedra.com/v3/sandboxes/environment-variables \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "HF_TOKEN", "type": "secret", "value": "'"$HF_TOKEN"'"}'
+```
+
+The answer is the variable without its value:
+
+```json
+{
+  "name": "HF_TOKEN",
+  "type": "secret",
+  "created_at": "2026-11-13T17:02:11Z",
+  "updated_at": "2026-11-13T17:02:11Z"
+}
+```
+
+A variable's type cannot change. Saving a name your workspace holds as the other type is a `409` `ALREADY_EXISTS`; delete the variable first to save its name as the other type.
+
+### List, read and delete
+
+```bash
+# Every variable, by name, without values
+curl https://api.hedra.com/v3/sandboxes/environment-variables \
+  -H "Authorization: Key $HEDRA_API_KEY"
+
+# Only Secrets (or ?type=config)
+curl "https://api.hedra.com/v3/sandboxes/environment-variables?type=secret" \
+  -H "Authorization: Key $HEDRA_API_KEY"
+
+# One variable
+curl https://api.hedra.com/v3/sandboxes/environment-variables/MODEL_ID \
+  -H "Authorization: Key $HEDRA_API_KEY"
+
+# Delete one
+curl -X DELETE https://api.hedra.com/v3/sandboxes/environment-variables/MODEL_ID \
+  -H "Authorization: Key $HEDRA_API_KEY"
+```
+
+The list answers `{"data": [...]}`, sorted by name, with no values of either type. Reading one Config returns its `value`; reading a Secret returns its name, type and timestamps, and never a `value`. The read of one variable is sent with `Cache-Control: no-store`. A delete answers with the deleted variable, and a name your workspace does not hold is a `404`.
+
+### Names and limits
+
+A saved variable's name:
+
+- uses uppercase letters, digits and `_`, and does not start with a digit;
+- is at most 63 characters;
+- does not start with `SANDBOX_`;
+- is not `HEDRA_SANDBOX_RUNNER_START`, `OTEL_RESOURCE_ATTRIBUTES`, `OTEL_SERVICE_NAME` or `TRACEPARENT`, which the sandbox sets itself.
+
+A value is UTF-8 without NUL characters, up to 64 KiB. A Config value can be empty; a Secret value is at least 1 byte.
+
+## Use variables in a sandbox
+
+A sandbox's `env` is a map of environment variable names to values. Each value is either a literal string or `{"ref": "NAME"}`, which names a saved Config or Secret:
+
+```bash
+curl -X POST https://api.hedra.com/v3/sandboxes \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "train",
+    "image": "pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime",
+    "gpu": "b300:1",
+    "ttl_seconds": 28800,
+    "env": {
+      "MODEL_ID": {"ref": "MODEL_ID"},
+      "HF_TOKEN": {"ref": "HF_TOKEN"},
+      "LOG_LEVEL": "info"
+    }
+  }'
+```
+
+Each instance starts with `MODEL_ID` and `HF_TOKEN` set to the saved values and `LOG_LEVEL` set to `info`. No other saved variable is injected. The sandbox's answers list `env` as `env_keys`, the keys only, never the values.
+
+When any reference names a variable your workspace does not hold, the create is refused with a `400` whose `param` is `env.<KEY>`, such as `env.HF_TOKEN`, and no sandbox is created.
+
+A sandbox's `env` holds at most:
+
+- 128 references;
+- 15 references that resolve to Secrets, counting each key separately, so one Secret under two keys counts twice, and counting any names in the legacy [`secrets`](#migrate-from-secrets) list;
+- 128 KiB of Config references, counting their keys and values together;
+- 32 KiB for the whole `env` object, written as JSON.
+
+A key whose value is a reference follows the environment variable name rules: letters, digits and `_`, not starting with a digit, not starting `SANDBOX_`, and not a reserved name. A literal's key is any non-empty name without `=` that does not start `SANDBOX_`.
+
+## Map a saved variable to another name
+
+The key in `env` is the variable's name **inside the sandbox**. The `ref` is its **saved** name in your workspace. They are often the same, but they don't have to be:
+
+```json
+"env": {
+  "OPENAI_API_KEY": {"ref": "OPENAI_KEY_PROD"}
+}
+```
+
+Here the process reads `OPENAI_API_KEY`, and its value is the saved Secret `OPENAI_KEY_PROD`.
+
+### One value per environment
+
+A workspace has one set of names, with no separate production, staging or preview copies. To keep a value per environment, save each under its own name and map whichever one a sandbox needs to the name your code reads:
+
+```jsonc
+// A production sandbox
+"env": {"OPENAI_API_KEY": {"ref": "OPENAI_KEY_PROD"}}
+
+// An evaluation sandbox
+"env": {"OPENAI_API_KEY": {"ref": "OPENAI_KEY_EVAL"}}
+```
+
+The code reads `OPENAI_API_KEY` in both, and doesn't need to know which key it was given.
+
+### A name an image or library expects
+
+Many images and libraries read a fixed name, such as `HF_TOKEN` for Hugging Face or `WANDB_API_KEY` for Weights & Biases. Save the value under whatever name suits your workspace, and give it the expected name in `env`:
+
+```json
+"env": {
+  "HF_TOKEN": {"ref": "HUGGINGFACE_READ_TOKEN"},
+  "WANDB_API_KEY": {"ref": "WANDB_TEAM_KEY"}
+}
+```
+
+### One value under two names
+
+Reference the same variable under more than one key when different tools read different names for it:
+
+```json
+"env": {
+  "HF_TOKEN": {"ref": "HUGGINGFACE_READ_TOKEN"},
+  "HUGGING_FACE_HUB_TOKEN": {"ref": "HUGGINGFACE_READ_TOKEN"}
+}
+```
+
+Each key that resolves to a Secret counts toward the sandbox's limit of 15, so this example uses two.
+
+## When a sandbox reads the values
+
+A sandbox reads its referenced variables when each instance is placed, not while it runs. An instance that is already running keeps the values it started with, and saving or deleting a variable never changes it.
+
+| What happens | Values the instance gets |
+| --- | --- |
+| You create a sandbox | The current saved values |
+| You replace or delete a saved variable | Running instances keep the values they started with; nothing is redeployed |
+| Hedra places a new instance for a running sandbox, for example to replace one lost to a node failure | The current saved values, so it can differ from its siblings |
+| The command restarts inside a running instance, under `restart` | The instance's existing values. A Secret can occasionally pick up a newer value at this point, so don't rely on a restart keeping the old one |
+| A referenced variable no longer exists when an instance is placed | The instance fails with `failure_reason` `start_failed` instead of starting without it |
+
+To give a running workload a new value, create a new sandbox after you save the value. Before you delete a variable, check that no sandbox you still run, or plan to create, references it.
+
+## Errors
+
+| Status | `code` | When |
+| --- | --- | --- |
+| `400` | `INVALID_ARGUMENT` | A save with a bad name, type or value; `param` is `name`, `type` or `value`. The value is never quoted in the error |
+| `400` | `INVALID_ARGUMENT` | A create whose `env` references a variable your workspace does not hold, or breaks a limit above; `param` is the `env.<KEY>` at fault, or `env` |
+| `403` | `PERMISSION_DENIED` | A save or delete by a member who is not an owner or admin, or by a service key; or a key without the route's scope |
+| `404` | `NOT_FOUND` | A get or delete of a name your workspace does not hold |
+| `409` | `ALREADY_EXISTS` | A save of a name your workspace holds as the other type. Delete it first; retrying does not help |
+
+See [Errors and retries](/pages/developer/v3/errors-and-retries) for the error envelope.
+
+## Migrate from `secrets`
+
+The create's `secrets` list, `"secrets": ["HF_TOKEN"]`, still works: each name in it is a saved Secret, passed under its own name. The equivalent `env` entry is:
+
+```json
+"env": {"HF_TOKEN": {"ref": "HF_TOKEN"}}
+```
+
+The `env` form also takes Configs and can give a variable another name. A sandbox cannot set the same name in both `secrets` and `env`; that create is refused with a `400` on `env.<KEY>`. Secrets you saved through `/v3/sandboxes/secrets` appear in the environment variables list as Secrets, and `ref` can name them.
