@@ -1,0 +1,181 @@
+---
+title: "Move from Runpod Pods to Hedra sandboxes"
+description: "Map Runpod Pods, runpodctl commands and Pods API calls to Hedra GPU sandboxes, hedra-cli and the v3 API, and give a sandbox an end time in place of an in-Pod stop timer."
+sidebarTitle: "Coming from Runpod"
+---
+
+A Hedra GPU sandbox does the job of a Runpod Pod: a container from an image you choose, on the GPUs you choose, paid from a prepaid balance while it runs. `hedra-cli sandbox` does the job of `runpodctl pod`, and `/v3/sandboxes` the job of Runpod's Pods API. This page maps one onto the other; [Run GPU sandboxes from hedra-cli](/pages/developer/v3/sandbox-cli) describes every command in full.
+
+## Set up
+
+| | Runpod | Hedra |
+| --- | --- | --- |
+| Install the CLI | `brew install runpod/runpodctl/runpodctl` | `npm install --global @hedra/cli@latest` |
+| Sign in | `runpodctl config --apiKey <key>` | `hedra-cli auth login`, or `export HEDRA_API_KEY="<key_id>:<secret>"` |
+| API base URL | `https://api.runpod.io/v2` | `https://api.hedra.com/v3` |
+| API key header | `Authorization: Bearer <key>` | `Authorization: Key <key_id>:<secret>`, or `Authorization: Bearer <key_id>:<secret>` |
+| Balance | Account balance, with auto-pay | The API wallet, with auto top-up, on the console's [billing page](https://www.hedra.com/develop/billing) |
+
+Since the Hedra API also takes the key as a Bearer credential, code that sends Runpod's header needs only the new base URL and key. The key needs the sandbox scopes, and the key `hedra-cli auth login` stores has them; see [Sign in with a key that holds the sandbox scopes](/pages/developer/v3/sandbox-cli#sign-in-with-a-key-that-holds-the-sandbox-scopes).
+
+## Commands
+
+| To | runpodctl | hedra-cli |
+| --- | --- | --- |
+| List GPU types | `runpodctl gpu list` | `hedra-cli sandbox gpus` |
+| Create | `runpodctl pod create --name train --gpu-id "NVIDIA GeForce RTX 4090" --image <image>` | `hedra-cli sandbox create --name train --gpu rtx4090:1 --image <image>` |
+| List running ones | `runpodctl pod list` | `hedra-cli sandbox ls` |
+| List stopped ones too | `runpodctl pod list --all` | `hedra-cli sandbox ls --all true` |
+| Get one | `runpodctl pod get <pod-id>` | `hedra-cli sandbox get --sandbox train` |
+| Stop at a set time | `sleep 2h; runpodctl pod stop $RUNPOD_POD_ID &`, run in the Pod | `hedra-cli sandbox update --sandbox train --ttl-ends-at 2h` |
+| Stop | `runpodctl pod stop <pod-id>` | `hedra-cli sandbox stop --sandbox train` |
+| Terminate | `runpodctl pod delete <pod-id>` | `hedra-cli sandbox stop --sandbox train` |
+| Open a shell | `ssh`, with the command from the Pod's **Connect** tab | `hedra-cli sandbox shell train`, or `hedra-cli sandbox exec train -- nvidia-smi` for one command |
+| Copy files | `scp`, over the Pod's SSH over exposed TCP | `hedra-cli sandbox cp ./data train:/work/data` |
+| Read the output | The Pod's **Logs** in the console | `hedra-cli sandbox logs -f train` |
+| Reach an HTTP port | `https://<pod-id>-8888.proxy.runpod.net` | `hedra-cli sandbox port-forward train 8888`, or the sandbox's `url` with a token from `hedra-cli sandbox token --sandbox train` |
+
+hedra-cli takes the sandbox's name wherever runpodctl takes a Pod id. The commands that call the API, such as `get`, `update` and `stop`, take it as `--sandbox`; the commands that open a stream to the sandbox, such as `shell`, `exec`, `cp`, `logs` and `port-forward`, take it as their first argument.
+
+## API calls
+
+| To | Runpod (`https://api.runpod.io/v2`) | Hedra (`https://api.hedra.com/v3`) |
+| --- | --- | --- |
+| Create | `POST /pods` | `POST /sandboxes` |
+| List | `GET /pods` | `GET /sandboxes`; `?all=true` adds ended and failed ones |
+| Get one | `GET /pods/{id}` | `GET /sandboxes/{sandbox}` |
+| Stop at a set time | A timer in the Pod | `PATCH /sandboxes/{sandbox}` with `{"ttl_ends_at": "<time>"}` |
+| Change the image, environment or ports | `PATCH /pods/{id}` | `POST /sandboxes`, for a new sandbox |
+| Stop | `POST /pods/{id}/action` with `{"action": "stop"}` | `POST /sandboxes/{sandbox}/stop` |
+| Start a stopped Pod | `POST /pods/{id}/action` with `{"action": "start"}` | `POST /sandboxes` with the same `name` |
+| Terminate | `DELETE /pods/{id}` | `POST /sandboxes/{sandbox}/stop` |
+
+`{sandbox}` is the sandbox's name or its `sandbox_` id. The sandbox API also reads an instance's output with `GET /sandboxes/{sandbox}/logs` and its lifecycle events with `GET /sandboxes/{sandbox}/events`, and mints a token for the sandbox's `url` with `POST /sandboxes/{sandbox}/endpoint-token`.
+
+## Create a sandbox from a Pod's settings
+
+| Runpod `POST /pods` | Hedra `POST /sandboxes` |
+| --- | --- |
+| `name` | `name`: 1 to 32 lowercase letters, digits and hyphens, which you then use in place of the id |
+| `image` | `image` |
+| `gpu`: `{"id": "NVIDIA GeForce RTX 4090", "count": 1}` | `gpu`: `"rtx4090:1"`, a model from `GET /sandboxes/gpus` and a count |
+| `entrypoint` and `cmd`, or `args` | `command`: the whole command as an array, run in place of the image's `ENTRYPOINT` and `CMD`; leave it out to run those |
+| `env` | `env`, the same object of strings |
+| `ports`: `["8888/http"]` | `ports`: `[{"port": 8888}]`, served at the sandbox's `url` |
+| `disk` and `mounts` | `resources.scratch_gb`: the sandbox's disk space |
+| | `ttl_seconds`: an optional end time, in seconds from the create |
+| | `idle`: `true` for a sandbox you work in, with no main process |
+
+The same sandbox from each:
+
+<CodeGroup>
+
+```bash Runpod
+runpodctl pod create \
+  --name web \
+  --gpu-id "NVIDIA GeForce RTX 4090" \
+  --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
+  --env '{"LOG_LEVEL": "info"}' \
+  --ports "8888/http" \
+  --docker-args "python -m http.server 8888 --bind 0.0.0.0"
+```
+
+```bash hedra-cli
+hedra-cli sandbox create \
+  --name web \
+  --gpu rtx4090:1 \
+  --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
+  --env '{"LOG_LEVEL": "info"}' \
+  --ports '{"port": 8888}' \
+  --command '["python", "-m", "http.server", "8888", "--bind", "0.0.0.0"]'
+```
+
+```bash Hedra API
+curl -X POST https://api.hedra.com/v3/sandboxes \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "web",
+    "gpu": "rtx4090:1",
+    "image": "pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime",
+    "env": {"LOG_LEVEL": "info"},
+    "ports": [{"port": 8888}],
+    "command": ["python", "-m", "http.server", "8888", "--bind", "0.0.0.0"]
+  }'
+```
+
+</CodeGroup>
+
+Use a GPU model that `hedra-cli sandbox gpus` lists. Once `hedra-cli sandbox get --sandbox web` shows the instance `running`, reach the server from your machine:
+
+```bash
+hedra-cli sandbox port-forward web 8888   # runs until Ctrl-C
+curl http://127.0.0.1:8888                # in another terminal
+```
+
+or at the sandbox's `url`, with an endpoint token:
+
+```bash
+hedra-cli sandbox token --sandbox web
+curl -H "Authorization: Bearer <token>" <url>
+```
+
+`token` answers both `token` and `url`; see [Reach a sandbox's URL](/pages/developer/v3/sandbox-cli#reach-a-sandboxs-url).
+
+## Stop at a set time
+
+On Runpod, a Pod stops at a set time when a process in it runs `runpodctl pod stop` on a timer:
+
+```bash
+sleep 2h; runpodctl pod stop $RUNPOD_POD_ID &
+```
+
+A Hedra sandbox carries its end time itself. Set it at create, then move it earlier or later, or remove it, from your machine or the console, with nothing in the sandbox to keep running. The charge ends at the end time.
+
+<CodeGroup>
+
+```bash hedra-cli
+# End 2 hours after the create
+hedra-cli sandbox create --name train --gpu rtx4090:1 \
+  --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
+  --idle true --ttl-seconds 7200
+
+# End 4 hours from now instead
+hedra-cli sandbox update --sandbox train --ttl-ends-at 4h
+
+# End at a set time
+hedra-cli sandbox update --sandbox train --ttl-ends-at 2026-11-20T18:00:00Z
+
+# Run until you stop it
+hedra-cli sandbox update --sandbox train --ttl-ends-at none
+```
+
+```bash Hedra API
+# End at a set time
+curl -X PATCH https://api.hedra.com/v3/sandboxes/train \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"ttl_ends_at": "2026-11-20T18:00:00Z"}'
+
+# Run until you stop it
+curl -X PATCH https://api.hedra.com/v3/sandboxes/train \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"ttl_ends_at": null}'
+```
+
+</CodeGroup>
+
+`hedra-cli sandbox ls` shows each sandbox's end time under `ttl_ends_at`. [Set or change the end time](/pages/developer/v3/sandbox-cli#set-or-change-the-end-time) gives the forms each command takes.
+
+To stop a sandbox when a job finishes, run the job as the sandbox's `command`: the sandbox ends when its command exits, and so does the charge.
+
+## What works differently
+
+- **A stopped sandbox has ended.** A sandbox does not start again after it stops, as a terminated Pod does not. To run it again, create a sandbox with the same name; endpoint tokens minted for that name keep working.
+- **Files last as long as the sandbox.** Its disk space, `resources.scratch_gb`, takes the place of a Pod's container disk and volumes. Copy out what you keep with `hedra-cli sandbox cp`, or upload it from the sandbox, before it stops.
+- **The command sets how long a sandbox runs.** The sandbox ends when its main process exits, unless you create it with `--restart on-failure` or `--restart always`. For a sandbox you work in, create it with `--idle true` in place of a command such as `sleep infinity`; `--idle-ttl-seconds` then stops it once it has had no activity for that long.
+- **One HTTP port, behind a token.** `ports` takes one port, which the sandbox serves at its `url` to requests that carry an endpoint token. `hedra-cli sandbox port-forward` reaches any other port.
+- **Shells without SSH.** `shell`, `exec` and `cp` reach the sandbox through hedra-cli, with no SSH keys to add, no SSH server in the image and no port 22 to expose.
+- **Billing follows the instances.** The charge runs from when the sandbox's instances start, after any wait for a GPU and the image pull, until you stop it, its command exits or its end time arrives. When the API wallet cannot pay, Hedra stops the sandbox, and `get` shows its `end_reason` as `unpaid`.
+- **Secrets.** For values such as access tokens, see [Pass secrets to a sandbox](/pages/developer/v3/sandbox-cli#pass-secrets-to-a-sandbox).
