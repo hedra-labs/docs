@@ -179,7 +179,7 @@ curl -X PATCH https://api.hedra.com/v3/sandboxes/train \
   -d '{"ttl_ends_at": "2027-06-30T18:00:00Z"}'
 ```
 
-At the end time, Hedra stops the sandbox as `stop` does, and `get` shows its `end_reason` as `ttl_ended`. Hedra charges you up to the end time and no further. An end time less than about 20 minutes away can pass before the sandbox stops: the sandbox can run up to about 20 minutes past it, and the charge still ends at the end time.
+At the end time, Hedra stops the sandbox as `stop` does, and `get` shows its `end_reason` as `ttl_ended`. Hedra charges you up to the end time and no further. An end time less than about 20 minutes away can pass before the sandbox stops: the sandbox usually stops within about 20 minutes of it, and the charge still ends at the end time.
 
 ## Pass secrets to a sandbox
 
