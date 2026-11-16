@@ -94,8 +94,7 @@
             "pages": [
               "pages/developer/v3/sdks",
               "pages/developer/v3/coding-agents",
-              "pages/developer/v3/sandbox-cli",
-              "pages/developer/v3/coming-from-runpod"
+              "pages/developer/v3/sandbox-cli"
             ]
           },
           {
