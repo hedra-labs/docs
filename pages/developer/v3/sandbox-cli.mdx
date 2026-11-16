@@ -175,79 +175,16 @@ hedra-cli sandbox exec train -t -- htop
 
 ## Stop a sandbox when its work is done
 
-Hedra charges a sandbox's GPU time until the sandbox stops, so stop it once its work is done. The way to stop it follows from how the work ends:
+Hedra charges a sandbox's GPU time until the sandbox stops. Stop it the way its work ends:
 
 | How the work ends | What stops the sandbox | `end_reason` in `get` |
 | --- | --- | --- |
-| The sandbox's command exits | The exit | `exited`, or `instance_failed` for an exit code other than 0 |
-| A job you ran with `exec` exits | No activity for `--idle-ttl-seconds` | `idle_ttl_ended` |
-| A program outside the sandbox sees the work finish | That program's `stop` | `caller_stopped` |
-| None of these happens | The end of `--ttl-seconds` | `ttl_ended` |
+| A job that is the sandbox's `--command` exits | The exit, unless `--restart` restarts it | `exited`, or `instance_failed` for an exit code other than 0 |
+| A job you run with `exec` in an `--idle true` sandbox exits | `--idle-ttl-seconds` with no activity | `idle_ttl_ended` |
+| A program outside the sandbox finishes, such as a client of a server in it | That program runs `hedra-cli sandbox stop --sandbox <name>`, or sends `POST /v3/sandboxes/{sandbox}/stop` with an API key that holds `sandboxes:write` | `caller_stopped` |
+| None of these | The end of `--ttl-seconds` | `ttl_ended` |
 
-### Run the job as the main process
-
-For a job that runs to completion, such as a training run or a batch job, make the job the sandbox's main process with `--command`:
-
-```bash
-hedra-cli sandbox create \
-  --name batch \
-  --gpu "$GPU" \
-  --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
-  --command '["python", "-u", "train.py"]' \
-  --ttl-seconds 28800
-```
-
-The sandbox ends when the command exits, and its charge ends at the exit. `get` then shows `end_reason` `exited` when the command exited 0, and `instance_failed` when it exited with any other code; the instance's `failure_reason` says why, such as `process_exited`. With more than one replica, each replica's charge ends when its own command exits, and the sandbox ends once every replica's command has exited.
-
-`--restart` sets which exits end the sandbox:
-
-| `--restart` | Exit code 0 | Any other exit code |
-| --- | --- | --- |
-| `never`, the default | Ends the sandbox | Ends the sandbox |
-| `on-failure` | Ends the sandbox | Restarts the command |
-| `always` | Restarts the command | Restarts the command |
-
-Under `always`, no exit of the command ends the sandbox: stop it, or let its `--ttl-seconds` end it.
-
-Once the sandbox has ended, `exec` and `cp` cannot reach it, so have the command copy its results out of the sandbox, such as to your own object storage, before it exits. [`logs`](#read-the-output) still prints its output.
-
-### Run the job with `exec` in an idle sandbox
-
-To run the job from your own terminal, create an idle sandbox with `--idle-ttl-seconds`, and run the job with `exec`:
-
-```bash
-hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
-  --ttl-seconds 28800 --idle true --idle-ttl-seconds 600
-hedra-cli sandbox cp ./train.py dev:/work/train.py
-hedra-cli sandbox exec dev -- python -u /work/train.py
-hedra-cli sandbox cp dev:/work/out ./out
-```
-
-An `exec` session counts as activity from its start until its command exits, so the sandbox stays up for as long as the job runs. Once the last session has ended, Hedra stops the sandbox after `--idle-ttl-seconds` with no activity, 10 minutes here, which leaves time to copy out the results with [`cp`](#copy-files). `get` then shows `end_reason` `idle_ttl_ended`. The stop can come a minute or so after the limit.
-
-- Run the job in the foreground of `exec`. A process that keeps running after its session ends, such as one started with `nohup` or `&` or inside `tmux`, is not activity, so Hedra can stop the sandbox at its idle limit while that process still runs.
-- `exec` stops its command in the sandbox when `exec` exits or loses its connection. For a job that keeps running without your terminal, [run it as the main process](#run-the-job-as-the-main-process).
-
-### Stop it from outside the sandbox
-
-When a program outside the sandbox knows the work is done, such as a client that has sent its last request to a server in the sandbox, have that program stop the sandbox:
-
-```bash
-hedra-cli sandbox stop --sandbox serve
-```
-
-A program without hedra-cli can send `POST /v3/sandboxes/{sandbox}/stop` with an API key that holds `sandboxes:write`:
-
-```bash
-curl --fail-with-body -X POST https://api.hedra.com/v3/sandboxes/serve/stop \
-  -H "Authorization: Key $HEDRA_API_KEY"
-```
-
-`{sandbox}` is the sandbox's name or its `sandbox_` id. A name reaches only your own sandboxes, so stop a teammate's sandbox by its id. An endpoint token reaches only the server in the sandbox, so it cannot stop the sandbox. `get` then shows `end_reason` `caller_stopped`.
-
-### When nothing else stops it
-
-`--ttl-seconds` stops the sandbox that many seconds after it is created, whatever is running in it, and `get` then shows `end_reason` `ttl_ended`. It ends a job that hangs, an `exec` session left open, or a sandbox whose client never sends its stop, so set it a little longer than the work needs. `shell --gpu` sets it from `--max-duration`.
+Copy a job's results out before it exits, since `exec` and `cp` cannot reach an ended sandbox. Run an `exec` job in the foreground: a process left running after its session ends, such as one started with `nohup` or `&`, is not activity. An endpoint token cannot stop a sandbox.
 
 ## Read the output
 
