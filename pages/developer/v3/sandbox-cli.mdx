@@ -173,6 +173,19 @@ hedra-cli sandbox exec train -t -- htop
 
 `shell <sandbox>` opens an interactive shell in a running sandbox: the one the image's `SHELL` variable names, else `bash`, else `sh`. Like `-t`, it needs a terminal on stdin and stdout, which on Windows means Windows Terminal or a console window, not mintty or Git Bash. Its exit does not stop the sandbox.
 
+## Stop a sandbox when its work is done
+
+Hedra charges a sandbox's GPU time until the sandbox stops. Stop it the way its work ends:
+
+| How the work ends | What stops the sandbox | `end_reason` in `get` |
+| --- | --- | --- |
+| A job that is the sandbox's `--command` exits | The exit, unless `--restart` restarts it | `exited`, or `instance_failed` for an exit code other than 0 |
+| A job you run with `exec` in an `--idle true` sandbox exits | `--idle-ttl-seconds` with no activity | `idle_ttl_ended` |
+| A program outside the sandbox finishes, such as a client of a server in it | That program runs `hedra-cli sandbox stop --sandbox <name>`, or sends `POST /v3/sandboxes/{sandbox}/stop` with an API key that holds `sandboxes:write` | `caller_stopped` |
+| None of these | The end of `--ttl-seconds` | `ttl_ended` |
+
+Copy a job's results out before it exits, since `exec` and `cp` cannot reach an ended sandbox. Run an `exec` job in the foreground: a process left running after its session ends, such as one started with `nohup` or `&`, is not activity. An endpoint token cannot stop a sandbox.
+
 ## Read the output
 
 ```bash
