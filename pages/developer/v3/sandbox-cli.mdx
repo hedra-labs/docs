@@ -76,7 +76,7 @@ hedra-cli sandbox logs train
 | `get --sandbox <sandbox>` | API | One sandbox, with its instances and its charge so far |
 | `update --sandbox <sandbox> --ttl-ends-at <time>` | API | Set, move or remove a sandbox's end time |
 | `stop --sandbox <sandbox>` | API | Stop a sandbox |
-| `token --sandbox <sandbox>` | API | Mint a token for the sandbox's URL |
+| `token --sandbox <sandbox>` | API | Mint an endpoint token for a port created with `"auth": "token"` |
 | `saved-logs --sandbox <sandbox>` | API | The stored copy of an instance's output, as a JSON object |
 | `events --sandbox <sandbox>` | API | An instance's events |
 | `rotate-signing-key` | API | Revoke every session and endpoint token of the workspace's sandboxes within 30 seconds; open shells, streams and forwarded connections keep running |
@@ -130,7 +130,7 @@ hedra-cli sandbox create \
 - `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits, unless `--restart on-failure` or `--restart always` restarts it. The main process's stdin stays open, so a shell or an interpreter run as the command waits for input.
 - `--env` takes a JSON object. Answers return only the keys.
 - `--ttl-seconds` is optional: it gives the sandbox an [end time](#set-or-change-the-end-time) that long after it is created, in whole seconds or as a duration such as `90m`, `8h` or `2d`, from 2 minutes to 365 days. Without it, the sandbox runs until you stop it, its command exits, or the wallet cannot pay.
-- `--ports '{"port": 8888}'` serves that port at the sandbox's `url`, and at its `internet_url` when it has one; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
+- `--ports '{"port": 8888}'` serves that port to any client at the sandbox's `url`, and at its `internet_url` when it has one; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
 
 For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its end time arrives, or the wallet cannot pay. Add `--idle-ttl-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
 
@@ -289,11 +289,11 @@ A sandbox that has already stopped because the wallet could not pay is refused u
 Once it is listening, `port-forward` prints this line on stderr:
 
 ```text
-Forwarding 127.0.0.1:8888 and [::1]:8888 to port 8888 in `train`. Any local user can connect to it, and so can web pages in your browser, and it skips the sandbox's endpoint token; forward only servers that have their own auth.
+Forwarding 127.0.0.1:8888 and [::1]:8888 to port 8888 in `train`. Any local user can connect to it, and so can web pages in your browser; forward only servers that have their own auth.
 ```
 
 <Warning>
-**Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection skips the endpoint-token check that protects the sandbox's `url`, so the server in the sandbox is the only check left. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
+**Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection needs no endpoint token, even to a port created with `"auth": "token"`, so the server in the sandbox is the only check. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
 </Warning>
 
 `port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server, such as a large download, or a local client reads slowly, the connection is reset once up to about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
@@ -317,7 +317,9 @@ It then stops accepting connections, prints the error line, and exits with that 
 
 ## Reach a sandbox's URL
 
-A sandbox created with `--ports` serves that port at its `url`, and on a GPU model with a public address also at its `internet_url`. Both need a token. `token` mints one:
+A sandbox created with `--ports` serves that port at its `url`, and on a GPU model with a public address also at its `internet_url`. Send requests to `internet_url` when it is set, and to `url` when it is null; `hedra-cli sandbox get --sandbox train --format json` prints both. Any client that reaches the address can call the port, so any authentication is your server's own.
+
+To require an endpoint token as well, create the sandbox with `--ports '{"port": 8888, "auth": "token"}'`. Each request to the port then needs a token, which `token` mints:
 
 ```bash
 hedra-cli sandbox token --sandbox train
@@ -332,6 +334,8 @@ It answers:
 - `expires_at`: 30 days after the mint, whatever the sandbox's end time.
 
 The token, `browser_url` and `internet_browser_url` are credentials: anyone who has one of them reaches the sandbox until it expires. `rotate-signing-key` revokes every token and session of your workspace's sandboxes within 30 seconds. A shell, stream, forwarded connection or request already open keeps running, and hedra-cli commands mint new sessions with your API key.
+
+Each create sets `auth`: a create without it serves the port to any client, even when an earlier sandbox of the same name used `"auth": "token"`.
 
 ## Exit codes
 
