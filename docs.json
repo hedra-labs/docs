@@ -445,6 +445,38 @@
     {
       "source": "/pages/app/troubleshooting/faq",
       "destination": "/pages/app/getting-started/overview"
+    },
+    {
+      "source": "/pages/getting_started/quickstart",
+      "destination": "/pages/developer/v3/quickstart"
+    },
+    {
+      "source": "/pages/realtime-avatar/get-started",
+      "destination": "/pages/developer/v3/platform"
+    },
+    {
+      "source": "/pages/realtime-avatar/about",
+      "destination": "/pages/developer/v3/platform"
+    },
+    {
+      "source": "/edit-videos-in-composer",
+      "destination": "/pages/app/content-creation/edit-videos-in-composer"
+    },
+    {
+      "source": "/pages/studio/billing/how-credits-work",
+      "destination": "/pages/app/billing/how-credits-work"
+    },
+    {
+      "source": "/pages/studio/account/creator-program",
+      "destination": "/pages/app/account/creator-program"
+    },
+    {
+      "source": "/pages/app/content-creation/elements-301-production-workflows",
+      "destination": "/pages/app/getting-started/references-and-elements"
+    },
+    {
+      "source": "/pages/app/content-creation/elements-401-world-builders",
+      "destination": "/pages/app/getting-started/references-and-elements"
     }
   ],
   "navbar": {
