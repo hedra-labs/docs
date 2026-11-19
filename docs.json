@@ -495,7 +495,7 @@
       "autogenerate": false
     }
   },
-  "description": "Hedra is a research and infrastructure company bringing frontier inference to multimodal and physical AI. Start building with the v3 API, then explore model adaptation and deployment options.",
+  "description": "Hedra provides post-training and inference for real-world AI. Explore managed inference APIs, model adaptation, and deployment options.",
   "feedback": {
     "thumbs": true,
     "edits": false,
