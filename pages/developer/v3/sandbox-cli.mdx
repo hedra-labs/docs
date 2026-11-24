@@ -9,8 +9,12 @@ A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GP
 | GPU | `--gpu` | Memory | Price per GPU-hour |
 | --- | --- | --- | --- |
 | NVIDIA B300 | `b300:1` to `b300:4`, within your workspace's GPU quota | 270 GB per GPU | $8.25 |
+| NVIDIA RTX PRO 6000 | `rtxpro6000:1` | 96 GB | $2.49 |
+| NVIDIA RTX 4090 | `rtx4090:1` | 24 GB | $0.89 |
 
 `hedra-cli sandbox gpus` lists the models your workspace can run, each with its memory, its price per GPU-hour after your workspace's discount, and whether one is free right now. The examples below set `GPU` to one of them, such as `b300:1`.
+
+The B300 and the RTX PRO 6000 need an image built for their architecture, such as the CUDA 13 build `pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime` in the examples below. `pytorch/pytorch:latest` currently points to an older build, whose PyTorch finds these GPUs but warns that it cannot run on them.
 
 ## Before you start
 
@@ -23,11 +27,11 @@ The sandbox commands need these key scopes:
 
 | Scope | What it allows |
 | --- | --- |
-| `sandboxes:read` | Every stream command, and `ls`, `get`, `gpus`, `quota`, `events`, `saved-logs` and `secrets ls` |
-| `sandboxes:write` | `create`, `stop`, `token`, `secrets set`, `secrets rm`, `rotate-signing-key` and `port-forward` |
+| `sandboxes:read` | Every stream command, and `ls`, `get`, `gpus`, `quota`, `events` and `saved-logs` |
+| `sandboxes:write` | `create`, `update`, `stop`, `token`, `rotate-signing-key` and `port-forward` |
 | `sandboxes:exec` | `exec`, `shell` and `cp` |
 
-So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `secrets set`, `secrets rm` and `rotate-signing-key` also need you to be a workspace owner or admin, or the member who pays for the workspace; a service key cannot run them.
+So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `rotate-signing-key` also needs you to be a workspace owner or admin, or the member who pays for the workspace; a service key cannot run it.
 
 Sign in with:
 
@@ -70,11 +74,11 @@ hedra-cli sandbox logs train
 | `create --name <name> --gpu <model>:<count> --image <ref>` | API | Create a sandbox |
 | `ls` | API | List your creating, active and stopping sandboxes; `--all true` adds ended and failed ones |
 | `get --sandbox <sandbox>` | API | One sandbox, with its instances and its charge so far |
+| `update --sandbox <sandbox> --ttl-ends-at <time>` | API | Set, move or remove a sandbox's end time |
 | `stop --sandbox <sandbox>` | API | Stop a sandbox |
-| `token --sandbox <sandbox>` | API | Mint a token for the sandbox's URL |
+| `token --sandbox <sandbox>` | API | Mint an endpoint token for a port created with `"auth": "token"` |
 | `saved-logs --sandbox <sandbox>` | API | The stored copy of an instance's output, as a JSON object |
 | `events --sandbox <sandbox>` | API | An instance's events |
-| `secrets ls`, `secrets set`, `secrets rm` | API | Manage the workspace's sandbox secrets |
 | `rotate-signing-key` | API | Revoke every session and endpoint token of the workspace's sandboxes within 30 seconds; open shells, streams and forwarded connections keep running |
 | `exec <sandbox> -- <command>…` | Stream | Run a command and relay its input, output and exit code |
 | `shell <sandbox>` | Stream | Open an interactive shell |
@@ -95,20 +99,20 @@ API commands follow hedra-cli's usual output: a table on a terminal and JSON whe
 
 ## The quickest start: a shell on a new sandbox
 
-If your workspace has never created a sandbox, `gpus` answers that sandboxes are not available, because the first `create` or `shell --gpu` is what turns them on. Skip `gpus` and set `GPU` to a model from the table at the top of this page.
+Pick a model from `gpus` and set `GPU` to it:
 
 ```bash
 hedra-cli sandbox gpus
 export GPU=b300:1
-hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
+hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime
 ```
 
 `shell --gpu` creates a sandbox named `shell-` and six random characters, waits until it is ready, opens a shell in it, and stops it when you exit the shell. Billing ends at the stop request. While it waits, it prints its progress on stderr, and it warns first when no GPU of that model is free (the sandbox may then wait up to 15 minutes for one) or when your workspace's GPU quota is too small.
 
-- `--max-duration` stops the sandbox this long after it is created, from 2 minutes to 24 hours, such as `90m` or `8h`; the default is `24h`.
+- `--max-duration` gives the sandbox an [end time](#set-or-change-the-end-time) this long after it is created, from 2 minutes to 365 days, such as `90m` or `8h`; the default is `24h`.
 - The sandbox also stops on its own about 15 minutes after its last activity, so a sandbox whose CLI crashed or whose laptop went to sleep does not run for its full `--max-duration`. An open shell counts as activity from its start until it exits. A process left running in the background, such as a `tmux` server or a `nohup` or `&` job, does not.
 - It needs a terminal on stdin and stdout, in the foreground, and refuses before it creates anything when it has none. On Windows it needs a console: run it in Windows Terminal or a console window, since mintty and Git Bash are not consoles.
-- If the connection drops, the sandbox keeps running. hedra-cli prints how to reopen the shell with `hedra-cli sandbox shell <name>` and how to stop the sandbox. A reopened shell's exit does not stop the sandbox; its idle limit or `--max-duration` does, or `stop`.
+- If the connection drops, the sandbox keeps running. hedra-cli prints how to reopen the shell with `hedra-cli sandbox shell <name>` and how to stop the sandbox. A reopened shell's exit does not stop the sandbox; its idle limit or its end time does, or `stop`.
 
 ## Create a sandbox
 
@@ -116,23 +120,23 @@ hedra-cli sandbox shell --gpu "$GPU" --image pytorch/pytorch:latest
 hedra-cli sandbox create \
   --name train \
   --gpu "$GPU" \
-  --image pytorch/pytorch:latest \
+  --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
   --command '["python", "-u", "train.py"]' \
   --env '{"EPOCHS": "3"}' \
-  --ttl-seconds 28800
+  --ttl-seconds 8h
 ```
 
-- `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance.
+- `--gpu` is `<model>:<count>`, with a count from 1 to 99 GPUs per instance; the table at the top of this page lists the counts each model allows.
 - `--command` replaces the image's entrypoint. Give it a JSON array of the command and its arguments, as above, or pass it once per argument; use the array when an argument starts with `-`. Without it, the image's `ENTRYPOINT` and `CMD` run. The sandbox ends when its main process exits, unless `--restart on-failure` or `--restart always` restarts it. The main process's stdin stays open, so a shell or an interpreter run as the command waits for input.
 - `--env` takes a JSON object. Answers return only the keys.
-- `--ttl-seconds` is required: it stops the sandbox that many seconds after it is created, from 120 to 86,400 (24 hours). The sandbox stops sooner if you stop it, its command exits, or the wallet cannot pay. Longer reservations require a sales contract with Hedra; contact [sales@hedra.com](mailto:sales@hedra.com).
-- `--ports '{"port": 8888}'` serves that port at the sandbox's `url`; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
+- `--ttl-seconds` is optional: it gives the sandbox an [end time](#set-or-change-the-end-time) that long after it is created, in whole seconds or as a duration such as `90m`, `8h` or `2d`, from 2 minutes to 365 days. Without it, the sandbox runs until you stop it, its command exits, or the wallet cannot pay.
+- `--ports '{"port": 8888}'` serves that port to any client at the sandbox's `url`, and at its `internet_url` when it has one; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
 
-For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its `--ttl-seconds` ends, or the wallet cannot pay. Add `--idle-ttl-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
+For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its end time arrives, or the wallet cannot pay. Add `--idle-ttl-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
 
 ```bash
-hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:latest \
-  --ttl-seconds 28800 --idle true --idle-ttl-seconds 1800
+hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
+  --ttl-seconds 8h --idle true --idle-ttl-seconds 1800
 ```
 
 The command returns once the sandbox is created. Its instances may still be starting: check with `get`.
@@ -148,38 +152,38 @@ hedra-cli sandbox stop --sandbox train
 
 `get` shows each instance's status and, for one that failed, its `failure_reason`, and the sandbox's `end_reason` once it has stopped. `stop` answers with the sandbox in `stopping` and returns; Hedra records it `ended` once every instance has stopped, usually within a minute or two. Billing ends at the stop request. Its GPUs count against your workspace's quota until its instances have stopped, so at full quota a `create` sent straight after a `stop` can be refused for quota for a few seconds; retry it.
 
+## Set or change the end time
+
+An end time is optional. A sandbox with one stops at that time, and its charge ends there; a sandbox without one runs until you stop it, its command exits, or the wallet cannot pay. Set it at create with `--ttl-seconds`, or with `--max-duration` on `shell --gpu`.
+
+While a sandbox is creating or active, `update` sets its end time, moves it earlier or later, or removes it:
+
+```bash
+hedra-cli sandbox update --sandbox train --ttl-ends-at 2027-06-30T18:00:00Z
+hedra-cli sandbox update --sandbox train --ttl-ends-at 10h
+hedra-cli sandbox update --sandbox train --ttl-ends-at none
+```
+
+- A time is in RFC 3339 form with an offset, such as `Z` or `-08:00`, later than now and at most 365 days away.
+- A duration, such as `90m`, `10h` or `2d`, counts from when you run the command.
+- `none` removes the end time.
+
+`ls` shows each sandbox's end time under `ttl_ends_at`, and `—` for a sandbox with none. You can also change the end time from the sandbox's row or page in the console's [Sandboxes page](https://www.hedra.com/develop/sandboxes).
+
+Over the API, `PATCH /v3/sandboxes/{sandbox}` takes `ttl_ends_at`, a time or `null`, and answers the sandbox:
+
+```bash
+curl -X PATCH https://api.hedra.com/v3/sandboxes/train \
+  -H "Authorization: Key $HEDRA_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"ttl_ends_at": "2027-06-30T18:00:00Z"}'
+```
+
+At the end time, Hedra stops the sandbox as `stop` does, and `get` shows its `end_reason` as `ttl_ended`. Hedra charges you up to the end time and no further. An end time less than about 20 minutes away can pass before the sandbox stops: the sandbox usually stops within about 20 minutes of it, and the charge still ends at the end time.
+
 ## Pass secrets to a sandbox
 
-Store a value such as an access token once as a workspace secret, then name it when you create a sandbox. Only a workspace owner or admin, or the member who pays for the workspace, can set or delete a secret; a service key cannot.
-
-Pipe the request body on stdin with `--json -`, so the value stays out of your shell history and the process list. This form needs `jq`, and reads the value from `HF_TOKEN`, which must be exported:
-
-```bash
-jq -n '{name: "HF_TOKEN", value: env.HF_TOKEN}' | hedra-cli sandbox secrets set --json -
-```
-
-`--name HF_TOKEN --value "$HF_TOKEN"` works too, but the value then appears in the process list while the command runs.
-
-- A name is uppercase letters, digits and underscores, does not start with a digit, has at most 63 characters, and never starts `SANDBOX_`, which the sandbox reserves. It is also the name of the environment variable the sandbox receives.
-- A value is 1 byte to 16 KiB of UTF-8, and is never returned.
-- Setting a name your workspace already holds replaces its value.
-
-Name up to 32 secrets with `--secrets` on `create`. Every instance receives each one as an environment variable of the same name:
-
-```bash
-hedra-cli sandbox create --name hf --gpu "$GPU" --image pytorch/pytorch:latest \
-  --ttl-seconds 3600 --idle true --secrets '["HF_TOKEN"]'
-hedra-cli sandbox exec hf -- sh -c 'test -n "$HF_TOKEN" && echo set'
-```
-
-The `exec` line checks that the variable is set without printing it. `shell --gpu` has no secrets flag: create the sandbox with `--secrets`, then open it with `shell <sandbox>`.
-
-```bash
-hedra-cli sandbox secrets ls
-hedra-cli sandbox secrets rm --name HF_TOKEN
-```
-
-`secrets ls` lists each secret's name and when it was created, never its value.
+Workspace secrets store a value such as an access token once and pass it to a sandbox as an environment variable, without putting the value in your command line or the sandbox's settings. They are not yet enabled for self-serve workspaces. To use them, contact [sales@hedra.com](mailto:sales@hedra.com).
 
 ## Run commands
 
@@ -198,6 +202,19 @@ hedra-cli sandbox exec train -t -- htop
 - `--term` sets the remote `TERM` under `-t`; by default it is yours, or `xterm-256color` when the image may not know yours.
 
 `shell <sandbox>` opens an interactive shell in a running sandbox: the one the image's `SHELL` variable names, else `bash`, else `sh`. Like `-t`, it needs a terminal on stdin and stdout, which on Windows means Windows Terminal or a console window, not mintty or Git Bash. Its exit does not stop the sandbox.
+
+## Stop a sandbox when its work is done
+
+Hedra charges a sandbox's GPU time until the sandbox stops. Stop it the way its work ends:
+
+| How the work ends | What stops the sandbox | `end_reason` in `get` |
+| --- | --- | --- |
+| A job that is the sandbox's `--command` exits | The exit, unless `--restart` restarts it | `exited`, or `instance_failed` for an exit code other than 0 |
+| A job you run with `exec` in an `--idle true` sandbox exits | `--idle-ttl-seconds` with no activity | `idle_ttl_ended` |
+| A program outside the sandbox finishes, such as a client of a server in it | That program runs `hedra-cli sandbox stop --sandbox <name>`, or sends `POST /v3/sandboxes/{sandbox}/stop` with an API key that holds `sandboxes:write` | `caller_stopped` |
+| None of these | The end of `--ttl-seconds` | `ttl_ended` |
+
+Copy a job's results out before it exits, since `exec` and `cp` cannot reach an ended sandbox. Run an `exec` job in the foreground: a process left running after its session ends, such as one started with `nohup` or `&`, is not activity. An endpoint token cannot stop a sandbox.
 
 ## Read the output
 
@@ -285,11 +302,11 @@ A sandbox that has already stopped because the wallet could not pay is refused u
 Once it is listening, `port-forward` prints this line on stderr:
 
 ```text
-Forwarding 127.0.0.1:8888 and [::1]:8888 to port 8888 in `train`. Any local user can connect to it, and so can web pages in your browser, and it skips the sandbox's endpoint token; forward only servers that have their own auth.
+Forwarding 127.0.0.1:8888 and [::1]:8888 to port 8888 in `train`. Any local user can connect to it, and so can web pages in your browser; forward only servers that have their own auth.
 ```
 
 <Warning>
-**Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection skips the endpoint-token check that protects the sandbox's `url`, so the server in the sandbox is the only check left. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
+**Anything that can connect to your machine's loopback address can use your forwarded port.** The listener accepts connections from any local user, as `ssh -L` and `kubectl port-forward` do, and a web page open in your browser can send requests to it too. A forwarded connection needs no endpoint token, even to a port created with `"auth": "token"`, so the server in the sandbox is the only check. Forward only a server that requires its own authentication, such as Jupyter with its token, and stop the forward when you are done.
 </Warning>
 
 `port-forward` cannot slow down the server in the sandbox. When the sandbox sends faster than your side takes the data, because your network link is slower than the server, such as a large download, or a local client reads slowly, the connection is reset once up to about 8 MiB is waiting for it, in Hedra's queue toward you or in hedra-cli's memory. When 64 MiB is waiting in hedra-cli across every connection, hedra-cli resets the connection holding the most. Copy large files with [`hedra-cli sandbox cp`](#copy-files) instead.
@@ -313,7 +330,9 @@ It then stops accepting connections, prints the error line, and exits with that 
 
 ## Reach a sandbox's URL
 
-A sandbox created with `--ports` serves that port at its `url`, which needs a token. `token` mints one:
+A sandbox created with `--ports` serves that port at its `url`, and on a GPU model with a public address also at its `internet_url`. Send requests to `internet_url` when it is set, and to `url` when it is null; `hedra-cli sandbox get --sandbox train --format json` prints both. Any client that reaches the address can call the port, so any authentication is your server's own.
+
+To require an endpoint token as well, create the sandbox with `--ports '{"port": 8888, "auth": "token"}'`. Each request to the port then needs a token, which `token` mints:
 
 ```bash
 hedra-cli sandbox token --sandbox train
@@ -321,12 +340,15 @@ hedra-cli sandbox token --sandbox train
 
 It answers:
 
-- `token`, sent as `Authorization: Bearer <token>` to `url`;
+- `token`, sent as `Authorization: Bearer <token>` to `internet_url` when it is set, and to `url` when it is null;
 - `url`;
 - `browser_url`, a link that opens `url` in a browser and keeps that browser signed in to the sandbox;
-- `expires_at`: the end of the sandbox's `--ttl-seconds`, or 30 days after the mint, whichever is earlier.
+- `internet_url` and `internet_browser_url`, the same pair for the sandbox's public address, or null when it has none;
+- `expires_at`: 30 days after the mint, whatever the sandbox's end time.
 
-The token and `browser_url` are credentials: anyone who has either one reaches the sandbox until it expires. `rotate-signing-key` revokes every token and session of your workspace's sandboxes within 30 seconds. A shell, stream, forwarded connection or request already open keeps running, and hedra-cli commands mint new sessions with your API key.
+The token, `browser_url` and `internet_browser_url` are credentials: anyone who has one of them reaches the sandbox until it expires. `rotate-signing-key` revokes every token and session of your workspace's sandboxes within 30 seconds. A shell, stream, forwarded connection or request already open keeps running, and hedra-cli commands mint new sessions with your API key.
+
+Each create sets `auth`: a create without it serves the port to any client, even when an earlier sandbox of the same name used `"auth": "token"`.
 
 ## Exit codes
 
