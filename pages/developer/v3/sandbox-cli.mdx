@@ -11,10 +11,11 @@ A sandbox is a container with GPUs that runs in Hedra's cloud and is paid per GP
 | NVIDIA B300 | `b300:1` to `b300:4`, within your workspace's GPU quota | 270 GB per GPU | $8.25 |
 | NVIDIA RTX PRO 6000 | `rtxpro6000:1` | 96 GB | $2.49 |
 | NVIDIA RTX 4090 | `rtx4090:1` | 24 GB | $0.89 |
+| AMD MI355X | `mi355x:<count>` | See `hedra-cli sandbox gpus` | $7.00 |
 
 `hedra-cli sandbox gpus` lists the models your workspace can run, each with its memory, its price per GPU-hour after your workspace's discount, and whether one is free right now. The examples below set `GPU` to one of them, such as `b300:1`.
 
-The B300 and the RTX PRO 6000 need an image built for their architecture, such as the CUDA 13 build `pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime` in the examples below. `pytorch/pytorch:latest` currently points to an older build, whose PyTorch finds these GPUs but warns that it cannot run on them.
+The B300 and the RTX PRO 6000 need an image built for their architecture, such as the CUDA 13 build `pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime` in the examples below. `pytorch/pytorch:latest` currently points to an older build, whose PyTorch finds these GPUs but warns that it cannot run on them. The MI355X is an AMD GPU and needs an image built for AMD GPUs: a CUDA image does not run on it.
 
 ## Before you start
 
@@ -89,7 +90,7 @@ hedra-cli sandbox logs train
 | `port-forward <sandbox> <local>:<remote>` | Stream | Forward a local port to a port in the sandbox |
 
 
-A name is 1 to 32 lowercase letters, digits and hyphens, starting and ending with a letter or digit, and not `gpus`, `quota`, `secrets` or `signing-key`. With `--ports`, it contains no `--`. It is unique among your creating, active and stopping sandboxes, so a name reaches your live sandbox of that name, or else your newest one. A stream command resolves the name once and keeps the id, so a reconnect never reaches a later sandbox that reuses the name.
+A name is 1 to 32 lowercase letters, digits and hyphens, starting and ending with a letter or digit, and not `environment-variables`, `gpus`, `quota`, `secrets` or `signing-key`. With `--ports`, it contains no `--`. It is unique among your creating, active and stopping sandboxes, so a name reaches your live sandbox of that name, or else your newest one. A stream command resolves the name once and keeps the id, so a reconnect never reaches a later sandbox that reuses the name.
 
 Stream commands connect over HTTP/2 to a separate Hedra host, which the API names for each session, so a firewall that allows only `api.hedra.com` blocks them. They use the same proxy and certificate settings as the API commands: `HEDRA_CLI_PROXY`, `HTTPS_PROXY` or `ALL_PROXY`, with `NO_PROXY`, and `HEDRA_CLI_CA_BUNDLE`, `HEDRA_CLI_EXTRA_CA_CERTS` or `SSL_CERT_FILE`.
 
@@ -132,11 +133,11 @@ hedra-cli sandbox create \
 - `--ttl-seconds` is optional: it gives the sandbox an [end time](#set-or-change-the-end-time) that long after it is created, in whole seconds or as a duration such as `90m`, `8h` or `2d`, from 2 minutes to 365 days. Without it, the sandbox runs until you stop it, its command exits, or the wallet cannot pay.
 - `--ports '{"port": 8888}'` serves that port to any client at the sandbox's `url`, and at its `internet_url` when it has one; see [Reach a sandbox's URL](#reach-a-sandboxs-url).
 
-For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its end time arrives, or the wallet cannot pay. Add `--idle-ttl-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
+For a sandbox you work in interactively, with no main process, pass `--idle true`. It stays up until you stop it, its end time arrives, or the wallet cannot pay. Add `--stop-after-inactive-seconds` to stop it sooner, once it has had no activity for that long. Activity is an `exec`, `shell` or `cp` session, from its start until its process exits, and a request to its `url`. A `port-forward`, an `attach`, and a process left running after its session ends are not activity.
 
 ```bash
 hedra-cli sandbox create --name dev --gpu "$GPU" --image pytorch/pytorch:2.15.0-cuda13.2-cudnn9-runtime \
-  --ttl-seconds 8h --idle true --idle-ttl-seconds 1800
+  --ttl-seconds 8h --idle true --stop-after-inactive-seconds 1800
 ```
 
 The command returns once the sandbox is created. Its instances may still be starting: check with `get`.
@@ -183,7 +184,7 @@ At the end time, Hedra stops the sandbox as `stop` does, and `get` shows its `en
 
 ## Pass secrets to a sandbox
 
-Workspace secrets store a value such as an access token once and pass it to a sandbox as an environment variable, without putting the value in your command line or the sandbox's settings. They are not yet enabled for self-serve workspaces. To use them, contact [sales@hedra.com](mailto:sales@hedra.com).
+Workspace secrets store a value such as an access token once and pass it to a sandbox as an environment variable, without putting the value in your command line or the sandbox's settings. Whether a sandbox can use one depends on its GPU model: `hedra-cli sandbox gpus --format json` shows `secrets_supported` for each model, and a create that names a secret on a model where it is `false` can be refused. To use secrets on such a model, contact [sales@hedra.com](mailto:sales@hedra.com).
 
 ## Run commands
 
@@ -210,7 +211,7 @@ Hedra charges a sandbox's GPU time until the sandbox stops. Stop it the way its 
 | How the work ends | What stops the sandbox | `end_reason` in `get` |
 | --- | --- | --- |
 | A job that is the sandbox's `--command` exits | The exit, unless `--restart` restarts it | `exited`, or `instance_failed` for an exit code other than 0 |
-| A job you run with `exec` in an `--idle true` sandbox exits | `--idle-ttl-seconds` with no activity | `idle_ttl_ended` |
+| A job you run with `exec` in an `--idle true` sandbox exits | `--stop-after-inactive-seconds` with no activity | `inactive` |
 | A program outside the sandbox finishes, such as a client of a server in it | That program runs `hedra-cli sandbox stop --sandbox <name>`, or sends `POST /v3/sandboxes/{sandbox}/stop` with an API key that holds `sandboxes:write` | `caller_stopped` |
 | None of these | The end of `--ttl-seconds` | `ttl_ended` |
 
