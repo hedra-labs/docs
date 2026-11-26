@@ -32,7 +32,7 @@ The sandbox commands need these key scopes:
 | `sandboxes:write` | `create`, `update`, `stop`, `token`, `rotate-signing-key` and `port-forward` |
 | `sandboxes:exec` | `exec`, `shell` and `cp` |
 
-So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `rotate-signing-key` also needs you to be a workspace owner or admin, or the member who pays for the workspace; a service key cannot run it.
+So `exec`, `shell` and `cp` need `sandboxes:read` and `sandboxes:exec`, `port-forward` needs `sandboxes:read` and `sandboxes:write`, and `shell --gpu`, which creates, opens and stops a sandbox, needs all three. `rotate-signing-key` needs only `sandboxes:write`: any workspace member's key and a service key can run it, and it revokes every member's tokens.
 
 Sign in with:
 
